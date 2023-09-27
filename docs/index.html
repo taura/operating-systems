@@ -1,0 +1,2173 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="ja">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>オペレーティングシステム: 講義案内</title>
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+h1 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #BBDDBB;
+}
+
+h2 {
+  font-size   : 13pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #CCEECC;
+}
+
+h3 {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #DDFFDD;
+}
+
+h4 {
+  font-size   : 10pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #FFFFFF;
+}
+
+div {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+ul {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>冬学期<br/>「オペレーティングシステム」講義案内</h1>
+
+<div>
+<p align="right">
+<a href="http://www.eidos.ic.i.u-tokyo.ac.jp/~tau">田浦健次朗</a></p>
+</div>
+
+<!---
+<p>
+<ul>
+<li><a href=gen/ex/index.html>例題集</a>
+</ul>
+</p>
+--->
+
+<h2>What's New</h2>
+<div>
+  常時追加・更新中. 新しいものが上．お知らせなど随時掲載しますので，
+  ちょくちょく「再読み込み」してください
+  <ul>
+    <li><font color=blue>(投稿日 2023/1/31)</font>
+      試験本番は 1/31 (火) 授業と同じ時間帯(1限)・場所(241)です.
+      急な変更などに備えて
+      <a href="https://sites.google.com/g.ecc.u-tokyo.ac.jp/ee-office/%E3%83%9B%E3%83%BC%E3%83%A0/%E6%8E%B2%E7%A4%BAbulletin">
+        電気系事務のホームページ</a>にある,
+      <a href="https://drive.google.com/file/d/1VdgP0t-1Cn3BqOD2M74KPk2gtB8bpqcH/view">
+        2022年度 A1A2期末試験日程（電気系学部科目）
+      </a>も確認してください.
+      試験の詳細を
+      <a href="html/exam2022.html">
+        オペレーティングシステム試験案内 2022年度</a>で確認してください
+    </li>
+    <li><font color=blue>(投稿日 2023/1/9)</font>
+      <font color="red">1/10 (火)に試験の予行演習を行うので事情がない限り,
+        教室で出席</font>してください. 詳細を
+      <a href="html/exam2022.html">
+        オペレーティングシステム試験案内 2022年度</a>で確認してください
+    </li>
+    <li><font color=blue>(投稿日 2022/12/30)</font>
+      os15_pipe というJupyter notebookを配布し,
+      それに関する課題をITC-LMSで出しています(課題5 : os15_pipe).
+      締切は 1/20 (土)
+    </li>
+    <li><font color=blue>(投稿日 2022/12/22)</font>
+      12/20(火)の穴埋めをするオンデマンド動画(35分)をひとつアップしています
+      (operating system 2022 12 22 on demand;
+      全動画プレイリストへのリンクはITC-LMS).
+      これに付随する演習をこのあとアップするつもりですが,
+      こちらはアップアップしておりまして, もうしばらくお待ちくださいm(_ _)m
+      できたものから五月雨でのアップを御許しください.
+    </li>
+    <li><font color=blue>(投稿日 2022/12/13)</font>
+      12/27 はオンデマンドとお伝えしましたが,
+      田浦のやんごとなき用事により, 12/20 もオンデマンドにしますm(_ _)m;
+      (大量の動画ではなく, 演習中心の教材を提供予定)
+    </li>
+    <li><font color=blue>(投稿日 2022/12/13)</font> 予定
+      <ol>
+        <li><a href="slides/pdf/06_file_system.pdf">ファイルシステム
+            (mmapの実装, 主記憶と2次記憶の統合)</a></li>
+        <li>os13_mmap, os14_mmap_app</li>
+        <li>スライド7: <a href="slides/pdf/07_everything_is_file.pdf">
+            ファイルディスクリプタと擬似ファイル
+            〜 副題 : Unix 的な考え方 (全てがファイル)</a></li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 2022/12/06)</font>
+      12/27 (火) にも授業がありますが, (人道上の理由により:-)
+      オンデマンド授業とします. 良い年末を.
+    </li>
+    <li><font color=blue>(投稿日 2022/12/06)</font>
+      課題(os07_cond_var)の問題の答え(ans_os07_cond_var),
+      課題ではない演習(os08_cas)の問題の答え(ans_os08_cas)を
+      リリースしています
+    </li>
+    <li><font color=blue>(投稿日 2022/12/06)</font> 予定
+      <ol>
+        <li><a href="slides/pdf/06_file_system.pdf">ファイルシステム
+            (mmap, ファイルシステム高速化のためのOSの機構)</a></li>
+        <li>os11_cache</li>
+        <li>os12_prefetch</li>
+        <li><a href="slides/pdf/06_file_system.pdf">ファイルシステム
+            (mmapの実装, 主記憶と2次記憶の統合)</a></li>
+        <li>os13_mmap</li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 2022/11/29)</font> 予定
+      <ul>
+        <li><a href="slides/pdf/05_memory.pdf">メモリ管理 : ページ置換アルゴリズム</a></li>
+        <li><a href="slides/pdf/06_file_system.pdf">ファイルシステム</a></li>
+        <li>os11_cache</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/11/15)</font> 予定
+      <ul>
+        <li><a href="slides/pdf/05_memory.pdf">メモリ管理(仮想記憶)</a></li>
+        <li>os10_vm</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/11/08)</font> 予定
+      <ul>
+        <li><a href="slides/pdf/05_memory.pdf">メモリ管理(仮想記憶)</a></li>
+        <li>適宜演習の時間(os06_mutex, os07_cond_var, os08_casなど)</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/11/08)</font>
+      課題3: os07_cond_var を
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE3d16L10J01"
+             target="_blank" rel="noopener">
+        ITC-LMS</a>で出しました
+    </li>
+    <li><font color=blue>(投稿日 2022/11/01)</font> 予定
+      <ul>
+        <li><a href="slides/pdf/04_concurrent.pdf">並行処理</a></li>
+        <li>os06_mutex, os07_cond_var, os08_casなど</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/10/29)</font>
+      os01_process, os03_thread, os06_mutex の解答例
+      (それぞれ ans_os01_process, ans_os03_thread, ans_os06_mutex) を配布
+    </li>
+    <li><font color=blue>(投稿日 2022/10/29)</font>
+      課題2: os02_install_vm_and_linux 用の
+      (<a href="html/install_vm_and_linux.html"
+          target="_blank" rel="noopener">動画</a>として,
+      Windows, Linux, Mac OSのパターンを揃えました.
+      自分の環境に応じて必要なものを見てください.
+    </li>
+      
+    </li>
+    <li><font color=blue>(投稿日 2022/10/25)</font> 予定
+      <ol>
+        <li><a href="slides/pdf/04_concurrent.pdf">並行処理</a></li>
+        <li>os06_mutex, os07_cond_var, os08_casなど</li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 2022/10/18)</font> 予定
+      <ol>
+        <li><a href="slides/pdf/02_threads.pdf">スレッド</a></li>
+        <li>os01_process, os03_thread などをやる(自分の進度に応じて)</li>
+        <li><a href="slides/pdf/03_scheduling.pdf">スケジューリング</a></li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 2022/10/18)</font>
+      os03_thread, os04_sched, os05_vruntime を配布
+    </li>
+    <li><font color=blue>(投稿日 2022/10/14)</font>
+      <ul>
+        <li>課題1: os01_process を
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE3d16L10J01"
+             target="_blank" rel="noopener">
+            ITC-LMS</a>で出しました</li>
+        <li>課題2: os02_install_vm_and_linux を
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE3d16L10J01"
+             target="_blank" rel="noopener">ITC-LMS
+          </a>で出しました
+          (<a href="html/install_vm_and_linux.html"
+              target="_blank" rel="noopener">
+            関連動画
+          </a>)
+        </li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/10/07)</font>
+      講義録画(その他の動画)は,
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE3d16L10J01"
+         target="_blank" rel="noopener">
+        ITC-LMS
+      </a>の「教材」から見られるようにしてあります
+    </li>
+    <li><font color=blue>(投稿日 2022/10/04)</font>
+      申し訳ありませんがやんごとなき事情により, <font color="blue">
+        来週(10/11)休講</font>.
+      課外学習(?)として以下を動画を使ってゆっくり説明し, 課題とする予定
+      <ul>
+        <li>仮想マシンを使う</li>
+        <li>仮想マシンにOS (Linux)をインストールする</li>
+        <li>仮想マシンにSSHでログインする</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/10/04)</font> 本日の予定
+      <ul>
+        <li><a href="https://forms.gle/dYU4SMWpQhJABXdLA">アンケート</a>
+          お手すきのときに</li>
+        <li><a href="slides/pdf/00_intro.pdf">イントロ</a></li>
+        <li><a href="../operating_systems/html/jupyter.html"
+               target="_blank" rel="noopener">Jupyter環境の使い方</a>
+          pd00_intro を開けるようになる.
+          SSHできるようになる(後でも可)
+        </li>
+        <li><a href="slides/pdf/01_process.pdf">プロセス</a></li>
+        <li>Jupyterでpd01_process; 練習のため, 提出課題とする予定</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/10/01)</font>
+      <ul>
+        <li>履修するか決めていない場合でも, 初回の授業に出席する前に
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE3d16L10J01"
+             target="_blank" rel="noopener">ITC-LMSで自己登録</a>してください
+          (注: その場合も履修すると決心したときに
+          <a href="https://utas.adm.u-tokyo.ac.jp/"
+             target="_blank" rel="noopener">UTAS</a>での履修登録が必要です.
+          一方, 先にUTASで履修登録すれば, 一日後にITC-LMSに自動的に登録されます).
+        </li>
+        <li>講義はハイブリッド(教室でもオンラインでも参加可能)です.
+          Zoom URLは<a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE3d16L10J01"
+                       target="_blank" rel="noopener">ITC-LMS</a>で入手してください</li>
+        <li>他学部聴講の利便性などのためオンラインでも参加可能としますが,
+          生活のリズムを失わないよう, 一週間のうち登校する日(授業)を決めてそれを守ることを推奨します.
+          気がつくとほとんど外出していないということがないよう,
+          登校計画を立てましょう.
+        </li>
+        <li>教室で受ける場合はPCを持参してください</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/09/30)</font>
+      <ul>
+        <li>細かいお知らせや質問, 学生間の情報共有のためにSlackを使います.
+          参加は任意です.
+          必須のお知らせはこのホームページ, ITC-LMSなどで流します.
+          <a href="html/slack.html" target="_blank" rel="noopener">参加方法</a>
+        </li>
+        <li>田浦への連絡は以下のいずれかで
+          <ul>
+            <li>Email (高頻度で見ているが一旦見逃すとそのまま埋もれて忘却する危険がある)</li>
+            <li>Slack (早いときは一瞬で返事が返るが1日見ていないときもある)</li>
+            <li>LMSでの連絡 (見逃しの確率は低いが数日見ていないときもある)</li>
+          </ul>
+        </li>
+        <li>
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE3d16L10J01"
+             target="_blank" rel="noopener">ITC-LMSのページ</a>
+        </li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 2022/09/30)</font> 2022年版HP開設</li>
+  </ul>
+</div>
+
+<h1>目次</h1>
+<div>
+  <ul>
+    <!--
+        <li><a href=#resumes>配布資料</a></li>
+        -->
+    <li><a href=#ostoha>オペレーティングシステム(OS)とは</a></li>
+    <li><a href=#why>なぜオペレーティングシステムを学ぶのか？</a></li>
+    <li><a href=#howweproceed>講義の進め方</a></li>
+    <li><a href=#books>教科書・参考書</a></li>
+    <li><a href=#items>講義項目</a></li>
+    <li><a href=exams/ >過去問</a></li>
+  </ul>
+</div>
+
+<a name=slides></a>
+<h2>2020年度〜 スライド</h2>
+<div>
+  <ul>
+    <li>スライド0: <a href="slides/pdf/00_intro.pdf">イントロ</a></li>
+    <li>スライド1: <a href="slides/pdf/01_process.pdf">プロセス</a></li>
+    <li>スライド2: <a href="slides/pdf/02_threads.pdf">スレッド</a></li>
+    <li>スライド3: <a href="slides/pdf/03_scheduling.pdf">スケジューリング</a></li>
+    <li>スライド4: <a href="slides/pdf/04_concurrent.pdf">並行処理</a></li>
+    <li>スライド5: <a href="slides/pdf/05_memory.pdf">メモリ管理(仮想記憶)</a></li>
+    <li>スライド6: <a href="slides/pdf/06_file_system.pdf">ファイルシステム</a></li>
+    <li>スライド7: <a href="slides/pdf/07_everything_is_file.pdf">
+        ファイルディスクリプタと擬似ファイル 〜 副題 : Unix 的な考え方 (全てがファイル)</a></li>
+    <li>スライド8: <a href="slides/pdf/08_signal.pdf">シグナル</a></li>
+    <li>スライド9: <a href="slides/pdf/09_vm_app.pdf">仮想記憶APIの応用</a></li>
+  </ul>
+</div>
+
+<a name=resumes></a>
+<h2>参考2019までの配布資料とスライド(以降使う予定なし)</h2>
+
+  <div>
+    <font size="-3" color="grey">
+
+    <ul>
+      <li> 
+        スライド0 (<a href=gen/slides/0-os-intro.pdf>pdf</a>, 
+        <a href=gen/slides/0-os-intro.ppt>ppt</a>), 
+        資料0 (<a href=gen/resume/0.pdf>pdf</a>, <a href=gen/resume/0.doc>doc</a>).
+      <li> 
+        スライド1 (<a href=gen/slides/1-thread-process.pdf>pdf</a>, 
+        <a href=gen/slides/1-thread-process.ppt>ppt</a>).
+        資料1 (<a href=gen/resume/1.pdf>pdf</a>, <a href=gen/resume/1.doc>doc</a>).
+      </li>
+      <li> 
+        スライド2 (<a href=gen/slides/2-C-and-assembly.pdf>pdf</a>, 
+        <a href=gen/slides/2-C-and-assembly.ppt>ppt</a>).
+        資料2 (<a href=gen/resume/2.pdf>pdf</a>, <a href=gen/resume/2.doc>doc</a>),
+      <li> 
+        スライド3 (<a href=gen/slides/3-synchronization.pdf>pdf</a>, 
+        <a href=gen/slides/3-synchronization.ppt>ppt</a>), 
+        資料3 (<a href=gen/resume/3.pdf>pdf</a>, <a href=gen/resume/3.doc>doc</a>).
+      </li>
+      <li> 
+        スライド4 (<a href=gen/slides/4-memory-management.pdf>pdf</a>, 
+        <a href=gen/slides/4-memory-management.ppt>ppt</a>),
+        資料4 (<a href=gen/resume/4.pdf>pdf</a>, <a href=gen/resume/4.doc>doc</a>).
+      </li>
+      <li> 
+        スライド5 (<a href=gen/slides/5-memory-management.pdf>pdf</a>, 
+        <a href=gen/slides/5-memory-management.ppt>ppt</a>), 
+        資料5 (<a href=gen/resume/5.pdf>pdf</a>, <a href=gen/resume/5.doc>doc</a>).
+      </li>
+      <li> 
+        スライド6 (<a href=gen/slides/6-filesystem.pdf>pdf</a>, 
+        <a href=gen/slides/6-filesystem.ppt>ppt</a>),
+        資料6 (<a href=gen/resume/6.pdf>pdf</a>, <a href=gen/resume/6.doc>doc</a>)
+      </li>
+      <li> 
+        スライド7 (<a href=gen/slides/7-vm-app.pdf>pdf</a>, 
+        <a href=gen/slides/7-vm-app.ppt>ppt</a>), 
+        資料7 (<a href=gen/resume/7.pdf>pdf</a>, <a href=gen/resume/7.doc>doc</a>)
+      </li>
+      <li> 
+        スライド8 (<a href=gen/slides/8-security.pdf>pdf</a>, 
+        <a href=gen/slides/8-security.ppt>ppt</a>),
+      </li>
+      <li> 
+        スライド9 (<a href=gen/slides/9-network.pdf>pdf</a>, 
+        <a href=gen/slides/9-network.ppt>ppt</a>),
+      </li>
+      <li>
+        番外  <a href="gen/slides2/quantum_supremacy/pdf/quantum_supremacy_slide.pdf">「Googleの量子超越性について」</a>
+      </li>
+    </ul>
+    </font>
+  </div>
+
+<!--
+<li> 
+スライド10 (<a href=gen/slides/10-fs-implementation.pdf>pdf</a>, 
+<a href=gen/slides/10-fs-implementation.ppt>ppt</a>),
+-->
+
+<a name=ostoha></a>
+<h2>オペレーティングシステム(OS)とは</h2>
+<div>
+<p>すでに自宅などでパソコンを使っている人は多いと思います．
+  Windows, Mac OSという製品名はほとんどの人が聞いたことがあるでしょう．
+  これらはみなオペレーティングシステムの実例です．
+  サーバ用にはLinuxというOSが圧倒的に普及していますし,
+  スマホ用のOSであるAndroidもLinuxが元になって作られています.
+  </p>
+
+<p>OSはコンピュータを動かすにあたって，最も基本的なソフトウェアです．
+OSの厳密な「定義」は難しく，左のような言い方でごまかすのが普通です．OS
+が何か？という問いに対する短い答えを追い求める代わりに，OSのないコン
+ピュータとそうでないコンピュータの(その上の応用ソフトウェアを作る人の
+立場から見た)違いについて簡単に触れるのが有益かと思います．</p>
+
+<ul>
+
+<li>OSのない，「裸の」コンピュータでも，プログラムを作ることは可能です．
+しかしそれには非常な手間がかかります．まず，コンピュータにつながれた記
+憶装置（ハードディスク，CDROM，フロッピーディスク，USBメモリな
+ど）や，ネットワークとのデータのやり取りが恐ろしく大変になります．同じ
+記憶装置でもディスクとUSBメモリではデータの読み方が違います．
+「ディスクのどのトラックの何番目のセクタを読め」，というコマンドを発行
+する変わりに「&quot;OS講義案内&quot;というファイルを読みたい」という，
+より抽象的な命令で，プログラムが必要な情報を入手できれば便利です．OSは
+このような外部記憶装置に対する，統一的なインタフェースを与え，プログラ
+ムが，必要な情報がハードディスクにあるのか，フロッピーにあるのか，など
+の（ほとんどの場合はどうでもいい）違いを考慮せずにプログラムを書くこと
+を可能にします．</li>
+
+<li>それだけではありません．もし一度に動くプログラムが一つだけであれば
+OSの役目はさほど大きくなかったでしょう．しかし実際にはひとつのコンピュー
+タ内に同時にウェブブラウザが動き，ワープロが動き，ゲームが動きます．OS
+のないプログラムでこれを実現しようと思うと大変なことになります．コン
+ピュータに搭載されているCPUは，与えられた命令列を順に実行するだけの機
+械です．裸のコンピュータで，ブラウザ，ワープロ，ゲームを同時に動かした
+ければ，それらを組み合わせた一つのプログラムを書いて，それぞれの実行を
+「少しずつ，代わりばんこに」実行するような処理を，プログラマが書かなく
+てはなりません．しかしそれは今日のプログラマが行っている作業ではなく，
+個々のプログラムはブラウザならブラウザ，ワープロならワープロ「のみ」に
+集中し，それらを「代わりばんこにちょっとずつ」実行するのはOSが行ってく
+れます．</li>
+
+<li>最後に，OSの重要な機能に，保護機能があります．OSのない裸のコンピュー
+タでは，一つのプログラムが処理を間違えると，コンピュータ全体が機能停止
+に陥ることが容易に起こり得ます．ワープロソフトのバグのせいで，コンピュー
+タ全体が機能停止に陥り，リセットボタンを押す羽目になることが容易に起こ
+  るのです(一昔前になりますが, Windows 98, Windows Meや，
+  冬至のMacintoshを利用している人は日常的に経験していました)．
+  これは，それに対し，基本的な「メモリ保護
+機能」を備えたコンピュータは，通常のプログラムが勝手に他のプログラムや
+OSのデータを破壊することがないように作られています．この機能なくしては
+プログラム開発が困難になるばかりでなく，複数の利用者が安心して同時に利
+用可能なコンピュータを作ることは，そもそも不可能です．</li>
+
+</ul>
+</div>
+
+<a name=why></a>
+<h2>なぜオペレーティングシステムを学ぶのか？</h2>
+
+<div>
+<p>卒業論文，またはその後の研究において，オペレーティングシステムその
+ものや，ネットワーキング（インターネット），プログラミング言語，セキュ
+リティ，並列・分散計算など，その他あらゆる，コンピュータの基盤に関わる
+研究をしたいと思っている人は，迷わずオペレーティングシステムを学ぶべき
+です．オペレーティングシステムを学ぶことは，大雑把に言って，コンピュー
+タソフトウェアが根本的なところで「どう動くか」を学ぶことと同じです．
+</p>
+
+<ul>
+
+<li>オペレーティングシステムの研究をしたい人にはなんの説明も必要がない
+でしょう</li>
+
+<li>ネットワーキングのように，コンピュータの入出力機構はオペレーティン
+グシステムの中にインプリメントされています．日々進化するネットワーキン
+グハードウェアを実際にプログラムから利用可能にするためには，デバイスド
+ライバと呼ばれるソフトウェアを書く必要がありますが，これを動かすために
+は，オペレーティングシステムが根本的なところでどう動いているのかを学ぶ
+必要があるでしょう．</li>
+
+<li>プログラミング言語やライブラリの実装の中には，OSの提供する機能(仮
+想記憶など)を駆使したものがあります．たとえばメモリ管理やチェックポイ
+ンティング（実行中プロセスの状態を退避する）ために，OSの仮想記憶が使わ
+れます．OSを学ぶと，素人（失礼!）にとっては「摩訶不思議な」機能の実装
+方法を理解することが出来ます．</li>
+
+<li>セキュリティは，オペレーティングシステムのにならず様々なソフトウェ
+ア（時にはハードウェア）の連携により実現されるものですが，どのような役
+割分担がされていることを知ることは，将来新たな提案をするための第一歩と
+いえるでしょう．</li>
+
+<li>並列・分散計算は，ネットワーキングやセキュリティなどの技術を組み合
+わせて，多数の計算機を用いて高性能な計算を可能にする技術です．そこでは，
+OSを単なるブラックボックスとして見たのでは，機能や性能上の重要なポイン
+トをしばしば見失ってしまいます．たとえば，OSは「あたかも各プログラムが
+1つのコンピュータを占有しているかのような錯覚」を与えてプログラミング
+を簡単にしますが，実際には10msとか，そのくらいの間隔でプログラムの間
+を切り替えながら実行しています．この事実を知らずにいると，複数のプログ
+ラムの待ち合わせに，busy wait この言葉の意味がわからなければ授業にきて
+ください）を用いることが，どのような場合に良く，どのような場合に悪い選
+択なのかが理解できません．</li>
+
+</ul>
+
+<p>私はコンピュータのシステムそのものの勉強がしたいのではなく，コンピュー
+タを使った情報処理（自然言語，画像，音声，etc.）ができればそれで満足だ，
+細かいOSの機能などはどうでもよい，という人もいることでしょう．そのよう
+な人にも，単位を取る以上の動機付けをあたえるとすると以下のようになるで
+しょう．</p>
+
+<ul>
+
+<li>まず，およそどんなプログラムもOSの提供する機能を使わずにプログラム
+ができることはありません．そのようなプログラムはアルゴリズムの授業に出
+てくるだけで，実際にはそれらのアルゴリズムを，ディスクやネットワークか
+らの情報と組み合わせてプログラムを作ります．その意味で，およそプログラ
+ミングに関わる人は全て，OSが提供する機能(API)を学ぶ必要があります．し
+かし，APIを学ぶときに，UNIXやWindowsのマニュアルとにらめっこするのは，
+あまり知的なやり方ではないでしょう．そうではなく，どんなOSでも，（まと
+もなOSならば)提供している「はずの」機能に対する鳥瞰図を得ておき，必要
+に応じてマニュアルを見るのが正しい方式です．</li>
+
+<li>より重要なことは，マニュアルを読むのでもほとんどの場合，基本的なOS 
+  の背景知識が必要になることです．例えば以下はUNIXの
+  <a href="https://linuxjm.osdn.jp/html/LDP_man-pages/man2/mmap.2.html"
+     target="_blank">
+    mmap</a>というAPIに関する説明です．これを初めて読んで，
+理解できる人は少ないでしょう．これがいったい何をするためにあるのか，ど
+ういう場面で役に立つのかを理解するには，マニュアルを奥深く読むのではな
+く，「OSの基本」について学ぶのが最も近道であり，まっとうな道です．
+</li>
+
+</ul>
+<p>OSを学ぶ気になったでしょうか？</p>
+</div>
+
+<a name=howweproceed></a>
+<h2>講義の進め方</h2>
+<div>
+<p>普通の講義と同様，教室での講義をすることになると思います．ただし，
+OSは黒板の上で説明するだけで面白いものではありません．OSを学ぶのは，コ
+ンピュータの最もweirdな(「変な」)部分を学ぶことですから，コンピュータ
+にたくさんさわらずに，あるいはさわったとしても，メールやWEBを使うだけ
+ではOSを「体感」することはできません（これはOSの役割が「縁の下の力持ち」
+でることを考えれば当たり前です）．したがって，ときおりプログラミング演
+習的な要素を取り入れる予定です．</p>
+
+<p>単位も普通に試験で行うことになるでしょ
+うが，これもOSは筆記試験だけで出来を決めるのは，体育の試験を筆記試験で
+やるのに近いものを感じます．そこで，プログラミング演習で力作を課して，
+その出来によっては試験を免除するということも考えています．詳細は授業中
+にお知らせします(どんなことが行われたかは<a href=#past_presentations>以下
+</a>を見ると少しはわかるでしょう)．要するにプログラミングのためにコン
+ピュータを長時間触る(コンピュータ好きがコンピュータに「ハマル」)機会を
+作りたいと考えています．</p>
+
+<p>また，もうひとつの選択肢として，授業の最後の方の時間を利用して，少
+し高度な内容を本や論文から調べて，発表してもらうという時間を作りました．
+ちょっと高度すぎたかも知れませんが，同様の主旨の企画は今年も作ろうかと
+思っています．
+</p>
+</div>
+
+<a name=eval></a>
+<h2><font color="red">NEW</font> 評価 (2020年度)について </h2>
+<div>
+  評価については以下の通りと致します.
+  <ul>
+    <li>単位の用件は以下の,
+      <font color="blue">試験</font> AND <font color="blue">課題</font>
+      <font size="-2">(試験の代わりに「本・論文購読チャレンジ」をやりたいという人は
+        現れていませんがいたらすぐに教えてください)</font>
+    </li>
+  </ul>
+  <ul>
+    <li>試験: 1/19 (火) オンライン試験 Zoom使用, 常時カメラオンは不要.
+      試験開始に当たる指示などはZoomで行う(EEIC 方式3相当).
+      それ以上の詳細は未定だが,
+      <ul>
+        <li>おそらく一部の問題で, 時間内にプログラムを完成させる問題を出す</li>
+        <li>これまでJupyterで見てきたような,
+          システムコールを使って何かを書く系のプログラム</li>
+        <li>Jupyter環境でもよいが, 好きなエディタのほうが速いという人は今のうちに,
+          taulec.zapto.orgにSSHログインしてエディタを使う方法を練習しておくと良い</li>
+        <li>同様に, プログラムが思うように動かないときにデバッガで調べる,
+          などのこともSSHログインの方が生産性が高いので今のうちにそれをすることをすすめる
+        </li>
+        <li>今日の課題 (mmap) はその予行演習だと思ってやってみてください
+        </li>
+      </ul>      
+    </li>
+    <li>課題:
+      <ol>
+        <li>プロセス, スレッドプログラミング練習 (os03_sched.c.ipynb)</li>
+        <li>並行プログラミング練習 (os07_concurrency.sos.ipynb)</li>
+        <li>mmap演習 (os14_mmap_ex.sos.ipynb)</li>
+        <li>
+          <strike>
+            もう一つ, 試験後に締切を設定した, プログラミング課題を課す予定
+          </strike>
+          (双方の負担を考慮して)やめました. 
+        </li>
+      </ol>
+      授業内で使っている多くのJupyter notebookの演習は,
+      理解を具体的にするため. 提出を要する課題はLMSで課題として設定するので,
+      それ以外のものの提出は課していない. LMSで提出するのは上記(os03_... とos14_... のみ)
+      だが, 理解を深めるため + 試験対策として, 残りも丁寧に見ておくことを強くすすめる.
+    </li>
+
+    <li><font color=red>
+        本・論文購読チャレンジ:</font>
+      (試験の代わりにこれをやりたい人は早めに申し出てください)
+      OSに関係する本のチャプターや論文を読んで内容を授業時間中に発表する．
+      チーム(できれば2人まで．最大3人まで)発表可．
+      最近の話題, OSの授業でカバーする話題の一歩先にあるような話について,
+      原典に当たって調べて発表してくれることを期待. 
+
+      <ul>
+        <li>Meltdown脆弱性について</li>
+        <li>Intel SGXとはなにか? 脆弱性は?</li>
+        <li>仮想マシンの仕組み</li>
+        <li>コンテナの仕組み</li>
+      </ul>
+
+      代表的カンファレンス. 多くは「何のことかわからない」
+      論文かもしれませんが, これらの目次をスキャンして,
+      「読めそう, 面白そう」というものがあったら食らいつくという姿勢で良いです.
+      
+      <ul>
+        <li><a href="https://www.usenix.org/conference/osdi18/technical-sessions">
+            Usenix OSDI</a>
+        </li>
+        <li><a href="https://www.usenix.org/conference/usenixsecurity18/technical-sessions">
+            Usenix Security Symposium</a>
+        </li>
+    <li>
+      <a href="https://www.sigops.org/s/conferences/sosp/2017/">
+        ACM SOSP
+      </a>
+    </li>
+        <li>
+          <a href="https://www.usenix.org/conference/atc18">Usenix ATC</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  注: 多分試験勉強の方が楽です. 救済措置ではありませんので誤解なきよう.
+  興味・意欲のある人の取り組みを歓迎します．
+</div>
+
+<a name=books></a>
+<h2>教科書・参考書</h2>
+<div>
+<p>特定の教科書は使いません．以下は私が参考にする本で，興味があれば入
+手してください．図書に推薦してありますので，おそらく図書に入荷すると思
+います(入荷していなかったら知らせてください)．どれか一冊読んでみたいが，
+迷っている人は1.  を見るとよいと思います．このリストは今後も更新してい
+きます．以下のいくつかの本には邦訳が出ています．英語で読むことをお勧め
+しますが，もし興味があれば探ってみてください．</p>
+
+<ol>
+
+  <li>Silberschatz et al.
+    <br><a href="http://www.amazon.co.jp/gp/product/1118112733/ref=s9_simh_co_p14_d0_i1?pf_rd_m=AN1VRQENFRJN5&pf_rd_s=left-1&pf_rd_r=1J020E29VANYQ1B8RG8M&pf_rd_t=3201&pf_rd_p=464711576&pf_rd_i=typ01">
+      Operating System Concepts Ninth Edition</a> (ISBN 0471694665)
+    <br>大部な名著です．名著ですがちと高すぎます...
+    <!--
+        (田浦はSixth Editionまでしか，まだ目にしたことがありませんが良書であることは
+        ほぼ間違いないでしょう)．
+      -->
+  </li>
+
+  <li>Silberschatz et al.
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/0471263141/qid=1130775248/sr=1-15/ref=sr_1_0_15/250-3906577-8023441">Applied Operating System Concepts (Windows Xp Update)</a> (ISBN 0471263141)
+    <br>内容的にはほぼ，Operating System Conceptsと同一ですが，Windows XPなどに関するCase Studyが充実しています．
+  </li>
+  
+  <li>D.M. Dhamdhere 
+    <br><a href=http://www.amazon.co.jp/Operating-Systems-D-M-Dhamdhere/dp/0070611947/ref=sr_1_2/503-1613807-5685547?ie=UTF8&s=english-books&qid=1191196442&sr=1-2>
+      Operating Systems</a> (ISBN-10: 0070611947, ISBN-13: 978-0070611948)
+    <br>基礎的な内容から，マルチプロセッサ，分散システムまで充実した内容．
+  </li>
+  
+  <li>Andrew S. Tanenbaum
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/0130926418/ref=sr_aps_eb_2/250-2904443-7078668">Modern Operating Systems</a> (ISBN 0136386776)
+    <br>古典的な話と，分散システムの話を広くカバーしている
+  </li>
+
+  <li>Andrew S. Tanenbaum and Albert S. Woodhull
+    <br><a href="http://www.amazon.co.jp/exec/obidos/tg/detail/glance/-/english-books/0136386776/0136386776/249-9962019-8008335"> 
+      Operating Systems: Design and Implementation, second edition</a>
+    (ISBN 0135881870)
+    <br>Minixという小さなOSを，ソースコードを掲載しながら細部まで説明している．
+  </li>
+
+  <li>前川守
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4000103466/qid=1065017214/sr=1-7/ref=sr_1_2_7/250-2904443-7078668">オペレーティングシステム</a>
+    (ISBN 4000103466)
+<br>日本語の大部な教科書．
+  </li>
+  
+  <li>野口健一郎
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4274132501/qid=1065017167/br=3-14/br_lfncs_b_14/250-2904443-7078668">オペレーティングシステム</a>
+    (ISBN 4274132501)
+    <br>薄めの要点解説的な教科書．
+  </li>
+
+  <br>以下は，いわゆる一般的なOSの教科書ではありませんが，興味を持つ人も
+  いるでしょう．
+  
+  <li>Gary Nutt. 
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/0201612437/qid=1065017328/sr=1-3/ref=sr_1_0_3/250-2904443-7078668">Kernel Projects for Linux</a>
+    (ISBN 0201612437)
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4894714566/qid%3D1065017390/250-2904443-7078668">邦訳: 実習Linuxカーネル 理論と実習 カーネルを効率的に理解するための実習書</a>
+    (ISBN 4894714566)
+    <br>ここにある数々のプログラミング課題がすべてできれば，授業に出る必要はない．
+  </li>
+
+  <li>Beck et al.
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/0201719754/qid%3D1065017551/250-2904443-7078668">Linux Kernel Programming</a>
+    (ISBN 0201719754)
+    <br>Linuxカーネルについての詳細な解説
+  </li>
+  
+  <li>Uresh Vahalia
+    <br><a href="http://www.amazon.co.jp/exec/obidos/tg/detail/glance/-/english-books/0131019082/qid=999681489/ref=sr_sp_re_1_4/249-9962019-8008335"> 
+      UNIX Internals The New Frontiers</a> 
+    (ISBN 0-13-101908-2)
+    <br>UNIXについての詳細な解説
+  </li>
+  
+  <li>Jim Mauro and Richard Mc Dougall
+    <a href="http://www.amazon.co.jp/exec/obidos/tg/detail/glance/-/english-books/0130224960/qid=999681489/ref=sr_sp_re_1_1/249-9962019-8008335"> 
+      Solaris Internals Core Kernel Architecture</a>
+    (ISBN 0-13-022496-0)
+    <br>Solaris (UNIXの一種)についての詳細な解説．
+  </li>
+  
+  <li>Remy Card, Eric Dumas, and Franck Mevel
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/0471981419/qid=999681546/249-9962019-8008335">
+      The Linux Kernel Book</a>
+    (ISBN 0471981419)
+    <br>Linuxについての詳細な解説．
+  </li>
+  
+  <li>W. Richard Stevens
+    <br><a href="http://www.amazon.co.jp/exec/obidos/ASIN/0201563177/qid=999681570/249-9962019-8008335"> 
+      Advanced Programming in the UNIX Environment</a>
+    (ISBN 0-201-56317-7)
+    <br>UNIXの，内部ではなくシステムコール(API)を解説．システムプログラマとしての
+    腕を上げたい人向き．
+  </li>
+</ol>
+</div>
+
+<a name=items></a>
+<h2>講義項目(予定)</h2>
+<div>
+<ol>
+  <li>概論</li>
+  <ol>
+    <li>「裸の」コンピュータ</li>
+    <ol>
+      <li>CPU</li>
+      <li>メモリ</li>
+      <li>入出力機器</li>
+    </ol>
+    <li>プログラマから見たOS: 基本概念</li>
+    <ol>
+      <li>CPUの抽象化: スレッドとプロセス</li>
+      <li>メモリの抽象化: アドレス空間</li>
+      <li>外部記憶装置の抽象化: ファイルシステム</li>
+      <li>ネットワークの抽象化: ソケット</li>
+    </ol>
+  </ol>
+  <li>プロセスとスレッド</li>
+  <ol>
+    <li>提供される抽象化</li>
+    <ol>
+      <li>スレッド，プロセス</li>
+      <li>シグナル</li>
+    </ol>
+    <li>C言語と機械語</li>
+    <li>事例: i386, SPARC, Alpha, IA64</li>
+    <li>CPUの多重化: コルーチンの実現法</li>
+    <li>割り込み</li>
+    <li>スレッドの状態</li>
+    <li>CPUの割り当てアルゴリズム</li>
+  </ol>
+  <li>仮想記憶</li>
+  <ol>
+    <li>提供される抽象化: アドレス空間</li>
+    <li>物理アドレスと論理アドレス</li>
+    <li>ページ表とTLB</li>
+    <li>ページング</li>
+    <li>ページ置換アルゴリズム</li>
+  </ol>
+  <li>仮想記憶プリミティブとその応用</li>
+    <ol>
+      <li>ページ保護のためのAPI</li>
+      <li>チェックポインティング</li>
+      <li>効率的な自動メモリ管理</li>
+    </ol>
+  <li>ファイルシステム</li>
+  <ol>
+    <li>提供される抽象化</li>
+    <ol>
+      <li>ドライブ，ディレクトリ，ファイル</li>
+      <li>open/read/write</li>
+      <li>ファイルのメモリへのマッピング</li>
+      <li>アクセス制御</li>
+      <li>権限委譲</li>
+    </ol>
+    <li>空き領域管理</li>
+    <li>ディスクのスケジューリング</li>
+  </ol>
+</ol>
+</div>
+
+<a name=past_presentations></a>
+<h2>過去の発表 (の不完全なリスト)</h2>
+
+<div>
+もし過去にこの授業で発表をした人がこのページをたまたまおとずれ, 
+自分の名前が無いことを発見したら, 気を悪くせず, 発表資料を
+田浦まで送って下さい. 資料がない場合でも(過去の記録を真面目に持っていないので)
+発表したという事実と年度をお送り下さい.
+むしろ最近のものが欠けている.
+
+<ul>
+
+  <li>2017年度
+    <a href=2017/OS_presentation_slides.pdf>発表資料</a>
+  </li>
+
+<li>2013年度
+<a href=2012/shimazu-os-presentation.pdf>島津真人</a>
+<ul>
+  <li><a href=http://ci.nii.ac.jp/naid/110003180349>
+      EDFスケジューリングでの応答時間予測</a>
+  <li><a href=http://lwn.net/images/conf/rtlws11/papers/proc/p16.pdf>
+      An EDF scheduling class for the Linux kernel</a>
+  <li><a href=http://www.sciencedirect.com/science/article/pii/S1383762111000348>
+      Multiprocessor real-time scheduling</a>
+  <li><a href=http://retis.sssup.it/~giorgio/paps/2006/ospert06-gai.pdf>
+      Efficient EDF Implementation for Small Embedded Systems</a>
+  <li><a href=https://github.com/jlelli/sched-deadline>
+      EDFが実装されたlinuxカーネル</a>
+  </li>
+</ul>
+
+<li>2010年度
+  <a href=2010/nakatani.pdf>中谷翔 Linuxのスケジューリング調査と超低優先度プロセスの実装</a>
+</li>
+
+<li>2009年度
+<a href=2009/Scheduler-Activations.ppt>Jonas Jahanson. Scheculer Activations</a>
+</li>
+
+<li>2008年度
+<a href=2008/david_vm.pdf>David Jageberg, Analysis of the Intel
+Pentium's ability to support a secure Virtual Machine Monitor</a>
+</li>
+
+<li>2007年度
+<a href=2007/CFS.pdf>松田徹也, Chimed. Linux スケジューラの研究</a>,
+<a href=2007/opt.pdf>原健太朗 OPT置換の最適性の証明</a>,
+<a href=2007/opt_slide.pdf>スライド</a>.
+</li>
+
+<li>2003年度
+<a href=2003/talks/vmware-danu.pdf>
+ダヌシカ ボレガラ 
+Virtualizing I/O Devices on VMware Workstation's VMM</a>
+</li>
+
+<li>2002年度
+<a href=2002/talks/WinBe-OS-toyoshima.pdf>
+  豊島隆史 Win32 on BeOS</a>
+</li>
+
+<li>2001年度
+<a href=2001/talks/vmware-suekane.ppt>
+三輪誠, 末包昌司 Virtualizing I/O Devices on VMware Workstation VMM
+</a>
+</li>
+
+</ul>
+</div>
+
+<h2>過去ログ</h2>
+
+<h3>2021</h3>
+<div>
+  <font size="-3" color="grey">
+  <ul>
+    <li><font color=blue>(投稿日 2/1)</font>
+      <font color="purple">
+        今日の試験の内容はあと48時間ほど,
+        ツイート, バラマキは禁止です.
+      </font>
+    </li>
+    <li><font color=blue>(投稿日 2/1)</font>
+      <font color="purple">
+        UTASで授業アンケートを投稿可能だそうですので,
+        お願いします
+      </font>
+    </li>
+    <li><font color=blue>(投稿日 1/31)</font>
+      明日の試験を受ける人は<a href="html/exam2021.html">実施要領</a>
+      を今一度読んでおいてください(1/12以降, 内容の大幅な更新は
+      ありませんが, 順番など入れ替えて整理しています).
+    </li>
+    <li><font color=blue>(投稿日 1/31)</font>
+      Jupyter環境が何度も繋げなくなることがあってご迷惑をおかけしました.
+      <p>
+        何が起きているのかを調査したところどうやら,
+        <ul>
+          <li>(a) notebookをひとつ開くとそのプロセスが100MB - 200MBくらいのメモリを消費すること(これはJupyterがそもそもそうなのかもしれません), </li>
+          <li>さらに, (b) Kernelのshutdown, ログアウト, Stop My Serverなどいろいろやっても, そのプロセスが残ることがあること(これはSOSカーネル, Cカーネル, もしくはその組み合わせあたりに問題があるよう)</li>
+        </ul>がわかりました. その結果, しばらく運用しているとどんどんメモリが食いつぶされ, やがてOut of Memory という状態になっているようでした.
+      </p>
+
+      <p>
+        すぐに抜本的回避策が見つかるとは思えないことと, (a)についてはユーザが多数のnotebookを開いていると必然的に生じてしまうことから抜本的な解決策は追求せず, 対処療法として, 1/31 13:30 頃から, マシンのメモリを増やして再立ち上げをします. ご了承ください(長くても 15:30ごろには復活できるとおもいます).
+      </p>
+    </li>
+    <li><font color=blue>(投稿日 1/31)</font>
+      <p>
+        16:00 ごろ, マシンの再立ち上げは終了しました. 時間がかかりすいません.
+        一度触ってみて, 異常がないことを確かめてもらえるとありがたいです.
+        不審な点があればお知らせください.
+        一点, SSH コマンドで端末でアクセスしている人向けのお知らせ.
+        マシンの最立ち上げによりホストのキーが変わった関係で,
+        SSHでアクセスしようとすると以下のようなエラーが(多分)出ます.
+      </p>
+<pre>
+$ ssh u21xxx@taulec.zapto.org        
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ED25519 key sent by the remote host is
+SHA256:V6uBZv9txFCAk8drAK6X5f1Oi7zz6IYnQt2kwCtJ9dc.
+Please contact your system administrator.
+Add correct host key in /xxxxxx/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /xxxxxx/.ssh/known_hosts:21
+Host key for taulec.zapto.org has changed and you have requested strict checking.
+Host key verification failed.
+</pre>
+      <p>
+対処方法は, 基本は, 書かれているエラーメッセージの指示に従えばよいですが,
+上記の場合は, /xxxxxx/.ssh/known_hostsというファイルの 21行目がエラーの原因
+(Offending ECDSA key)ということなのでその行を取り除けばよいです.
+      </p>
+      <p>
+その後もう一度SSHするときに「初めて見るホストだけどつなげてよいか?」みたいなことを
+聞かれるのでよいと答えてください(今回のエラーは,
+「前につなげたホストと違うのにつないでいるみたい」というエラーです).
+よく考えると, 本当はホストが持っているキーを保存して新しいホストへ移行すれば,
+こんなことにはならなかったのだと思いますがすいません(あ, でもIPアドレスが違うという
+ところは文句を言われるかな. 確信なし).
+      </p>
+      <p>
+        なおknown_hosts の所定の行を消す代わりに, ファイルをまるごと消しても普通は問題ありません
+        (以前につないだホストの情報がすべて失われるのでしばらくSSHするたびに,
+        「初めて見るホストだけどつなげてよいか?」みたいなことを聞かれることになる).
+      </p>
+      <p>
+        また, 田浦はよく知らない vscode というエディタで,
+      taulec.zapto.org上のファイルを(中ではSSH経由で)アクセスして編集するという
+      機能を使っている人も, 同じ理由でエラーを食らうようです.
+      添付のようなエラーになるという報告がありました. 理由と対処方法は上記と同じですので,
+      上記と同じように対処してみてください.
+
+        <a href="img/vscode-ssh-error.png"><img src="img/vscode-ssh-error.png" width=300/></a>
+      </p>
+    </li>
+    <li><font color=blue>(投稿日 1/11)</font>
+      本日1/11(火)予行演習後に,
+      試験の<a href="html/exam2021.html">実施要領</a>を更新しています.
+      試験時に手順を正しく実行できるよう, よく読んでおいてください.
+    </li>
+    <li><font color=blue>(投稿日 1/10)</font>
+      1/11 (火) 最終回の予定
+      <ol>
+        <li>試験の予告と, <font color="red">予行演習 (20分程度)</font></li>
+        <li>発表 by 飯田君 (70分程度) 「WebAssembly を利用したServerless Computing の効率化」(<a href="https://drive.google.com/file/d/1Qi_ts3p4VbNZViH2Tu9xiMfgCjw90Hmq/view?usp=sharing" target="_blank">資料</a>, <a href="https://www.usenix.org/system/files/atc20-shillaker.pdf" target="_blank">元論文</a>, 発表学会(USENIX Annual Technical Conference)での<a href="https://www.usenix.org/conference/atc20/presentation/shillaker" target="_blank">ページ</a>)</li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 1/10)</font>
+      試験とその予行演習の<a href="html/exam2021.html">実施要領</a>.
+      教室にいる人も試験時間帯は全員Zoomに接続してください.
+    </li>
+    <li><font color=blue>(投稿日 1/2)</font>
+      <ul>
+        <li><font color="green">1/4 --- リアルタイム講義はなし</font></li>
+        <li>教材スライド
+          <ul>
+            <li>スライド8: <a href="slides/pdf/08_signal.pdf">シグナル</a></li>
+            <li>スライド9: <a href="slides/pdf/09_vm_app.pdf">仮想記憶APIの応用</a></li>
+          </ul>
+        </li>
+        <li>説明ビデオを講義録画と同じ場所(YouTubeとGoogle Drive)にあげています.
+          URLはITC-LMS上に掲載しています
+        </li>
+        <li>見やすいよう, トピックごとに細切れにしています(7本).
+          YouTubeで連続再生できますのでそれで見ることを勧めます
+        </li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 12/21)</font>
+      以降の予定. 
+      <ol>
+        <li>以降を<font color="green">オンデマンド</font>
+          で講義予定(年末, 年始にかけて)
+          <ol>
+            <li>シグナル, 仮想記憶の応用</li>
+            <li>仮想マシンを使ってみる; OSをインストールしてみる</li>
+          </ol>
+        </li>
+        <li><font color="green">1/4 --- なし</font> (オンデマンド教材に変えます)</li>
+        <li><font color="green">1/11 の講義 --- 発表 by 飯田君 (Serverless Computingについて)</font></li>
+        <li>試験はオンラインで行います
+          (普段のJupyter環境を使った解答回収).
+          詳細仕様などはここでアナウンスします.</li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 12/21)</font>
+      <ol>
+        <li>説明 <a href="slides/pdf/07_everything_is_file.pdf">
+            ファイルディスクリプタと擬似ファイル</a></li>
+        <li>演習 os13 (15分)</li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 12/21)</font>
+      ITC-LMSに課題(os13)を追加しました
+    </li>
+    <li><font color=blue>(投稿日 12/14)</font>
+      <ol>
+        <li>説明 (35分): <a href="slides/pdf/06_file_system.pdf">ファイルシステム (mmap の実装, 主記憶と 2 次記憶の統合, API p26-)</a></li>
+        <li>休憩(5分) + 演習 os12, os13 (15分)</li>
+        <li>説明 (35分) <a href="slides/pdf/07_everything_is_file.pdf">ファイルディスクリプタと擬似ファイル</a></li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 12/14)</font>
+      os09, os10, os11, os12 の解説動画をアップしました
+    </li>
+    <li><font color=blue>(投稿日 12/14)</font>
+      2020年度 期末試験問題を<a href=exams/ >アップ</a>しました
+    </li>
+    <li><font color=blue>(投稿日 12/07)</font>
+      <ol>
+        <li>説明 (40分): <a href="slides/pdf/06_file_system.pdf">ファイルシステム (ファイルシステムの役割, API p1-p18)</a></li>
+        <li>休憩 (5分)</li>
+        <li>説明 (35分): <a href="slides/pdf/06_file_system.pdf">ファイルシステム
+            (ファイルシステム高速化のための OS の機構 p19-p25) </a></li>
+        <li>演習 (10分): os10</li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 12/06)</font>
+      演習 os10, os11をアップしています 
+    </li>
+    <li><font color=blue>(投稿日 12/06)</font>
+      os06 の解答例 ans_os06 をアップしています
+    </li>
+    <li><font color=blue>(投稿日 11/30)</font>
+      <ol>
+        <li>説明 (30分): <a href="slides/pdf/05_memory.pdf">メモリ管理 p42- (ページ置換)</a></li>
+        <li>演習 os08, os09 (10分) + 休憩 (5分) + 解説 (10分)</li>
+        <li>説明 (35分): <a href="slides/pdf/05_memory.pdf">メモリ管理 (ページ置換 続き)</a></li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 11/30)</font>
+      os05 の解答例 ans_os05 をアップしています
+    </li>
+    <li><font color=blue>(投稿日 11/16)</font>
+      <ol>
+        <li>説明 (35分): <a href="slides/pdf/05_memory.pdf">メモリ管理 p8-p30 (アドレス変換, メモリ管理APIとその動作)</a></li>
+        <li>演習os08 (5分) + 休憩(5分)</li>
+        <li>Quiz (sli.do <a href="https://app.sli.do/event/kwbsourz/live/questions" target="_blank">2021a-os</a>) </li>
+        <li>説明 (20分): <a href="slides/pdf/05_memory.pdf">メモリ管理 p31-p41 (資源使用量を知る・制御するAPI)</a></li>
+        <li>演習os09 (10分)</li>
+        <li>説明 (20分): <a href="slides/pdf/05_memory.pdf">メモリ管理 p42- (ページ置換)</a></li>
+      </ol>      
+    </li>
+    <li><font color=blue>(投稿日 11/09)</font>
+      <ol>
+        <li>説明 (40分): <a href="slides/pdf/04_concurrent.pdf">並行処理 (頻忙待機, デッドロック)</a></li>
+        <li>演習os07 (5分) + 休憩(5分)</li>
+        <li>説明 (40分): <a href="slides/pdf/05_memory.pdf">メモリ管理</a></li>
+      </ol>      
+    </li>
+    <li><font color=blue>(投稿日 11/01)</font>
+      <ol>
+        <li>説明 (30分): <a href="slides/pdf/04_concurrent.pdf">並行処理 (条件変数)</a></li>
+        <li>演習 (15分): os06</li>
+        <li>休憩 (5分)</li>
+        <li>説明 (40分): <a href="slides/pdf/04_concurrent.pdf">
+            並行処理 (不可分更新命令, 頻忙待機, デッドロック)</a></li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 10/26)</font>
+      <ol>
+        <li>クイズ (5分): スケジューリングに関して</li>
+        <li>デモ (10分): スケジューリング可視化(os03), vruntime可視化(os04)</li>
+        <li>説明 (30分): <a href="slides/pdf/04_concurrent.pdf">並行処理 (排他制御, バリア同期まで)</a></li>
+        <li>演習 (15分): os05</li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 10/26)</font>
+      新しいJuptyerノートブックos04, os05がFetch可能
+    </li>
+    <li><font color=blue>(投稿日 10/19)</font>
+      <ol>
+        <li>説明(15分): <a href="slides/pdf/02_threads.pdf">スレッド</a></li>
+        <li>演習(10+分): os02</li>
+        <li>説明(50分?): <a href="slides/pdf/03_scheduling.pdf">スケジューリング</a></li>
+        <li>演習(15分): os02, os03</li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 10/19)</font>
+      新しいJuptyerノートブックos02, os03がFetch可能
+    </li>
+    <li><font color=blue>(投稿日 10/14)</font>
+      os01ですが, 練習を兼ねて, 提出課題とします. 課題のダウンロードから
+      提出までの流れ(以降も同様):
+      <ol>
+        <li>Download (Fetch)<br />
+          <ul>
+            <li>Jupyterのトップページ上で Assignments タブを選択</li>
+            <li>当該課題 (今回の場合 os01) が Downloaded assignments になければ, Released assignments にあるはずなので, FetchボタンでDownloadする</li>
+          </ul>
+        </li>
+        <li>課題を実行<br />
+          <ul>
+            <li>Downloaded Assingments の当該課題 (今回の場合 os01) をクリック, 現れるファイル名 (今回の場合 os01_process.sos) を開く</li>
+            <li>説明を読み, 実行できるセルは実行したり, 理解を深めるために少しいじって実行するなどする</li>
+            <li>Problem となっているのが課題. 問題文に従って解答(大概の場合プログラム)を書いて実行</li>
+            <li>こまめにCtrl-Sで保存(定期的に自動保存されるが, こまめな保存を心がける)</li>
+            <li>画面上部に(unsaved changes)となっていたら保存されていない変更がある. (autosaved)となっていたら保存済み</li>
+          </ul>
+        </li>
+        <li>Jupyter上で提出
+          <ul>
+            <li>Jupyterのトップページ上で Assignments タブを選択</li>
+            <li>当該課題 (今回の場合 os01) の Downloaded assignments セクションの Submit ボタンを押す (Validate にも何か気の利いた役割があると思われるがあまり気にしなくて良い)</li>
+          </ul>
+          なお, [3]は締め切り前までに何度でも実行可能. 実は締切後でもできるが, 提出時刻とともに保存されているので, 締切をちょろまかすことはできません.
+        </li>
+        <li>ITC-LMS上で提出
+          <ul>
+          </ul>ITC-LMS上には以下のようなテキストだけを提出すれば良い
+<pre>
+=======
+(オプション: 適宜時候の挨拶など(「いかがお過ごしでしょうか」的な)を挿入)
+課題 os01 をJupyter上でSubmitしました
+=======
+</pre>
+        </li>
+      </ol>
+    </li>
+    <li><font color=blue>(投稿日 10/12)</font>
+      os01 という新たなJupyter notebookがFetch可能になっています
+    </li>
+    <li><font color=blue>(投稿日 10/12)</font>
+      <ul>
+        <li>説明 <a href="slides/pdf/01_process.pdf">プロセス</a></li>
+        <li>演習 os01</li>
+      </ul>
+    </li>
+      
+    <li><font color=blue>(投稿日 10/04)</font> 
+      対面講義@241講義室(工学部2号館4F) + オンラインです
+      (URLは<a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2021FEN-EE3d16L10J01" target="_blank">ITC-LMS</a>参照)</li>
+    <li><font color=blue>(投稿日 10/04)</font> 
+      授業中の質問は口頭, sli.do (event code: <a href="https://app.sli.do/event/kwbsourz/live/questions" target="_blank">2021a-os</a>), Zoom chat
+    </li>
+    <li><font color=blue>(投稿日 10/04)</font> 
+      必須の連絡は本HPとITC-LMSで行います.
+      秘密でない公開して差し支えないアナウンスは基本, 本HPでやります.
+    </li>
+    <li><font color=blue>(投稿日 10/04)</font> 
+      任意参加の連絡手段としてEEIC Slack
+      (チャンネル: #2021a-オペレーティングシステム)を用意しました.
+      参加のリンクは
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2021FEN-EE3d16L10J01" target="_blank">ITC-LMS</a>にあります (SNSなどへの拡散は厳禁)
+    </li>
+    <li><font color=blue>(投稿日 10/04)</font> 授業時間外の田浦への連絡手段
+      <ul>
+        <li>メール ( tau あっと eidos.ic.i.u-tokyo.ac.jp) 確実. </li>
+        <li>Slack ( #2021a-オペレーティングシステム )
+          1日2日読まないことがあるが読んでれば早い.
+          クラスメートが答えてくれるかもしれない</li>
+        <li><a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2021FEN-EE3d16L10J01" target="_blank">ITC-LMS</a> の教員宛メッセージ: 極力読み忘れないよう心がけます...</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 10/04)</font>
+      教室に来る人はできるだけMOCHAを利用してください
+      <a href="https://drive.google.com/file/d/1_7yXeAVCPPd_rv2qerj8q0vHrVTIlUxq/view" target="_blank">やり方. (要東大Googleアカウント)</a>
+    </li>
+    
+    <li><font color=blue>(投稿日 10/02)</font> 2021年版HP開設</li>
+  </ul>
+  </font>
+</div>
+
+<h3>2020</h3>
+<div>
+  <font size="-3" color="grey">
+  <ul>
+    <li><font color=blue>(投稿日 1/30)</font>
+      試験の採点結果(feedback)を返します.
+      <a href="html/jupyter_feedback.html">アクセス方法・見方</a>
+    </li>
+    <li><font color=blue>(投稿日 1/30)</font>
+      <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=T6978HAr10eaAgh1yvlMhKiEyE2V_T1Ao4OzeJJKaG1UN09XTFUxQlc3NDVaMFMxNk42TlIyRTNGVi4u">
+        試験採点後のアンケート(ミニマム所要時間 数分)</a>
+      に答えてください. なおもうすぐ大学での今学期全体に対するアンケート
+      が発出されるのでそちらもお願いします.
+    </li>
+    <li><font color=blue>(投稿日 1/20)</font>
+      試験お疲れ様でした. UTASに授業アンケートがあるのでお答えください.
+    </li>
+    <li><font color=blue>(投稿日 1/20)</font>
+      試験後にもう一つ課題を出すと言いましたが,
+      重さを考えて取りやめます.
+    </li>
+    <li><font color=blue>(投稿日 1/17)</font>
+      遅くなりすみませんが, 試験の実施案内
+      (なお更新中)
+    </li>
+    <li><font color=blue>(投稿日 1/17)</font>
+      遅ればせながら,
+      提出課題とした os07_concurrency.sos, os15_mmap_ex_revised.sos
+      の解答を配布しました
+      (os07_concurrency.sos.ans, os15_mmap_ex_revised.sos.ans).
+      一部の(易しい)問題の解答は省略している
+    </li>
+    <li><font color=blue>(投稿日 1/5)</font>
+      <ul>
+        <li>ピチュカ君による発表 50分
+          <a href="html/pitchuka.pdf">(Meltdown, Virtual Machineについて)</a></li>
+        <li>今日は試しにITC-LMSで出欠を取ります. ITC-LMSの出欠に行ってください.
+        passcodeはchatで知らせます</li>
+        <li>試験のやり方に関する予告, 練習, 質問受付け 40分</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 1/5)</font> 試験形式の練習を行う.
+      <ul>
+        <li>ピチュカ君による発表後の30分ほどを用いて行う</li>
+        <li>問題は<a href="html/os2020_practice.pdf">
+            暗号化されたPDF</a>を試験開始少し前に配布</li>
+        <li>試験開始時にZoomでPDFの複合化パスワードを配布</li>
+        <li>解答はJupyter notebook上の解答用ページ
+          (試験開始前にアクセスできる)に行う.
+          以下, 解答用ページのアクセス方法 (<a href="https://drive.google.com/file/d/1xOWPRVK_BpgulHcVCXCuAM4kbO9harHv/view?usp=sharing">動画</a>)
+          
+          <ol>
+            <li>いつものJupyter notebookページに行く</li>
+            <li>上部に, <font color="blue">
+                Formgrader, Courses, Assignments</font>
+              というタブが見つかるはず</li>
+            <li>解答用紙を見てよい旨の合図があったら
+              そこで<font color="blue">Assignments</font>をクリック.
+              それ以前にクリックしてもエラーになる</li>
+            <li><font color="blue">Released assignments</font>の中に
+              <font color="blue">practice</font>が現れるのでその右の
+              <font color="blue">Fetch</font>ボタンを押す
+            </li>
+            <li><font color="blue">Downloaded assignments</font>の中に
+              <font color="blue">practice</font>が現れるのでクリックすると,
+              <font color="blue">answer_sheet.sos</font>
+              が現れるのでクリックすると, 解答用紙が現れる
+            </li>
+            <li>NAME (氏名)を忘れず記入すること.
+            </li>
+            <li>COLLABORATORSは空欄のまま(もちろん誰ともCOLLABORATEしてはいけない)
+            </li>
+            <li>解答を終えたら解答用紙を開く前のページに戻り,
+              <font color="blue">SUBMIT</font>ボタンを押して提出.
+            </li>
+          </ol>
+        </li>
+        <li>提出は試験時間内であれば何度しても構わない.
+          試験時間後は提出しないこと.
+          仮に試験時間後に提出しても無視されるだけのはずだが,
+          意図的にやったと思われぬよう, やらないようにすること.
+        </li>
+        <li>解答をどこにどう書けばよいかは解答用ページを見ればわかると思うが,
+          選択式や文章での記述問題(プログラムを書かせる以外の問題)は,
+          Pythonのセルで ans という変数に答えを代入する形式にしてある.
+          ansに, 少なくとも解答としてあり得る値が入っているかを
+          チェックする機能があるので利用されたい. ただしこれはもちろん,
+          正解かどうかをチェックしているのではないので注意.
+          これをパスしたからと言ってなにかが保証されるわけではない.
+        </li>
+        <li>本番もこれと同様の形式で行う予定だが, 詳細の変更があるかも知れない.
+          詳細な情報はこのホームページに掲載するので適宜チェックすること.
+        </li>
+        <li>ルール
+          <ul>
+            <li>カメラやマイクをONにしての監視は行わないが,
+              部屋には一人で試験を受けるにふさわしい状態を確保し,
+              場合によってそれらをオンにできる状態にしておくこと
+            </li>
+            <li>マニュアル, 本, Googleで見つかるようなページを参照しても良い</li>
+            <li>人の助けを借りるのはダメ, 助けかどうかは関係なく人と話すのは禁止</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    
+    <li><font color=blue>(投稿日 12/22)</font>
+      予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画確認</li>
+        <li><a href="slides/pdf/07_everything_is_file.pdf">ファイルディスクリプタと擬似ファイル</a></li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 12/22)</font>
+      下記はos15_mmap_ex_revised.sosという名前で12/16に配布済みのつもりです.
+      万が一なければお知らせください.
+    </li>
+    <li><font color=blue>(投稿日 12/22)</font>
+      ITC-LMSに二つ課題を出しています(os07_cuncurrency.sos,
+      os15_mmap_ex_revised.sos)
+    </li>
+    <li><font color=blue>(投稿日 12/15)</font>
+      os14_mmap_ex.sos の中の, 結果をテストする部分に誤りがありました.
+      正解のプログラムを書いても結果が正しくないと言われてしまいます.
+      修正したnotebookを(極力本日中に)リリースしますので,
+      少々お待ちくださいm(_ _)m
+      授業中に説明した, 自分でチェックする方法を用いてある程度のチェックを
+      しておいてくれれば,
+      リリースされ次第プログラムをコピペするだけで済むと思います.
+    </li>
+    <li><font color=blue>(投稿日 12/15)</font>
+      予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画確認</li>
+        <li><a href="slides/pdf/06_file_system.pdf">ファイルシステム</a> 30分</li>
+        <li>Jupyter os13_mmap.sos</li>
+        <li>Jupyterで演習 (模擬試験のつもりで?) os14_mmap_ex.sos</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 12/15)</font>
+      <a href="#eval">評価について</a>
+    </li>
+    <li><font color=blue>(投稿日 12/8)</font>予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画確認</li>
+        <li><a href="slides/pdf/06_file_system.pdf">ファイルシステム</a></li>
+        <li><a href="slides/pdf/06_file_system.pdf">Jupyterで演習 os12_cache_prefetch.sos</a></li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 12/1)</font>予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画確認</li>
+        <li><a href="slides/pdf/06_file_system.pdf">ファイルシステム</a></li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 11/24)</font>予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画確認</li>
+        <li><a href="slides/pdf/05_memory.pdf">メモリ管理(仮想記憶) ページ置換</a></li>
+        <li>Jupyter notebook os11_vm_madvise.sos (大部分は前回のos10_vm.sosの再掲)</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 11/17)</font>予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画確認</li>
+        <li><a href="slides/pdf/05_memory.pdf">メモリ管理(仮想記憶)</a></li>
+        <li>Jupyter notebook os10_vm.sos</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 10/27)</font>予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画確認</li>
+        <li><a href="slides/pdf/04_concurrent.pdf">並行処理</a>
+          続き(15分)
+        </li>
+        <li><a href="slides/pdf/05_memory.pdf">メモリ管理(仮想記憶)</a>イントロ(25分)</li>
+        <li>Jupyter notebook os09_addr.sos</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 10/28)</font>
+      授業で使っているJupyter notebook環境
+      を自分の手元で使いたい人向けに
+      <a href="https://github.com/taura/install_some_jupyter_kernels">
+        コードを公開</a>しました.
+      <pre>git clone https://github.com/taura/install_some_jupyter_kernels.git</pre>
+      または
+      <pre>git clone git@github.com:taura/install_some_jupyter_kernels.git</pre> 
+      <ul>
+        <li>Cの環境:
+          <a href="https://github.com/brendan-rius/jupyter-c-kernel">
+            jupyter-c-kernel</a>
+          を修正・拡張しています</li>
+        <li>CとPythonを1ページに同居できる
+          <a href="https://vatlab.github.io/sos-docs/">sos カーネル</a>
+          のインストールスクリプトも同梱
+        </li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 10/27)</font>予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画確認</li>
+        <li>並行処理続き</li>
+        <li>Jupyter notebook os07_concurrency.sos</li>
+        <li>Jupyter notebook os08_lock.sos</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 10/20)</font>予定
+      <ul>
+        <li>8:30+ 開始</li>
+        <li>録画開始(忘れぬよう)</li>
+        <li>並行処理 (やんごとなき事情により早めに終わります.
+          録画 + 演習でフォローしますm(_ _)m)</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 10/13)</font>予定
+      <ul>
+        <li>8:30開始</li>
+        <li>録画開始(忘れぬよう)</li>
+        <li>スケジューラ</li>
+        <li>Jupyterで演習 (os05_vruntime.c, os05_vruntime_vis.py)</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 10/06)</font>予定
+      <ul>
+        <li>8:30開始</li>
+        <li>録画開始(忘れぬよう)</li>
+        <li>SSH補足</li>
+        <li>プロセス(exec)</li>
+        <li>スレッド</li>
+        <li>Jupyterで演習</li>
+      </ul>
+    </li>
+    <li><font color=blue>(投稿日 9/29)</font>
+      <a name=ssh_does_not_work></a>
+      すみません. os00_intro.c の 3-3 SSH公開鍵の登録 / Register the SSH public key のところで以下の手順が示されていますがこれでは SSH のログインに失敗します.
+<pre>
+//% cmd: mkdir -p ~/.ssh/
+//% cmd: cp id_rsa.pub ~/.ssh/authorized_keys
+//% cmd: cat ~/.ssh/authorized_keys
+</pre>
+    直すには以下を実行してください.
+<ol>
+      <li>画面上部の + ボタンでセルを作る</li>
+      <li>以下のように打ち込んで SHIFT + ENTER
+<pre>
+//% cmd: chmod 755 ~/.ssh
+//% cmd: chmod 644 ~/.ssh/authorized_keys
+</pre>
+      </li>
+</ol>
+確認:
+<pre>
+//% cmd: ls -ld ~/.ssh
+//% cmd: ls -l ~/.ssh/authorized_keys
+</pre>
+として出力が以下のよう(drwxr-xr-x と rw-r--r--) になっていれば正解です
+<pre>
+drwxr-xr-x 2 u20xxx u20xxx 4096 Jun 23  2019 /home/u20xxx/.ssh
+-rw-r--r-- 1 u20xxx u20xxx 1662 Jun 23  2019 /home/u20xxx/.ssh/authorized_keys
+</pre>
+  </li>
+  <li><font color=blue>(投稿日 9/29)</font>
+    <ol>
+      <li>8:30開始</li>
+      <li>録画開始</li>
+      <li>イントロ</li>
+      <li>環境</li>
+      <li>プロセス</li>
+    </ol>
+  </li>
+  <li><font color=blue>(投稿日 9/29)</font>
+    演習環境(Jupyter)ページのURLを受け取るため(だけ)の課題を
+    <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE3d16L10J01">
+      ITC-LMS</a>で提出しているので今すぐ提出してください
+  </li>
+  <li><font color=blue>(投稿日 9/29)</font>
+    急ぎませんがそのうち使うので<a href="html/vm_install/">仮想マシンにLinux 環境</a>
+    を作っておきましょう
+  </li>
+  <li><font color=blue>(投稿日 9/19)</font> 2020年版HP開設</li>
+  <li><font color=blue>(投稿日 9/19)</font>
+    <a href="https://itc-lms.ecc.u-tokyo.ac.jp/">ITC-LMS</a>
+    上で自分の連絡先を, 普段良く読むメールアドレス(またはLINE)
+    に設定しておいてください.
+    重要事項の連絡に, ITC-LMSに登録されたメールアドレスを使うことがあります.
+  </li>
+</ul>
+  </font>
+</div>
+
+<h3>2019</h3>
+<div>
+  <font size="-3" color="grey">
+    <ul>
+      <li><font color=blue>(投稿日 3/1)</font>
+        <a href=exams/ >過去問</a>ページに試験の解答と講評をアップ.
+      </li>
+      <li><font color=blue>(投稿日 3/1)</font>
+        試験答案の返却を行います.
+        事務室に3/3 (火)以降行けば回収可能です. ◯, △, などがわかるだけで, 点数も書いていません.
+        自分の点数の概算が知りたければ講評を参照してください.
+        採点や, 成績(優良可, 不可)に間違いがあるのでは,
+        と思う人は答案の写メと共に問い合わせをしてください.
+        その際成績はレポートと総合(比率はおよそ5:3程度)でつけられている,
+        1点や2点で成績が変わることはあまりないことに注意してください. 
+      </li>
+      
+      <li><font color=blue>(投稿日 1/6)</font>
+        1/7の近藤くん, 吉田くんによる発表
+        「Meltdown脆弱性 〜ｺﾝﾋﾟｭﾛﾋﾟｭﾛｱｯｷﾃｸﾁｮ!!〜」の
+        <a href="https://docs.google.com/presentation/d/1IKZSrx94A64p5SyrA2D-Queplw_c9de-yXebad7v6aA/edit?usp=sharing" target="_blank">発表資料</a> (<a href="2019/Meltdown脆弱性-kondo-yoshida.pdf">PDF保存</a>)
+        と<a href="https://www.usenix.org/node/217479" target="_blank">主に紹介している原論文のページ</a>,
+        その<a href="https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-lipp.pdf">PDF</a>
+        資料から, 非常に素晴らしい発表になりそうなので, 絶対にお見逃しなく.
+        質問をしましょう. 手をあげたくない人は
+        <a href="https://www.sli.do" target="_blank">
+          sli.do</a>に書き込んでも良い. コード
+        は <font color="blue"><tt>#os0107</tt></font>
+      </li>
+      
+      <li><font color=blue>(投稿日 12/16)</font>
+        演習課題をLMSで 二つ出していますので期限までに提出して下さい.
+        <ul>
+          <li>演習 5 「仮想記憶」 締切 1/10 (土) 23:55</li>
+          <li>演習 6 「ページ置換アルゴリズムの観察」 締切 1/10 (土) 23:55</li>
+        </ul>
+      </li>
+      
+      <li><font color=blue>(投稿日 12/16)</font>
+        最終回 1/7に近藤くん, 吉田くんによる発表
+        <blockquote>
+          <font color="blue">「Meltdown脆弱性 〜ｺﾝﾋﾟｭﾛﾋﾟｭﾛｱｯｷﾃｸﾁｮ!!〜」</font>
+          (原文ママ)
+        </blockquote>
+        が行われます. 田浦の授業に飽きたのでもういいや, な人も参加して下さい.
+      </li>
+      
+      <li><font color=blue>(投稿日 11/26)</font>
+        番外講義:
+        <a href="gen/slides2/quantum_supremacy/pdf/quantum_supremacy_slide.pdf">「Googleの量子超越性について」</a>
+        と
+        <a href="https://forms.gle/MyeLFMQegCGB4bFA6" target="_blank">アンケート(時間内に答えてください)</a>
+      </li>
+      
+      <li><font color=blue>(投稿日 11/12)</font>
+        11/19は休講 m(_ _)m
+        メモリに関する演習課題を(多分)出すのでそれをやって下さい.
+      </li>
+      
+      <li><font color=blue>(投稿日 11/06)</font>
+        演習 2 「同期, スレッドセーフなデータ」の課題2-2の出題に不備がありました(<a href="2019/bb/">詳しい説明</a>).
+        不備を修正したものを新しい演習4としてLMSで追加しています.
+        課題2-2の代わりにこちらをやって下さい.
+        不備を指摘してくれた新君 ありがとうございます.
+        不備にもかかわらず問題の意図を汲んでやってくれた人もありがとうございます.
+        そういう人には2度手間となりすいませんが, 演習4も提出して下さい(演習2-2の答えと同じでよいはず).
+        <ul>
+          <li>演習4 「演習2 課題2-2の不備訂正」 締切 11/23 (土) 23:55</li>
+        </ul>
+      </li>
+      
+      <li><font color=blue>(投稿日 11/05)</font>
+        <a href="https://forms.gle/W2RLKBxYfz5UJmgZ7" target="_blank">OSクイズ3</a>
+      </li>
+      
+      <li><font color=blue>(投稿日 10/30)</font>
+        演習課題をLMSで <strike>二つ</strike> <font color=red>三つ</font>出していますので期限までに提出して下さい.
+        <font color=red size=-1>当初二つと表示し, LMS でも 演習x2 とお知らせしましたが3つです. 紛らわしくすいません</font>
+        <ul>
+          <li>演習 1 「スレッドプログラミングの基本」 締切 11/9 (土) 23:55</li>
+          <li>演習 2 「同期, スレッドセーフなデータ」 締切 11/16 (土) 23:55</li>
+          <li>演習 3 「不可分命令を用いた更新」 締切 11/16 (土) 23:55</li>
+        </ul>
+      </li>
+      <li><font color=blue>(投稿日 10/14)</font> 10/15およびそれ以降の演習環境のURLを,
+        LMSの
+        <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course/report/submission?idnumber=2019FEN-EE3d16L10J01&reportId=19262" target="_blank">提出練習のための課題</a>に対するコメントとして返していますので入手してください.
+      </li>
+      <li><font color=blue>(投稿日 10/8)</font>
+        <a href="https://forms.gle/arCdXJrL6uPbCt4H6"
+           target="_blank"> クイズその2 </a>
+      </li>
+      <li><font color=blue>(投稿日 10/8)</font>
+        10/15の授業時間の一部を使って, 演習をやります.
+        PC持参してください.
+        とりあえず来週は最低限ブラウザが動けば良いです.
+      </li>
+      <li><font color=blue>(投稿日 10/8)</font>
+        LMSを通した
+        <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course/report/submission?idnumber=2019FEN-EE3d16L10J01&reportId=19262" target="_blank">提出練習のための課題</a>
+        を設定したので指示に従って提出してください.
+        すぐに締切です. <font color="red">10/8 (木)</font> です.
+      </li>
+      <li><font color=blue>(投稿日 9/23)</font> 2019年版HP開設</li>
+      <li><font color=blue>(投稿日 9/23)</font>
+        <a href="https://itc-lms.ecc.u-tokyo.ac.jp/">ITC-LMS</a>
+        上で自分の連絡先を, 普段良く読むメールアドレス(またはLINE)
+        に設定しておいてください.
+        重要事項の連絡に, ITC-LMSに登録されたメールアドレスを使うことがあります.
+      </li>
+      <li><font color=blue>(投稿日 9/23)</font>
+        <a href="https://forms.gle/8vTtuSr43R6FGg4g8">9/24 授業中のクイズ(匿名)</a>
+      </li>
+    </ul>
+  </font>
+</div>
+
+<h3>2018</h3>
+<div>
+  <font color="gray" size="-3">
+    <ul>
+      <li><font color=blue>(投稿日 3/3)</font>
+        <ul>
+          <li>試験の配点・採点基準・解答例・補足説明などを
+            <a href="exams/">過去問ページ</a>に記しました</li>
+          <li>採点済み解答用紙を事務から返却しています.
+            自分の答案がどう採点されたか知りたい人は取ってください
+            (点数は記入していません. ◯と, 上の配点を元に自分で計算してください.
+            満点は100ではなく86です. 最高点80. 平均点39.3)</li>
+        </ul>
+      </li>
+      
+      <li><font color=blue>(投稿日 2/24)</font>
+        オペレーティングシステムの試験を受けているが, 課題を一部または全部提出していない人あてに以下のような連絡を, ITC-LMSに登録されたメールアドレスあてに送信しています(該当しない人には送っていません). メールが届かない事態を恐れてここにも掲示しますが, 不安な人はITC-LMS上で課題の提出状況が自分の理解とあっているか確かめて下さい. 
+
+        <pre>
+          (ITC-LMSに登録されたメールアドレスに送信しています).
+
+          田浦です.
+
+          このメールは, オペレーティングシステムの試験を受けているが, 課題を一部または全部がITC-LMS上で提出されていない人に送られています.
+
+          課題1: unagi_serverのスレッド用いたgetの並列化 (締め切り2018/12/1)
+          課題2: unagi_serverのスレッド用いた安全な並列化 (締め切り2018/12/1)
+
+          間違いがないか確認し, 「きちんと提出したはずなのにITC-LMS上で提出されていない. 何かの間違いのはず」という場合は連絡を下さい. その際, 授業でコードやレポートの提出に用いたdoss-gitlab上の課題提出フォルダへのリンクも送って下さい(例: https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/xxxxxx/unagi/tree/master/submit ).
+
+          注: あくまでシステム上の間違いで提出したはずのレポートが受け取られていないことがないかを確認するための連絡です. これからのレポート提出を受け付けるという意味ではありません.
+        </pre>
+
+      </li>
+      <li><font color=blue>(投稿日 2/5)</font>
+        <font color=red>申し訳ありません.</font>
+        <a href="gen/unagi/tau/unagi/html/document_repository.html" target="_blank">
+          「第2回課題」
+        </a>
+        の詳細をここに公表すると約束しておりましたが,
+        それを準備する時間が取れずに今に至ってしまいました.
+        成績報告の締め切りを考えると, 今から数日後に課題の詳細を
+        発表しても, 締切の近い課題を急に出すことになり,
+        試験後に諸々の予定を入れていた人の都合を考えると迷惑を受ける人も
+        いるのではないかと思いますので,
+        <font color=red>「第2回課題(概要)」はとりやめます.</font>
+        概要に基づいて課題を実行した人には申し訳ありません
+        (が, 試験でも関連した問題を出したので役に立ったのではないかと思います:-).
+        所用に時間を取られすぎ, こちらの思っていた授業・演習の準備ができずに終わり,
+        申し訳なく思っております m(_ _)m
+      </li>
+      <li><font color=blue>(投稿日 1/7)</font>
+        UTASにもアナウンスしましたが, 明日(1/8)は休講です.
+        各自演習に取り組むなどしてください(来る必要はありません).
+        課題に関する詳細は引き続きこのページ上に掲載するので見続けてください.
+      </li>
+      <li><font color=blue>(投稿日 12/11)</font>
+        <a href="https://sli.do">sli.do</a> (イベントコード: os1211)
+        の質問に,
+        「今までの演習でやったmutex等の機能はhimonoにも追加する必要があるのでしょうか」というのがありました. 答え: 必要ありません(必須課題とはしません).
+        ただし提供されているコードはオプション(-t 1)でスレッドを立ち上げる
+        ようにはなっています.
+        lockだけ追加してくれれば(恐らくそれほど大変ではない)
+        スレッド機能を移行することは, 比較的簡単にできると思います.
+      </li>
+      <li><font color=blue>(投稿日 12/11)</font>
+        <a href="gen/unagi/tau/unagi/html/document_repository.html" target="_blank">
+          第2回課題(概要)
+        </a>のための説明
+      <li><font color=blue>(投稿日 12/11)</font>
+        オンライン質問用
+        <a href="https://sli.do">sli.do</a>
+        イベントコード
+        <font color=blue><tt>os1211</tt></font>
+      </li>
+      <li><font color=blue>(投稿日 12/4)</font>
+        12/11 の時間内に, 以下の説明と,
+        演習の時間を作る予定. PCの準備をしてきてください.
+      </li>
+      <li><font color=blue>(投稿日 12/4)</font>
+        <p>
+          unagiサーバの次の(+最後の)課題は, 以下のようなものになる予定.
+        </p>
+        <ul>
+          <li>データを永続化(= ファイルに格納)できるようにする.
+            それにより, </li>
+          <ul>
+            <li>一度蓄積(put)されたデータは,
+              サーバを一度終了, 再起動してもすぐに復活できるようにする</li>
+            <li>同時に, 主記憶よりも大きなデータを扱えるようにする.</li>
+          </ul>
+        </ul>
+        <p>
+          現在のunagiサーバは,
+          起動時には常に空の状態であるし,
+          データは全て主記憶にしかおかないので,
+          主記憶を越えるデータを扱うのは難しい
+          (正確には「スラッシング」がおこる).
+          どちらもちゃんとした検索エンジンにはあってはならない状態.
+        </p>
+        <p>
+          関連して,
+        </p>
+        <ul>
+          <li>データの検索を高速に行うための, 索引付けの機能</li>
+        </ul>
+        <p>
+          も必要になる. 現在はすべての検索を,
+          全ドキュメントをスキャン(頭から終わりまで全て読む)することで
+          実現しているが, 遅い.
+          ただし索引は, 多分にアルゴリズムの要素が強くOSの本題とはやや離れる,
+          索引にも様々なやり方がある, 正しく自力で実装するのは大変,
+          などの理由から, こちらで参照コードを提供する
+          (しかし例によって, 出す方の準備が間に合っていない状態orz).
+          検索については, 配列の2分探索 (binary search) を復習しておくと良い
+          (2分「木」探索ではなく, 配列の2分探索).
+        </p>
+        <p>
+          課題を行う上での解説がたくさん必要なので必要事項の解説を
+          次週(12/11)に行う予定. 
+        </p>
+      </li>
+      <li><font color=blue>(投稿日 11/20)</font>
+        すぐ下の投稿に関連して, 発表者を
+        <a href="#tanni">軽く募集してみる.</a>
+      </li>
+      <li><font color=blue>(投稿日 11/20)</font>
+        半分余談: <a href="https://meltdownattack.com/" target="_blank">
+          SpectreとかMeltdown</a>に関する
+        <a href="https://arxiv.org/abs/1811.05441">最近の論文</a>
+        とそれに関する<a href="http://www.itmedia.co.jp/enterprise/articles/1811/15/news059.html">記事 (他にも多数)</a>
+      </li>
+      
+      <li><font color=blue>(投稿日 11/11)</font>
+        11/13 はこの授業ありません(全学的な補講日).
+      </li>
+      <li><font color=blue>(投稿日 11/6)</font>
+        今日授業で見せた実験を自分でやりたい人用のページ:
+        <a href=gen/ex/mem_ex/index.html>メモリ管理に関する演習</a>
+        (興味のある人用に公開します. 課題とは無関係です)
+      </li>
+      
+      
+      <li><font color=blue>(投稿日 11/6)</font>
+        課題の提出方法について
+        <a href="https://www.eidos.ic.i.u-tokyo.ac.jp/~tau/lecture/operating_systems/gen/unagi/tau/unagi/html/" target="_blank">
+          演習・課題の実施手順
+        </a>のページに書きました(要約: 中身はgitで提出. ITC-LMSを使って報告のための提出.
+        締切はITC-LMSを参照).
+        個々の課題については,
+        <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/tree/master/assignments"
+           target="_blank">課題の説明フォルダ</a>を参照.
+      </li>
+      <li><font color=blue>(投稿日 11/6)</font>
+        課題2について, 詳細をアップしました.
+        <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/tree/master/assignments">課題の説明フォルダ</a>の<a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/blob/master/assignments/02thread_put.md">02thread_put.md</a>を見て下さい.
+      </li>
+      <li><font color=blue>(投稿日 11/6)</font>
+        <font color=red>予告:</font> 以下の2個の課題の締切は,
+        <blockquote>
+          <font color=red>多分, 3週間後(11/27 ごろ)</font>
+        </blockquote>
+        になる予定です.
+        <font color=gray>相変わらず提出手順など詳細未定義で
+          すいませんが, 追ってアナウンスします. 内容ですが,
+          長い作文は課しません. 所定の手順で
+          走らせる(こちらで実行, 確認)ことができるコードを,
+          gitlabで提出し, 正しく実行し, 性能測定を行ったという
+          ことがわかるログのようなもの(だけ)の提出とする予定です
+          (翻訳: 実際にプログラミングを実行する以外の部分を多く課さない).
+          詳細指示は常に gitlab の所定の
+          <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/tree/master/assignments">フォルダ</a>に書きます.</font>
+      </li>
+      
+      <li><font color=blue>(投稿日 11/6)</font>
+        <font color=gray>
+          詳細は後日書きますが, 2個目の課題は以下のような感じになる
+          予定です.
+          <blockquote>
+            最初の課題(以下)を拡張して, put (ドキュメントの追加)要求が
+            他の要求と並行してやってきても正しく処理できる(データが壊れない)
+            ようにせよ.
+
+            <font color=orange>ヒント:</font>
+            授業でやった Pthread の mutex を使えば良い.
+            ただしそれだと get 要求まですべて排他制御して処理することになる.
+            Pthreadの reader writer lock という物を使うと,
+            reader しかいない間はそれらを並行に走らせることができる.
+          </blockquote>
+        </font>
+      </li>
+      <li><font color=blue>(投稿日 10/30)</font>
+        <font color=gray>
+          今日の授業と演習に関する質問は,
+          <a href="https://sli.do">sli.do</a> で<font color=orange>「も」</font>
+          受け付けます. イベントコード <font color=blue><tt>os1030</tt></font>
+          を入力して下さい.
+          なにか動かないみたいなことで悩まずお気軽に(追いつける限り処理します).
+        </font>
+      </li>
+      <li><font color=blue>(投稿日 10/30)</font>
+        <a href="https://www.eidos.ic.i.u-tokyo.ac.jp/~tau/lecture/operating_systems/gen/unagi/tau/unagi/html/" target="_blank">
+          演習・課題の実施手順
+        </a>詳細版. 以前の指示に従って作業をし始めている人も,
+        こちらに従って下さい.
+      </li>
+      
+      <li><font color=blue>(投稿日 10/16)</font>
+        <font color=gray>
+          詳細は後日書きますが, 最初の課題は以下のような感じになる
+          予定です.
+          <blockquote>
+            スレッドを用いて, サーバが複数の接続を並行に処理するようにせよ.
+            そして, 多数の get, getc 要求を並行に処理できるようにせよ.
+            ただしそのとき, put (ドキュメントの追加)要求が
+            他の要求と並行にやってくることはないと仮定して良い.
+            言い換えれば, もしputが他の要求と並行にやってきたら,
+            異常動作, サーバが終了するなど, 何がおきても構わない
+            (「動作は未定義」が仕様).
+            putを並行処理することの何が問題かは本日の講義で理解してください.
+
+            <font color=orange>ヒント:</font>
+            関係個所は run_server という関数. 接続を受付け,
+            出来た接続を処理する関数 server_process_connection
+            が, 新しいスレッドによって処理されるように書き換える.
+          </blockquote>
+        </font>
+      </li>
+      <li><font color=blue>(投稿日 10/16)</font>
+        <font color=gray>
+          演習の課題の詳細とか, 何を提出するのとか,
+          締め切りとか, どうなのっていう質問があると思いますが
+          もう少しお待ちください <tt>m(_ _)m</tt>
+          詳細(難易度の調整, 提出方法, etc.)を詰めているところです
+          (言い換え: 諸事情により田浦の処理が追いついていない).
+          ある日突然難しい課題を出して「来週締め切り」とかはしませんので,
+          待っていてください.
+        </font>
+      </li>
+      <li><font color=blue>(投稿日 10/9)</font>
+        <font color=red>
+          上記 (投稿日 10/30)の新しい手順に従って下さい.
+          以下をすでにやった人はすいませんがもう一度上記に従い,
+          すでに書いたコードなどは変更点をマニュアルで切り貼りして下さい.
+        </font>
+        
+        <strike><a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi"
+                   target="_blank">
+            演習用題材</a>
+          をまずはダウンロードしてください. gitコマンドが使える場合は以下です.
+          <pre>
+            git clone https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi.git
+          </pre>
+          使えない場合は, ダウンロードボタンがページの上の方にあるので,
+          好きなものを使ってダウンロードしてください.
+          今日は紹介と以降の予定を説明します.
+          質問を <a href="https://sli.do/" target="_blank">sli.do</a>でevent code <font color=red>4405</font> と入力して投げてください.</strike>
+      </li>
+      <li><font color=blue>(投稿日 10/2)</font>
+        10/2の授業中に見せたプログラムを,
+        自分で試してみたい人向けに<a href="gen/ex/threads_processes/">公開</a>
+        します. ページの最下部にプログラムへのリンクがあります
+        (注: 昨年度までの演習ページです.
+        今年度の演習では使う予定ありません.
+        自習したい人向け). 
+      </li>
+      <li><font color=blue>(投稿日 10/2)</font>
+        次回(10/9)演習をします. PC持参お願いします.
+        以下のいずれかの環境を用意してください(gccでUnixシステムコールを
+        使ったプログラムが動かせる環境). 事前テストの仕方や,
+        環境のセットアップの仕方は来週までにここにあげるのでこまめに見てください.
+        <ul>
+          <li>Linux</li>
+          <li>Mac OS</li>
+          <li>Windowsしかない人は以下の選択肢.
+            おすすめ順(調査の結果順序が変わるかも)
+            <ul>
+              <li>
+                <a href=gen/ex/mem_ex/vm_and_linux.html>仮想マシン + Linux</a>
+              </li>
+              <li>
+                Windows + Bash on Windows (調査中)
+              </li>
+              <li>
+                Windows + cygwin (あまりおすすめしない)
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><font color=blue>(投稿日 9/21)</font> 2018年版HP開設</li>
+    </ul>
+  </font>
+</div>
+
+<h3>2017</h3>
+<div>
+  <font color="gray" size="-3">
+    <ul>
+      <li>(投稿日 1/4) 新年最初の(唯一の)授業予定日1/9の授業は休講にします.
+      </li>
+      <li>(投稿日 12/9) 今日の発表は非常に良い発表でした.
+        4年生以降, 自分で
+        発表するときに真似して欲しい
+        点がいっぱいありましたので
+        <a href=2017/good_presentation.html>書き残します</a>.
+      </li>
+      <li>(投稿日 12/12) <font color=blue>12/19</font>の,
+        浅井さん, 王君による発表で取り上げる論文です.
+        興味のある人は事前に読んでおきましょう.
+        <blockquote>
+          Performance Implications of Extended Page Tables on Virtualized x86 Processors
+          <a href=2017/OS_presentation_slides.pdf>発表資料</a>,
+          <a href=https://dl.acm.org/citation.cfm?id=3139652>元論文</a>
+        </blockquote>
+      </li>
+      <li>(投稿日 11/28) <font color=blue>12/19</font>に,
+        浅井さん, 王君による発表があります.
+        <blockquote>
+          発表テーマ: 仮想マシンに関して
+        </blockquote>
+      </li>
+      <li>(投稿日 11/21) 来週<font color=blue>11/28</font>に,
+        後半は<a href=gen/ex/mem_ex/index.html>メモリ管理に関する演習</a>をします．
+        この演習をやるために,
+        <a href=gen/ex/mem_ex/vm_and_linux.html>仮想マシンと,
+          仮想マシンへの小さなLinux環境のインストール</a>
+        をやっておいてください(授業中にやらないように).
+      </li>
+      <li>(投稿日 9/25) 来週<a href=gen/ex/threads_processes/index.html>
+          10/3の時間内に演習</a>を行うので，準備をしておいて下さい
+        (<font color=red>特に普段Linuxを使っていない人は，
+          環境を整えておいて下さい．
+          トラブルがあったら質問・相談してください</font>)</li>
+      <li>(投稿日 9/25) 2017年版HP開設</li>
+    </ul>
+  </font>
+</div>
+
+<h3>2016</h3>
+<div>
+  <font color="gray" size="-3">
+    <ul>
+      <li>(投稿日 1/27) 試験問題中で述べた
+        <a href=http://www.u-tokyo.ac.jp/ja/news/events/events_z0114_00010.html>
+          パリサ・タブリズさん (Google) の講演会 2/10 17:00〜
+        </a>のお知らせです．セキュリテイ + 女子IT教育，
+        どちらかでも興味のある人は気軽に参加してください．
+      </li>
+      
+      <li>(投稿日 1/20) <a href=exams/ >過去問リスト</a>を更新しました．</li>
+
+      <li>(投稿日 1/17)
+        今日は金曜の授業だったんですね orz.
+        結局去年最後の授業が最終回というまま，終わってしまいました．
+        授業評価アンケートは試験日に回収しますのでよろしくお願いします．
+        もちろん試験範囲は授業でやった範囲となります．
+      </li>
+      <li>(投稿日 12/27)
+        すみません，年明けの
+        <blockquote>1/10 (火) の授業を休講</blockquote>
+        とさせていただきます．
+      </li>
+      <li>(投稿日 12/13) 
+        (<a href=gen/ex/para/index.html>11/15にやった演習</a>)
+        の提出締め切りですが，
+        <blockquote>
+          <font color=red>2017年1/16 (月) 23:59</font>
+        </blockquote>
+        とします．</li>
+      <li>(投稿日 12/13) <font color=blue>12/13</font>の授業は，前半説明，
+        後半はメモリ管理に関する<a href=gen/ex/mem_ex/index.html>演習</a>をします．</li>
+      <li>(投稿日 11/12) <font color=red>11/15は演習</font>をします
+        (<a href=gen/ex/para/index.html>内容</a>)．
+        1回目の演習と同じ準備をして来て下さい．</li>
+
+      <li>(投稿日 10/20) すみませんが，<font color=red>来週10/25 (火)は休講</font>
+        とします．
+      </li>
+      <li>(投稿日 10/11) 口頭で，今日演習をすると言っていましたが，都合により一週延期します．
+        次回に備えて下を読んでおいて下さい．
+      </li>
+      <li>(投稿日 10/11) 来週<a href=gen/ex/threads_processes/index.html>10/18の時間内に演習</a>
+        を行うので，準備をしておいて下さい(<font color=red>特に普段Linuxを使っていない人は，
+          環境を整えておいて下さい．トラブルがあったら質問・相談してください</font>)</li>
+    </ul>
+  </font>
+</div>
+
+<h3>2015</h3>
+<div>
+  <font color="gray" size="-3">
+    <ul>
+      <li>(投稿日 12/15) 田浦の授業はもういいという人も，
+        <font color=blue>残り2回はお見逃しなく</font></li>
+      <li>(投稿日 12/15) <font color=blue>12/22</font>の授業は，前半説明，
+        後半はメモリ管理に関する<a href="gen/ex/mem_ex/index.html">演習</a>をします．</li>
+      <li>(投稿日 12/15) <font color=blue>12/22</font>の授業では，
+        <font color=blue>柴藤大介君</font>と<font color=blue>石毛真修君</font>
+        による制作物<font color=blue>Circlass</font>を用いた，
+        授業中の質問投稿システムを試用します．
+        田浦の授業はどうでも良いが，
+        Circlassを見てみたい，この機会に質問をしたい，
+        という人も，お見逃しなく</li>
+      <li>(投稿日 12/15) 1/5 は学生有志による発表(2件)を行います．
+        <ul>
+          <li><font color=blue>発表1: 有薗拓也君</font>
+	    タイトル<a href="2015/arizono.pdf">「ログ構造化ファイルシステムの概要と動向」</a>
+	    <ul>
+	      <li>参考文献</li>
+	      <li><a href="http://dl.acm.org/citation.cfm?id=146943">原典</a></li>
+	      <li><a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=repository_uri&item_id=25535&file_id=1&file_no=1">Linux用ログ構造化ファイルシステム</a></li>
+	      <li><a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=repository_uri&item_id=60758&file_id=1&file_no=1">ログ構造化ファイルシステムNLFSの設計と実装</a>
+              </li>
+            </ul>
+          </li>
+          <li><font color=blue>発表2: 野上和加奈さん </font>
+            タイトル:
+            <a href="2015/OSがあまりにわからなかったからとりあえず自分でOSつくっちゃった話.pdf">「OSがあまりにわからなかったからとりあえず自分でOSつくっちゃった話」</a>
+            <ul>
+              <li>参考文献</li>
+              <li><a href="http://kozos.jp/books/makeos/">
+	          12ステップで作る　組み込みOS自作入門</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      
+      <li>(投稿日 10/30) 10/30の演習の続き:
+        <ul>
+          <li>11/10 (火)の時間中はやりません</li>
+          <li>11/17 (火)の時間中に一部の時間をそれにあてる予定です</li>
+          <li>11/17 (火)までに問題(少し実践的な並列処理の問題)
+            を1-2追加する予定です</li>
+          <li>それを含め，12/1 (火) 23:59を締め切りとします</li>
+          <li>11/17 (火)の時間内だけで終わると思わずに，
+            今のうちにできるだけやっておいて下さい</li>
+        </ul>
+      </li>
+
+      <li>(投稿日 10/30) 今日の
+        <a href=gen/ex/para/index.html>演習</a>です．
+        前回の授業時から変更されています．
+      </li>
+
+      <li>(投稿日 10/27) 今日やると予告していた
+        <a href=gen/ex/para/index.html>演習</a>は，
+        時間があればやります．なければ来週に回します．
+      </li>
+      
+      <li>(投稿日 9/29) 来週<a href=gen/ex/threads_processes/index.html>10/6の時間内に演習</a>を行うので，準備をしておいて下さい(<font color=red>特に普段Linuxを使っていない人は，
+          環境を整えておいて下さい．トラブルがあったら質問・相談してください</font>)</li>
+      <li>(投稿日 9/28) 2015年度HP開設</li>
+    </ul>
+  </font>
+</div>
+
+<h3>2014</h3>
+<div>
+  <font color="gray" size="-3">
+    <ul>
+      <li>(投稿日 2/16) 試験の<a href=2014/ex_ans.pdf>
+          解答と講評</a>をアップしました．答案は，2/17以降，
+        事務で受け取れます．
+      </li>
+
+      <li>(投稿日 1/26) 1/27が最終回ですが，
+        システム創成学科 3年 味曽野雅史 君が以下の論文について
+        発表します．
+        <a href=https://www.usenix.org/conference/atc14/technical-sessions/presentation/kivity>OSv --- Optimizing the Operating System for Virtual Machines</a> 普段の授業に飽きた人もぜひ出席してください．
+        上記ページからPDFをダウンロードしてください．
+        万が一できない場合，<a href=2014/atc14-paper-kivity.pdf>
+          こちら</a>も試してください．
+
+        <a href=2014/slide-20150127.pdf>発表資料はこちら．</a>
+
+      <li>(投稿日 12/15) 
+        明日 (12/16)に<a href="gen/ex/mem_ex/">演習</a>を行います．PC (仮想マシンが使える環境)を準備してください．
+      </li>
+
+      <li>(投稿日 11/11) 
+        来週 (= 11/18) も<a href=gen/ex/para_basic/ >並行プログラミング演習</a>の続きをやります．
+        また, 進捗を提出してもらいます. 今日, 手が動かないと感じた人はいくつかの問題に手をつけるなど,
+        必要な練習をしておいてください.
+      </li>
+
+      <li>(投稿日 11/11) 
+        <a href=gen/ex/para_basic/ >並行プログラミング演習</a>ページです.
+      </li>
+
+      <li>(投稿日 10/21) 
+        <a href=http://enq-maker.com/9bpQAE5>
+          今日の演習に関するアンケート</a>
+        に答えてください</li>
+
+      <li>(投稿日 10/21) 
+        <a href=gen/ex/threads_processes/ >最初の演習</a>ページです.
+      </li>
+      <li>(投稿日 10/14) 次回は演習をします．追ってアナウンスします．準備
+        (およびそれ自体一度はやっとくといい演習)として，
+        <a href=gen/ex/vm_install>仮想マシンにLinuxをインストール</a>
+        しておいてください．</li>
+      <li>(投稿日 10/7) <a href="gen/ex/vm_install/">最初の宿題</a>ページ
+      </li>
+    </ul>
+  </font>
+</div>
+
+
+</body>
+</html>

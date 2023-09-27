@@ -1,0 +1,185 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="ja">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script src="js/lang.js"></script>
+
+    <title>仮想マシン, Linuxのインストール</title>
+
+    <style>
+      body {counter-reset: h2}
+      h2 {counter-reset: h3}
+      h3 {counter-reset: h4}
+      h4 {counter-reset: h5}
+      h5 {counter-reset: h6}
+
+      h2:before {counter-increment: h2; content: counter(h2) ". "}
+      h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+      h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+      h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+      h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+      h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+      h1 {
+          font-size   : 14pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 15pt ;
+          
+          border-color     : #99A1AA;
+          background-color : #BBDDBB;
+      }
+
+      h2 {
+          font-size   : 13pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 15pt ;
+          
+          border-color     : #99A1AA;
+          background-color : #CCEECC;
+      }
+
+      h3 {
+          font-size   : 12pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 1pt;
+          border-color     : #99A1AA;
+          background-color : #DDFFDD;
+      }
+
+      h4 {
+          font-size   : 10pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 1pt;
+          border-color     : #99A1AA;
+          background-color : #FFFFFF;
+      }
+
+      div {
+          font-size   : 12pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-color     : #99A1AA;
+      }
+
+      p {
+          font-size   : 12pt;
+          font-family : serif;
+          border-color     : #99A1AA;
+      }
+
+      ul {
+          font-size   : 12pt;
+          font-family : serif;
+          border-color     : #99A1AA;
+      }
+
+      pre {
+          background-color:#efe;
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <h1 class="ja">仮想マシン, Linuxのインストール</h1>
+    <div>
+      のやり方についてゆっくり解説しています.
+      <ul>
+        <li>Windows 10 Hyper-V に Ubuntuを入れる<br />
+
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/RytJid_mC_Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+        </li>
+        <li>注意:
+          Windows 10 Home editionだとHyper-Vの有効化が面倒なようです
+          (<a href="https://4thsight.xyz/36873" target="_blank"
+             rel="noopener">
+            やり方
+          </a>).
+          東京大学のライセンスではEducation editionが使えますので問題ないです
+        </li>
+        <li>Linuxに仮想マシンkvmを導入する<br/>
+          
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/JlPKuCBHifU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </li>
+        <li>Mac OS UTM に Ubuntu を入れる<br />
+
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/RW21h1jC6Z0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          
+        </li>
+        
+        <!--
+            <li>参考 Mac OS
+              <ul>
+                <li><font color="red">10/20 更新</font>
+                  YouTubeにあがっていた
+                  <a href="https://www.youtube.com/watch?v=MVLbb1aMk24">
+                    参考となる動画
+                  </a>
+                </li>
+                <li><font color="red">10/18 更新</font>
+                  Macな人へ:
+                  <a href="https://mac.getutm.app/" target="_blank" rel="noopener">
+                    UTM</a>なる仮想マシンが使える. M1でも使え, 無料で, Ubuntu
+                  も問題なくインストールできる(Thanks to: 小林亮太君@弊研究室)
+                </li>
+                <li>巷ではポピュラーな選択肢として以下があがっている. すでに持っている人はおそらくこちらでも良いのでしょう
+                  何のため? と思ってしまいます
+                  <ul>
+                    <li>Parallels (有料)</li>
+                    <li>VMware Fusion (有料)</li>
+                    <li>VMware Fusion Player (M1/M2 で動いたという確定的な情報はない)</li>
+                    <li>VirtualBox (M1/M2 Mac では動かない)</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            -->
+
+        <li>これが一度できるようになったら, 実マシンにLinuxをインストールすることも簡単にできるでしょう.
+          ただし, WiFiのドライバやグラフィクスに問題がないことを確かめるため,
+          Ubuntu Desktopのインストーラで起動することを推奨します.
+        </li>
+
+        <li>
+          ダウンロードしたイメージファイルをUSBメモリなどに書き込んで起動します. 書き込むツールはOSによりけりです
+          <ul>
+            <li>Windows
+              <a href="https://rtc-fukushima.jp/technical/4977/"
+                 target="_blank" rel="noopener">
+                例えばこれ</a>
+            </li>
+            <li>Ubuntu
+              <a href="https://kledgeb.blogspot.com/2012/10/ubuntu-1-usb.html"
+                 target="_blank" rel="noopener">
+                標準ツール</a>
+            </li>
+          </ul>
+        </li>
+
+        <li>USBから起動する際, 多くのPCでは起動時にF2ボタンを押すと, firmware (BIOS) メニューが出てきて,
+          USBからの起動を選択できるようになります
+        </li>
+        
+      </ul>
+    </div>
+  </body>
+</html>
+

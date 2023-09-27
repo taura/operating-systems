@@ -1,0 +1,537 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="ja">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script src="js/lang.js"></script>
+
+    <title>Jupyter環境へのアクセス方法 / How to access Jupyter environment</title>
+
+    <style>
+      body {counter-reset: h2}
+      h2 {counter-reset: h3}
+      h3 {counter-reset: h4}
+      h4 {counter-reset: h5}
+      h5 {counter-reset: h6}
+
+      h2:before {counter-increment: h2; content: counter(h2) ". "}
+      h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+      h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+      h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+      h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+      h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+      h1 {
+          font-size   : 14pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 15pt ;
+          
+          border-color     : #99A1AA;
+          background-color : #BBDDBB;
+      }
+
+      h2 {
+          font-size   : 13pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 15pt ;
+          
+          border-color     : #99A1AA;
+          background-color : #CCEECC;
+      }
+
+      h3 {
+          font-size   : 12pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 1pt;
+          border-color     : #99A1AA;
+          background-color : #DDFFDD;
+      }
+
+      h4 {
+          font-size   : 10pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 1pt;
+          border-color     : #99A1AA;
+          background-color : #FFFFFF;
+      }
+
+      div {
+          font-size   : 12pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-color     : #99A1AA;
+      }
+
+      p {
+          font-size   : 12pt;
+          font-family : serif;
+          border-color     : #99A1AA;
+      }
+
+      ul {
+          font-size   : 12pt;
+          font-family : serif;
+          border-color     : #99A1AA;
+      }
+
+      pre {
+          background-color:#efe;
+      }
+
+    </style>
+
+  </head>
+
+  <body onload="main()">
+
+  <body>
+
+    <h1 class="ja">Jupyter環境の使い方</h1>
+    <h1 class="en">How to access Jupyter environment</h1>
+
+    <div>
+      <p>
+        <a href="?lang=ja">
+          <img src=../img/japan_flag.png border=1 height=16 alt=Japanese />
+        </a>
+        /
+        <a href="?lang=en">
+          <img src=../img/english_flag.png border=1 height=16 alt=English />
+        </a>
+      </p>
+    </div>
+
+    <h2 class="ja">
+      ユーザ名・パスワード入手
+    </h2>
+    <h2 class="en">
+      Get your user name and password
+    </h2>
+    <div>
+      <ul>
+        <li class="ja">
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/"
+             target="_blank" rel="noopener">ITC-LMS</a>
+          で当該授業のページに行く
+        </li>
+        <li class="en">
+          Go to <a href="https://itc-lms.ecc.u-tokyo.ac.jp/"
+                target="_blank" rel="noopener">ITC-LMS</a>
+          and open the page of the course
+        </li>
+        
+        <li class="ja">
+          課題一覧の中から, "課題0: Jupyterパスワード" の,
+          「教員からのコメント」を見る(課題を提出する必要はない)
+        </li>
+        <li class="en">
+          From the assignment list, find "Assignment 0: Jupyter password"
+          and get its "Comments from the instructor" (you don't have to submit
+          a report for the assignment)
+        </li>
+        
+        <li class="ja">
+          注: 上記課題が見えない人は, ITC-LMSで受講登録する
+          (参考: <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/manual/download?file=2"
+                    target="_blank" rel="noopener">ITC-LMS学生向け利用マニュアル(簡易版) p23</a>)
+          注: ITC-LMS上で受講登録しても履修登録したことにはなりません.
+          履修することにした場合, <a href="https://utas.adm.u-tokyo.ac.jp/"
+                                     target="_blank" rel="noopener">UTAS</a>.
+          から履修登録してください.
+        </li>
+        <li class="en">
+          Note: if you do not find the assignment, register yourself to the course course
+          by "Register a course" button in ITC-LMS
+          (see: <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/manual/download?file=1"
+                   target="_blank" rel="noopener">ITC-LMS User Manual for Students p28</a>)
+          Note: registering to the course in ITC-LMS does not sign up for the course.
+          If you decide to sign up for the course, do it from
+          <a href="https://utas.adm.u-tokyo.ac.jp/"
+             target="_blank" rel="noopener">UTAS</a>.
+        </li>
+
+        <li class="ja">
+          「教員からのコメント」に
+<pre>user=u22xxx password=xxxxxxxx</pre>
+と書かれているのを見る. <a href="https://taulec.zapto.org:8000/"
+           target="_blank" rel="noopener">https://taulec.zapto.org:8000/</a>
+にアクセスしてユーザ名とパスワードを入力してログイン. うまくいけばこのようなページが現れる.
+        </li>
+        <li class="en">
+          Find something like
+<pre>user=u22xxx password=xxxxxxxx</pre>
+in "comments from the instructor".
+Visit <a href="https://taulec.zapto.org:8000/"
+         target="_blank" rel="noopener">https://taulec.zapto.org:8000/</a>
+and login with the user name and password. If nothing goes wrong, you will see a page like this.
+        </li>
+      </ul>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/Kh1FxiUA8Ok" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      
+    </div>
+
+    <h2 class="ja">
+      Nbgraderの使い方
+    </h2>
+    <h2 class="en">
+      Working with Nbgrader
+    </h2>
+    <div>
+      <ul>
+        <li class="ja">課題や演習用のファイルを配布するのにNbgraderを使う.</li>
+        <li class="en">We use Nbgrader to distribute files for assignments or excercises.</li>
+        
+        <li class="ja">上部メニューから, <font color="blue">Nbgrader</font> -&gt;
+          <font color="blue">Assignment List</font>を選択. このようなページが現れる.
+        </li>
+        <li class="en">Select <font color="blue">Nbgrader</font> -&gt;
+          <font color="blue">Assignment List</font> in the top manu, to see a page like this.
+        </li>
+        
+        <li class="ja">配布物がある場合, ページ上部に配布物の名前と<font color="blue">Fetch</font>というボタンが現れるので, ボタンを押して入手
+        </li>
+        <li class="en">When you have an item to work on, you find its name along with a <font color="blue">Fetch</font> button near top of the page, press the button to get it.
+        </li>
+
+        
+        <li class="ja">▶ をクリックすると配布されたファイルが現れるのでクリックして開く. </li>
+        <li class="en">Press ▶ to show files fetched. Click one to open it.</li>
+        
+        <li class="ja">あとはファイルに書かれている指示に従って作業をする.</li>
+        <li class="en">Follow instruction in the file.</li>
+      </ul>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/dGAfRZuHhJU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+      <ul>
+        <li class="ja">Jupyterlabのnotebookでの作業を課題として提出する場合,
+          Jupyterlabの<font color="blue">Nbgrader</font> -&gt;
+          <font color="blue">Assignment List</font> から
+          <font color="blue">Submit</font> ボタンで
+          提出しつつ, ITC-LMSでもその旨の報告だけ(一行)を提出する
+        </li>
+        <li class="en">When you send your work done in Jupyterlab
+          notebook, send it in Jupyterlab AND ITC-LMS;
+          in Jupyterlab, 
+          open <font color="blue">Nbgrader</font> -&gt;
+          <font color="blue">Assignment List</font> in the menu
+          and press <font color="blue">Submit</font> button;
+          In ITC-LMS, send a one-line report for the assignment
+          to say you have done that.
+        </li>
+      </ul>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/3LelysDSeTk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      
+    </div>
+
+    <h2 class="ja">
+      おかしなことになったら
+    </h2>
+    <h2 class="en">
+      If things go wrong ...
+    </h2>
+    <div>
+      <ul>
+        <li class="ja">Jupyterでは物事が思う通りに動かないことがよくあるので,
+          脱出・回避方法を覚えておくと良い
+        </li>
+        <li class="en">Things often go wrong with Jupyter.
+          You want to know how to escape from a wrong state.
+        </li>
+      </ul>
+      <ol>
+        <li class="ja">比較的穏やかなリセット方法: 上部のメニューから<font color="blue">Kernel</font>-&gt;
+          <font color="blue">Restart Kernel</font>
+          (または<font color="blue">Restart Kernel and Clear Output</font>)を選択
+        </li>
+        <li class="en">A modest way to reset: Select <font color="blue">Kernel</font>-&gt;
+          <font color="blue">Restart Kernel</font>
+          (or <font color="blue">Restart Kernel and Clear Output</font>)
+          from the top menu.
+        </li>
+
+        <li class="ja">すべてがダメなときのリセット方法: 上部のメニューから<font color="blue">File</font>-&gt;
+          <font color="blue">Hub Control Panel</font>を選択. <font color="red">Stop My Server</font>
+          を押して, <font color="blue">Start My Server</font>を押す.
+        </li>
+        <li class="en">The "reset all" for when nothing else works:
+          Select <font color="blue">File</font>-&gt;
+          <font color="blue">Hub Control Panel</font>
+          from the top menu.  Press <font color="red">Stop My Server</font>
+          and then <font color="blue">Start My Server</font>.
+        </li>
+      </ol>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/op_SMRq5EfU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    
+    <h2 class="ja">
+      Jupyter (webブラウザ) じゃなくて端末(SSH)で作業・編集したい
+    </h2>
+    <h2 class="en">
+      I want to work with command line (SSH), not within Jupyter (web browser)
+    </h2>
+    <div>
+      <ul>
+        <li class="ja">Jupyterは説明やサンプルプログラムを与え,
+          それを小規模に編集する環境としては良いが, エディタとしての機能は貧弱である.
+          普段使っているVSCode, Vim, Emacsなどを使いたいという向きもいることだろう.
+        </li>
+        <li class="en">Jupyter is great for distributing texts and sample programs
+          and lightly editing them.
+          However, it is a poor environment for editing and writing programs.
+          You might want to use editors you are familiar with, such as
+          VSCode, Vim, or Emacs.
+        </li>
+
+        <li class="ja">それにはまずSSHを使ってリモートログインできるようになる必要がある</li>
+        <li class="en">As a prerequisite, you need to be able to remote-login the server using SSH
+        
+        <li class="ja">SSHを使ってリモートログインできるようになるためには,
+          公開鍵認証というものを使って認証するため,
+          以下のような状態を作る必要がある. すなわち
+          <ul>
+            <li>SSHの秘密鍵が自分のマシンのホームディレクトリの <tt>.ssh/id_rsa</tt>という名前で,</li>
+            <li>SSHの公開鍵がJupyterサーバ(taulec.zapto.org)の <tt>.ssh/authorized_keys</tt>という名前で</li>
+          </ul>
+          保存されている状態.
+        </li>
+        <li class="en">To be able to remote-login with SSH, you need to set up the following
+          state for public key authentication to work. That is, you have
+          <ul>
+            <li>SSH private key with the name <tt>.ssh/id_rsa</tt> in your machine</li>
+            <li>SSH public key with the name <tt>.ssh/authorized_keys</tt> in the Jupyter server (taulec.zapto.org)</li>
+          </ul>
+        </li>
+
+        <img src="svg/ssh.svg" width=800/>
+
+        <li class="ja">
+          秘密鍵のファイル名 (<tt>id_rsa</tt>) は使われている暗号方式によって異なる可能性があり,
+          他には<tt>id_ed25519, id_dsa</tt> などがある
+        </li>
+        <li class="en">
+          The filename (<tt>id_rsa</tt>) depends on the crypto and it may be
+          <tt>id_ed25519, id_dsa</tt> etc.
+        </li>
+        
+        <li class="ja">秘密鍵, 公開鍵は, 持っていなければ自分のマシン上で生成し,
+          その中の公開鍵をJupyterサーバにアップロードする
+        </li>
+        <li class="en">If you do not have a pair of private/public key, generate them on your machine and upload the public key to the Jupyter server
+        </li>
+      </ul>
+    </div>
+
+    <h3 class="ja">
+      SSHを使ってリモートログインできるようになるための手順
+    </h3>
+    <h3 class="en">
+      How to set up for SSH login
+    </h3>
+    <div>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/Yv10Ul3PIzY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    
+    <h4 class="ja">
+      SSH鍵ペアの準備
+    </h4>
+    <h4 class="en">
+      Prepare an SSH key pair
+    </h4>
+    <div>
+      <ul>
+        <li class="ja">自分のホームフォルダの下に, <tt>.ssh/id_rsa</tt> と <tt>.ssh/id_rsa.pub</tt>
+          (または <tt>id_ed25519, id_ed25519.pub</tt> など)
+          というファイルがあれば, すでに鍵ペアを持っているのでここはスキップして良い
+        </li>
+        <li class="en">If <tt>.ssh/id_rsa</tt> and <tt>.ssh/id_rsa.pub</tt>
+          (or <tt>id_ed25519</tt> and <tt>id_ed25519.pub</tt> etc.) already exist,
+          you have a key pair and can skip this step
+        </li>
+        
+        <li class="ja">その確かめ方:
+          自分のコンピュータでコマンドライン端末を開き以下を実行
+              (Windows 10の場合, 普通のコマンドプロンプト(cmd)ではなく, powershellをお勧めする(lsというコマンドはpowershellで使えるがcmdでは使えない)
+        </li>
+        <li class="en">How to check: open the command line terminal in your computer and execute the following.
+              On Windows 10, use powershell instead of the legacy command prompt (cmd).
+              Powershell has <tt>ls</tt> command but cmd doesn't, for example.
+        </li>
+        <pre>$ cd .ssh/
+$ ls
+id_rsa id_rsa.pub
+</pre>
+        
+        <li class="ja">上記二つのファイル(他にもあるかも知れないが)が表示されれば, あるということ. </li>
+        <li class="en">If you see the above two files, among others, it means you already have them</li>
+
+        <li class="ja"><font color="red">id_rsa</font> が<font color="red">秘密鍵</font>,
+          <font color="blue">id_rsa.pub</font> (.pub で終わる) が<font color="blue">公開鍵</font>
+        </li>
+        <li class="en"><font color="red">id_rsa</font> is <font color="red">the private key</font>,
+          and 
+          <font color="blue">id_rsa.pub</font> (ends with .pub) <font color="blue">the public key</font>
+        </li>
+
+        <li class="ja">鍵ペアを持っていなければ以下のコマンドで作る</li>
+        <li class="en">If you don't have a key pair, generate one by the following command</li>
+
+        <pre>$ ssh-keygen</pre>
+        
+        <li class="ja">なおこのコマンドは上記のファイルが存在していれば上書きするかどうかを聞いてくる. 
+          したがって間違えて,
+          すでに鍵を持っているのにこのコマンドを実行してしまった場合もそこで気づくことが出来る.
+        </li>
+        <li class="en">If they already exist, this command asks if you want to overwrite them,
+          so even if you somehow miss existing files and execute this command, you will be
+          so informed.
+        </li>
+      </ul>        
+    </div>
+
+    <h4 class="ja">
+      公開鍵のJupyterサーバへのアップロード
+    </h4>
+    <h4 class="en">
+      Uploading public key to Jupyter server
+    </h4>
+    <div>
+      <ol>
+        <li class="ja">Jupyterlabの左側のファイル一覧でホームディレクトリが表示されている状態
+          (<tt>notebooks</tt>フォルダが一覧に表示されている状態)にして,
+          Jupyterのメニュー直下のUpload Filesアイコン <img src="img/upload.png" />をクリックし,
+          公開鍵ファイル(<font color="blue">id_rsa.pub</font>など)をアップロードする.
+          これでサーバのホームディレクトリの下に<tt>id_rsa.pub</tt>というファイルができる</li>
+        <li class="en">
+          In the left pane of the Jupyterlab, choose the home directory 
+          so <tt>notebooks</tt> is shown there.
+          Click the Upload Files icon <img src="img/upload.png" /> right below
+          the Jupyter menu to upload the public key file
+          (<font color="blue">id_rsa.pub</font> or another).
+          You will have the file <tt>id_rsa.pub</tt> under the
+          server's home directory</li>
+        
+        <li class="ja">Jupyterlab のメニューからFile -&gt; New Launcher を選択.
+          表示された中からNotebookの下のBashを選択</li>
+        <li class="en">Select File -&gt; New Launcher
+          in Jupyterlab menu.  Among icons listed, open Bash below Notebook</li>
+        
+        <li class="ja">セルに以下をコピーしてSHIFT + Enterで実行(<tt>~/notebooks/id_rsa.pub</tt>の部分はアップロードしたファイルの名に合わせて適宜変更)
+        </li>
+        <li class="en">Copy the following into a cell and execute it by SHIFT + Enter (change <tt>~/notebooks/id_rsa.pub</tt> below accordingly if the file name is different)
+        </li>
+
+<pre>mkdir -p ~/.ssh/
+cp ~/id_rsa.pub ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys</pre>
+        
+        <li class="ja">確認のために以下を実行</li>
+        <li class="en">Do the following to check</li>
+
+<pre>ls -ld ~/.ssh
+ls -l ~/.ssh/authorized_keys
+cat ~/.ssh/authorized_keys
+</pre>
+        
+        <li class="ja">以下のような結果が表示されれば成功</li>
+        <li class="en">If you see something like this, you are all set</li>
+<pre>
+drwx------ 2 u2xxxx u2xxxx 4096 Oct  4 22:19 /home/u22xxx/.ssh
+-rw------- 1 u2xxxx u2xxxx 394 Oct  4 22:19 /home/u22xxx/.ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9s/2Uiy187pQvMNVwlNMRTSNFnvj9EVwOPx9/qLuiQg086zXFB2eugxTL1Pw+ViQ  ...  ... uB/TiOnA0e6KDpU2h4 
+</pre>
+        
+        <li class="ja">ポイントは <tt>drwx------</tt> <tt>-rw-------</tt> のところと最後の文字列 <tt>ssh-rsa AAAAB3Nza ...</tt> の雰囲気. 最後に以下のような文字列が表示されたらそれは鍵の形式が違う.
+        </li>
+        <li class="en">The points to check are <tt>drwx------</tt> and <tt>-rw-------</tt> and whether the string in the last line looks like <tt>ssh-rsa AAAAB3Nza ...</tt>. If the last line looks like the following, it means the key format is wrong
+        </li>
+        
+        <li class="ja">以下は鍵の形式違いです</li>
+        <li class="en">A key in a wrong format</li>
+<pre>=== BEGIN SSH2 PUBLIC KEY ===
+gakjjkgdslkjgkljkjdakjdakljdkff
+tuireuproeqiutreiurewuriouoweu0
+      ...
+
+=== END SSH2 PUBLIC KEY ===
+</pre>          
+      </ol>
+    </div>
+
+    <h3 class="ja">
+      SSHログインできることを確認
+    </h3>
+    <h3 class="en">
+      Checking if you are able to login with SSH
+    </h3>
+    <div>
+      <ul>
+        <li class="ja">自分のコンピュータのコマンドライン端末から
+<pre>$ ssh ユーザ名@taulec.zapto.org
+</pre>
+        </li>
+        <li class="en">From your machine's command line terminal, do
+<pre>$ ssh your_username@taulec.zapto.org
+</pre>
+        </li>
+        <li class="ja"><font color="blue">ユーザ名</font> の部分はJupyter環境での自分のユーザ名でu2xxxx のような文字列で. ITC-LMS経由の課題のフィードバックとして各人に通知している</li>
+        <li class="en"><font color="blue">your_username</font> is your user name in the Jupyter environment and should look like <tt>u2xxxx</tt>.  You were informed through Comments from the instructor of an assignment in ITC-LMS</li>
+        
+        <li class="ja">うまく行くと, サーバのコマンドプロンプトが現れるはずである.</li>
+        <li class="en">If everything goes alright, you should see the server's command prompt</li>
+<pre>$ ssh u2xxxx@taulec.zapto.org
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 4.15.0-1054-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+
+   ...
+
+Last login: Sun Dec 15 16:29:26 2019 from 111.99.149.67
+$ 
+</pre>
+        <li class="ja">
+          これで, 端末内で動くエディタ(emacs, vim, nano, etc.)であれば
+          何でも利用可能.
+        </li>
+        <li class="en">
+        Then you should be able to run any editor running within a terminal
+        (emacs, vim, nano, etc.)</li>
+        
+        <li class="ja">
+          課題の一部として配布されるファイルはすべてホームディレクトリ直下の
+           <tt>notebook</tt>内にある
+        </li>
+        <li class="en">
+          All files distributed as part of assignments are in <tt>notebook</tt>
+          directory right under your home directory.
+        </li>
+        
+        <li class="ja">
+          VSCodeはGUIを要するため話が別で, 以下で説明する
+        </li>
+        <li class="en">
+          Running VSCode is another story as it requires GUI, explained below
+        </li>
+      </ul>
+    </div>
+    
+  </body>
+

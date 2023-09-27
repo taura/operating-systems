@@ -1,0 +1,369 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="ja">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script src="js/lang.js"></script>
+
+    <title>UTokyo Slack,
+      「EEIC: 工学部 電子情報工学科・電気電子工学科」ワークスペース
+      への入り方</title>
+
+    <style>
+      body {counter-reset: h2}
+      h2 {counter-reset: h3}
+      h3 {counter-reset: h4}
+      h4 {counter-reset: h5}
+      h5 {counter-reset: h6}
+
+      h2:before {counter-increment: h2; content: counter(h2) ". "}
+      h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+      h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+      h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+      h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+      h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+      h1 {
+          font-size   : 14pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 15pt ;
+          
+          border-color     : #99A1AA;
+          background-color : #BBDDBB;
+      }
+
+      h2 {
+          font-size   : 13pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 15pt ;
+          
+          border-color     : #99A1AA;
+          background-color : #CCEECC;
+      }
+
+      h3 {
+          font-size   : 12pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 1pt;
+          border-color     : #99A1AA;
+          background-color : #DDFFDD;
+      }
+
+      h4 {
+          font-size   : 10pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 1pt;
+          border-color     : #99A1AA;
+          background-color : #FFFFFF;
+      }
+
+      div {
+          font-size   : 12pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-color     : #99A1AA;
+      }
+
+      p {
+          font-size   : 12pt;
+          font-family : serif;
+          border-color     : #99A1AA;
+      }
+
+      ul {
+          font-size   : 12pt;
+          font-family : serif;
+          border-color     : #99A1AA;
+      }
+
+      pre {
+          background-color:#efe;
+      }
+
+    </style>
+
+  </head>
+
+  <body onload="main()">
+
+  <body>
+
+    <h1>UTokyo Slack,
+      「EEIC: 工学部 電子情報工学科・電気電子工学科」ワークスペース
+      への入り方 /
+      How to join the
+      "EEIC: 工学部 電子情報工学科・電気電子工学科"  workspace, 
+      UTokyo Slack
+    </h1>
+
+    <div>
+      <p>
+        <a href="?lang=ja">
+          <img src=../img/japan_flag.png border=1 height=16 alt=Japanese />
+        </a>
+        /
+        <a href="?lang=en">
+          <img src=../img/english_flag.png border=1 height=16 alt=English />
+        </a>
+      </p>
+
+      <p class="ja">
+        <a href="https://www.ee.t.u-tokyo.ac.jp/"
+           target="_blank" rel="noopener">
+          工学部 電子情報工学科・電気電子工学科
+        </a>
+        の多くの授業で, 東京大学が全学契約している
+        <a href="https://utokyo.enterprise.slack.com/"
+           target="_blank" rel="noopener">
+          UTokyo Slack
+        </a>を使って情報を共有します.
+        授業によって, 参加が任意の場合と事実上の必須の場合があるでしょう.
+      </p>
+
+      <p class="en">
+        Many courses in the
+        <a href="https://www.ee.t.u-tokyo.ac.jp/"
+           target="_blank" rel="noopener">
+          Department of Electrical and Electronic Engineering /
+          Department of Information and Communication Engineering
+        </a>,
+        Faculty of Engineering,
+        will use
+        <a href="https://utokyo.enterprise.slack.com/"
+           target="_blank" rel="noopener">
+          UTokyo Slack
+        </a> for information sharing.
+        Joining the Slack may be optional or mandatory depending
+        on the course.
+      </p>
+
+      <p class="ja">
+        担当の先生から
+        <b>
+          「EEIC: 工学部 電子情報工学科・電気電子工学科」ワークスペース
+          の授業用チャンネル (2022a-〇〇〇〇)へ参加してください</b>
+        と言われたら
+        以下のようにしてください.
+      </p>
+
+      <p class="en">
+        If your instructor says 
+        <b>
+          "Please join the lecture channel (2022a-XXXXXXXX) in 
+          「EEIC: 工学部 電子情報工学科・電気電子工学科」
+          workspace, "</b>
+        do the following.
+      </p>
+
+    </div>
+
+    <h2 class="ja">
+      入るための準備(初めてのときだけ)
+    </h2>
+    <h2 class="en">
+      Preparation (only for the first time)
+    </h2>
+    <div>
+      <ul>
+        <li class="ja">UTokyo Accountの<font color="red">多要素認証</font>
+          を有効にしてください.
+          (実際はSlackを使うか否かによらず推奨).
+          <ul>
+            <li>多要素認証の説明と推奨の理由. 
+              <a href="https://utelecon.adm.u-tokyo.ac.jp/events/2022-09-14/"
+                 target="_blank" rel="noopener">
+                utelecon説明会</a>
+              (2. セキュリティと多要素認証)
+              <a href="https://utelecon.adm.u-tokyo.ac.jp/events/2022-09-14/slides/02-security.pdf"
+                 target="_blank" rel="noopener">
+                資料</a>, <a href="https://youtu.be/ssQVcOE10pc"
+                             target="_blank" rel="noopener">動画</a>
+            </li>
+          </ul>
+        </li>
+        
+        <li class="en">Turn on <font color="red">Multi-Factor Authentication (MFA)</font> of UTokyo Account (recommended whether you use Slack or not).
+          <ul>
+            <li>What is MFA and why we recommend it?
+              See 
+              <a href="https://utelecon.adm.u-tokyo.ac.jp/events/2022-09-14/"
+                 target="_blank" rel="noopener">
+                utelecon meeting</a>
+              (2. セキュリティと多要素認証)
+              <a href="https://utelecon.adm.u-tokyo.ac.jp/events/2022-09-14/slides/02-security.pdf"
+                 target="_blank" rel="noopener">
+                slide deck</a>, <a href="https://youtu.be/ssQVcOE10pc"
+                                   target="_blank" rel="noopener">video</a>
+              (sorry that they are Japanese only)
+            </li>
+          </ul>
+        </li>
+        
+        <li class="ja">
+          <a href="https://utelecon.adm.u-tokyo.ac.jp/utokyo_account/mfa/"
+             target="_blank" rel="noopener">
+            設定の仕方はuteleconのページ
+          </a>に書いてあるので,
+          30分ほど時間のあるときに落ち着いて設定してください
+          <ul>
+            <li>
+              <font color="red">注意1:</font>
+              最後の「手順4：多要素認証の利用を申請する」を
+              <font color="red">忘れてしまう</font>人が多いのでご注意
+            </li>
+            <li>
+              <font color="red">注意2:</font>
+              設定後,
+              <font color="red">最大40分程待たないと有効にならない</font>
+              ので手順4をやってからしばらくお待ちください
+            </li>
+          </ul>
+        </li>
+
+
+        <li class="en">
+          <a href="https://utelecon.adm.u-tokyo.ac.jp/en/utokyo_account/mfa/"
+             target="_blank" rel="noopener">
+            The set up procedure is detailed in
+            utelecon page
+          </a>.  Please sit down and set up it when you have time
+          (at least 30 minutes)
+          <ul>
+            <li>
+              <font color="red">Remark 1:</font>
+              <font color="red">Many people forget</font> to do the last step
+              (Step 4: Apply for MFA use)
+            </li>
+            <li>
+              <font color="red">Remark 2:</font>
+              After you completed the set up procedure, 
+              <font color="red">it takes up to 40 minutes</font>
+              for MFA to become effective.
+              Please wait for a while after completing the set up.
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+
+    <h2 class="ja">チャネルへの参加の仕方</h2>
+    <h2 class="en">How to join the channel</h2>
+    <div>
+      <p class="ja">
+        上記設定が終わっ(て40分経過し)たら,
+      </p>
+      <p class="en">
+        After you complete the setup (and wait for 40 minutes),
+      </p>
+      <ol>
+        <li class="ja">
+          <a href="https://utokyo-eeic.slack.com"
+             target="_blank" rel="noopener">
+            「EEIC: 工学部 電子情報工学科・電気電子工学科」ワークスペース
+          </a>にアクセス
+        </li>
+        <li class="en">
+          visit <a href="https://utokyo-eeic.slack.com"
+             target="_blank" rel="noopener">
+            「EEIC: 工学部 電子情報工学科・電気電子工学科」 workspace
+          </a>
+        </li>
+        <li class="ja">
+          左のメニューで<font color="blue">「その他」-&gt;「すべてのチャンネル」</font>を選び, 表示されるチャンネルから目当てのチャンネルを見つけて参加してください
+        </li>
+        <li class="en">
+          Go to <font color="blue">"More" -&gt; "All Channels"</font> to show the list of channels and find the channel you want to join
+        </li>
+      </ol>
+    </div>
+
+    <h2 class="ja">ブラウザじゃなくてSlackアプリで開きたい</h2>
+    <h2 class="en">I want to open it in the Slack app, not in browser</h2>
+    <div>
+      <dl>
+        <dt class="ja">方法1 (ブラウザから): </dt>
+        <dd class="ja">方法1: 
+          左上の
+          <font color="blue">
+            「EEIC: 工学部 電子情報工学科・電気電子工学科」
+            -&gt;
+            「Slackアプリを開く」を選択してください
+          </font>
+        </dd>
+        <dt class="en">Method 1 (from the browser):</dt>
+        <dd class="en">
+          From within the browser, go to
+          <font color="blue">
+            「EEIC: 工学部 電子情報工学科・電気電子工学科」
+            -&gt;
+            「Open the Slack app」
+          </font>
+        </dd>
+
+        <dt class="ja">方法2 (Slackアプリから): </dt>
+        <dd class="ja">方法2: 
+          Slackアプリの左側, ワークスペースが並んでいる列の最下部で,
+          <font color="blue">
+            「+」
+            -&gt;
+            「UTokyo Slackの他のワークスペースを...」を選択してください
+          </font>
+        </dd>
+        <dt class="en">Method 2 (from the Slack app):</dt>
+        <dd class="en">
+          From within the Slack app, you see the list
+          of your workspaces in the left.  Go to the
+          bottom of it and select
+          <font color="blue">          
+            "+"
+            -&gt;
+            "Find more UTokyo Slack workspaces"
+          </font>
+        </dd>
+
+      </ul>
+    </div>
+    
+    <h2 class="ja">ちなみに: 他のワークスペースへの参加</h2>
+    <h2 class="en">FYI: How to join other workspaces</h2>
+    <div class="ja">
+      UTokyo Slackには
+      「EEIC: 工学部 電子情報工学科・電気電子工学科」以外にも
+      多くのワークスペースがあります. 公開されているワークスペースは
+      <a href="https://utokyo.enterprise.slack.com/"
+         target="_blank" rel="noopener">
+        UTokyo Slackのトップページ
+      </a>で表示・検索できます(公開されていないワークスペースもあります).
+      他のワークスペースに参加してくださいと言われたら見てみてください.
+    </div>
+
+    <div class="en">
+      UTokyo Slack has many workspaces other than 
+      「EEIC: 工学部 電子情報工学科・電気電子工学科」.
+
+      You can display and search for public workspaces in 
+      <a href="https://utokyo.enterprise.slack.com/"
+         target="_blank" rel="noopener">
+        UTokyo Slack top page
+      </a> (note: non-public workspaces are not displayed).
+      If you are asked to join another workspace,
+      go there and find it.
+    </div>
+
+  </body>
+

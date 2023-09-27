@@ -1,0 +1,146 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="ja">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Jupyter試験の結果の見方</title>
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+h1 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #BBDDBB;
+}
+
+h2 {
+  font-size   : 13pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #CCEECC;
+}
+
+h3 {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #DDFFDD;
+}
+
+h4 {
+  font-size   : 10pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #FFFFFF;
+}
+
+div {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+ul {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Jupyter試験の結果の見方</h1>
+
+<div>
+<p align="right">
+<a href="http://www.eidos.ic.i.u-tokyo.ac.jp/~tau">田浦健次朗</a></p>
+</div>
+
+<h2>アクセス方法</h2>
+<div>
+  <ul>
+    <li>Jupyter環境に行き</li>
+    <li>-&gt; assignments</li>
+    <li>-&gt; Fetch feedback</li>
+    <li>-&gt; 最後にsubmitしたものに点数がついています</li>
+  </ul>
+</div>
+
+<h2>フィードバックの見方</h2>
+<div>
+  <ul>
+    <li>それぞれの問題の結果は右上の score を見てください</li>
+    <li><t>t1-1-1</t>のように<t>t</t>で始まるセルではテストが自動的に
+      行われていて, そのテスト結果はその下にあらわれているが,
+      scoreはそれとは異なる場合がある(例えば想定していた正解が
+      "sbrk" でも "brk" も正解としている場合などがあり,
+      その場合テスト結果ではエラーとなっていても score では
+      ◯になっているはずである. 自動的なテストの結果が採点にそのまま
+      用いられているわけではない
+    </li>
+    <li>コーディングの問題(4問)は基本的にこちらが用意した
+      テストデータに正解を出すかと,
+      問題の指示(例えば「排他制御を用いずに」など)
+      に従っているかどうかで見ている.
+      途中点はつけていない.
+      テストデータは試験中に提供されていたものと,
+      採点時のみ利用したものがあるため,
+      試験中のテストデータを通過していても正解となっていない場合もある
+      (間違いの中には, もう少し試験中のテストデータでそれが見つかるように
+      しておいてあげればよかったというものもある)
+    </li>
+    <li>記述式の問題ではいくつかの採点基準を設けて途中点をつけている.
+    </li>
+    <li>減点理由をコメントしている場合もある(全てではない).
+    </li>
+  </ul>
+</div>
+  
+</body>
+</html>
