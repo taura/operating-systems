@@ -1,0 +1,71 @@
+<!--- md --->
+
+#* オペレーティングシステム 演習 02
+
+#* Linuxのインストール
+
+<!--- end md --->
+
+<!--- md w --->
+
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+
+<!--- end md --->
+
+<!--- md --->
+#* 仮想マシンとLinuxのインストールをやってみて
+
+* やり方は以下のページの動画で説明している
+  * https://www.eidos.ic.i.u-tokyo.ac.jp/~tau/lecture/operating_systems/html/install_vm_and_linux.html
+* ホスト環境(外側のOS環境. そこに仮想マシンを入れる)やそこで利用する仮想マシンは自由
+* 選択肢(余力があればインストール動画を追加しますがそれを待たずにやってみて, わからなければ質問ください)
+  * ホスト環境がWindows : Hyper-V (推奨), VirtualBox, VMWare
+  * ホスト環境がMacOS : VirtualBox, VMWare, Parallels
+  * ホスト環境がLinux : kvm (推奨), VirtualBox, VMWare
+* 動画で説明しているのは Windows Hyper-V
+
+#*P 詳細＋提出物仕様
+
+1. 自分のホスト環境で使える仮想マシンをインストールし, その中にUbuntu (+ デスクトップ環境)をインストールする
+1. インストール中に聞かれるユーザ名を<font color="red">自分の名前(もしくは近いもの)</font>で作る(田浦だったら, taura, tau, など)
+1. <font color="red">インストールされたUbuntu環境で</font>Webブラウザ(e.g., Firefox, Chromium など)を立ち上げ, 授業のJupyterにアクセスし, ログインする
+  * 注: 上記動画でインストールしているubuntu-desktop-minimalという環境だと, Webブラウザはインストールされない. 端末で `sudo apt install firefox`, `sudo apt install chromium-browser` などのコマンドでインストールする
+
+<font color="red">Ubuntu環境のスクリーンショット</font>が提出物. そのスクリーンショットには以下がうつっていること.
+  * (a) 仮想マシンソフト内のLinux環境のWebブラウザで以下の bash セル(whoami コマンド)を実行した結果 (授業で割り当てられた u22xxx が表示されるはず)
+  * (b) 仮想マシンソフト内のLinuxの<font color="red">コマンドライン端末</font>の窓で, whoami コマンドを実行した結果(上記2.で設定した結果が表示されるはず)
+
+Ubuntuでスクリーンショットを撮るには, 左下のメニューを開き screenshot を検索し, "Take Screenshot" を起動. 画面全体のスクリーンショットは Screen を選択して記録する
+
+* [作業手順動画](https://youtu.be/zbE2SfXOW6w)
+
+* 正しいスクリーンショットの例
+
+<a href="img/vm_sample.png" target="_blank" opener="norel">
+<img src=img/vm_sample.png width=320>
+</a>
+
+<!--- end md --->
+
+<!--- md --->
+* 以下を, 仮想マシンにインストールしたLinuxから実行
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+whoami
+<!--- end code --->
+
+<!--- md --->
+* スクリーンショットをアップロードし, 以下のディレクトリ/ファイル名で配置し, 以下を実行して正しく表示せよ
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+from IPython.display import Image
+import os
+Image(os.path.expanduser("~/notebooks/os02_install_linux/vm.png"))
+<!--- end code --->
+
+
