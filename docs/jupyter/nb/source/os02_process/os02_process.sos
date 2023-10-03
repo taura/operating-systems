@@ -1,6 +1,6 @@
 <!--- md --->
 
-#* オペレーティングシステム 演習 01 
+#* オペレーティングシステム 演習 02
 
 #* プロセス
 
@@ -50,7 +50,7 @@ ps auxww
 
 <!--- code w kernel=python --->
 %%writefile fork.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os01_process/fork.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os02_process/fork.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -68,7 +68,7 @@ gcc -Wall fork.c -o fork
 
 <!--- code w kernel=python --->
 %%writefile fork_pc.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os01_process/fork_pc.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os02_process/fork_pc.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -86,7 +86,7 @@ gcc -Wall fork_pc.c -o fork_pc
 
 <!--- code w kernel=python --->
 %%writefile fork_wait.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os01_process/fork_wait.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os02_process/fork_wait.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -113,7 +113,7 @@ gcc -Wall fork_wait.c -o fork_wait
 
 <!--- code w kernel=python --->
 %%writefile fork_exec.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os01_process/fork_exec.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os02_process/fork_exec.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -141,7 +141,7 @@ echo $PATH
 
 <!--- code w kernel=python --->
 %%writefile fork_execvp.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os01_process/fork_execvp.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os02_process/fork_execvp.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -174,7 +174,7 @@ which zoom
 
 <!--- code w kernel=python --->
 %%writefile fork_n.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os01_process/fork_n.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os02_process/fork_n.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -217,7 +217,7 @@ sleep 1
 
 <!--- code w kernel=python label=prob,ans --->
 %%writefile do_nothing.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os01_process/do_nothing.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os02_process/do_nothing.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash label=prob,ans --->
@@ -231,7 +231,7 @@ gcc -Wall do_nothing.c -o do_nothing
 
 <!--- code w kernel=python points=1 --->
 %%writefile time_fork_exec_wait.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os01_process/time_fork.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os02_process/time_fork.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash points=1 --->
@@ -240,7 +240,7 @@ gcc -Wall time_fork_exec_wait.c -o time_fork_exec_wait
 
 <!--- code w kernel=python label=ans --->
 %%writefile time_fork_exec_wait_ans.c
-<!--- exec-include ./mk_version.py -DVER=2 nb/source/include/os01_process/time_fork.c --->
+<!--- exec-include ./mk_version.py -DVER=2 nb/source/include/os02_process/time_fork.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->
@@ -268,7 +268,7 @@ gcc -Wall time_fork_exec_wait_ans.c -o time_fork_exec_wait_ans
 
 <!--- code w kernel=python points=1 --->
 %%writefile time_fork_exit_wait.c
-<!--- exec-include ./mk_version.py -DVER=3 nb/source/include/os01_process/time_fork.c --->
+<!--- exec-include ./mk_version.py -DVER=3 nb/source/include/os02_process/time_fork.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash points=1 --->
@@ -281,7 +281,7 @@ gcc -Wall time_fork_exit_wait.c -o time_fork_exit_wait
 
 <!--- code w kernel=python label=ans --->
 %%writefile time_fork_exit_wait_ans.c
-<!--- exec-include ./mk_version.py -DVER=4 nb/source/include/os01_process/time_fork.c --->
+<!--- exec-include ./mk_version.py -DVER=4 nb/source/include/os02_process/time_fork.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->

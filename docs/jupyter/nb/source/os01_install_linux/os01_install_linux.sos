@@ -1,6 +1,6 @@
 <!--- md --->
 
-#* オペレーティングシステム 演習 02
+#* オペレーティングシステム 演習 01
 
 #* Linuxのインストール
 
@@ -40,7 +40,7 @@
 
 Ubuntuでスクリーンショットを撮るには, 左下のメニューを開き screenshot を検索し, "Take Screenshot" を起動. 画面全体のスクリーンショットは Screen を選択して記録する
 
-* [作業手順動画](https://youtu.be/zbE2SfXOW6w)
+* [作業手順動画](https://youtu.be/zbE2SfXOW6w) 
 
 * 正しいスクリーンショットの例
 
@@ -65,7 +65,7 @@ whoami
 <!--- code w kernel=python points=1 --->
 from IPython.display import Image
 import os
-Image(os.path.expanduser("~/notebooks/os02_install_linux/vm.png"))
+Image(os.path.expanduser("~/notebooks/os01_install_linux/vm.png"))
 <!--- end code --->
 
 
