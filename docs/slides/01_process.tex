@@ -1,0 +1,401 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\input{defs}
+\title{プロセス}
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \begin{frame}
+% \frametitle{目次}
+% \tableofcontents
+% \end{frame}
+
+% %%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%
+% \section{プロセス}
+% %%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{用語の整理}
+\begin{itemize}
+\item \ao{プログラム} $=$ 実行すべき命令が書かれているもの
+  \begin{itemize}
+  \item Firefox, シェル(bash), ls, a.out, など
+  \item 実体としてはファイルとして存在している
+  \end{itemize}
+\item \ao{\bf プロセス} $\approx$ \ao{プログラム}が走っているもの
+  \begin{itemize}
+  \item メニューでアプリを起動するアイコンをクリックしたり,
+    コマンドプロンプトにlsと打ち込むたびに, プロセスが作られている
+  \end{itemize}
+\item たとえ話
+  \begin{itemize}
+  \item \ao{プログラム} $\approx$ マニュアル
+  \item \ao{プロセス} $\approx$ マニュアルに従って働いている人
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{プロセスの役割}
+\begin{itemize}
+\item CPUを分け合うための抽象化
+  \begin{itemize}
+  \item ユーザはプロセスを作る
+  \item 各プロセスは全力で走れば良い(他の人にCPUを譲る必要ない)
+  \item OSがプロセスにCPUを与えたり奪ったりする
+  \end{itemize}
+\item メモリを分け合うための抽象化(アドレス空間)
+  \begin{itemize}
+  \item 他のプロセスのメモリは覗けない, 壊せない
+  \end{itemize}
+\end{itemize}
+いずれも仕組みは後の週で
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{プロセスを観察するコマンド}
+\begin{itemize}
+\item Unix CUI
+  \begin{itemize}
+  \item \ao{\tt ps} : 基本
+  \item \ao{\tt top} : 時々刻々表示
+  \item \ao{\tt pstree} : プロセスの親子関係も表示
+  \item \ao{\tt pgrep} : 色々な基準でプロセスを検索
+    ($\approx$ {\tt ps} $+$ {\tt grep})
+  \end{itemize}
+\item Linux
+  \begin{itemize}
+  \item \ao{\tt /proc/{\it pid}}
+  \end{itemize}
+\item Ubuntu GUI
+  \begin{itemize}
+  \item \ao{システムモニタ}
+  \end{itemize}
+\item Windows GUI
+  \begin{itemize}
+  \item \ao{タスクマネージャ}
+  \item \ao{リソースマネージャ}
+  \end{itemize}
+\end{itemize}
+
+注:
+\begin{itemize}
+\item CUI (Character User Interface) 端末の中で字だけ出す
+\item GUI (Graphical User Interface) 窓を出して絵を出す
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{{\tt ps auxww}}
+  \begin{itemize}
+  \item すべてのプロセスをコマンドライン含め表示
+\begin{lstlisting}
+$ @{\tt\underline{ps auxww}}@
+\end{lstlisting}%$
+\item ps と grepを組み合わせてトラブルシューティングする場面がよくある
+\begin{lstlisting}
+$ @{\tt\underline{ps auxww | grep ssh}}@  # ssh走ってるか?
+$ @{\tt\underline{ps auxww | grep tau}}@  # ユーザtauのプロセス
+\end{lstlisting}
+\item \ao{\tt pgrep} $\approx$ {\tt ps} $+$ {\tt grep}
+\begin{lstlisting}
+$ @{\tt\underline{pgrep -f ssh}}@
+$ @{\tt\underline{pgrep -f tau}}@
+\end{lstlisting}
+\end{itemize}
+
+表記上の約束: 
+\begin{itemize}
+\item {\tt \$}はコマンドプロンプトのつもり
+\item {\tt \$}以降(下線)が入力すべきもの
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{プロセスID (PID)}
+  \begin{itemize}
+  \item 存在しているプロセス全てに付けられている一意な識別子
+  \item Linuxでは通常, 4194304までの整数
+  \item あるプロセスのPIDを知らなくてはいけない場面はそう多くはないが,
+    外から強制終了(kill)したい場合などに必要
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{{\tt man}コマンド}
+  \begin{itemize}
+  \item 以降, コマンドや関数, システムコールの説明が出てきたら,
+    必要に応じて{\tt man}コマンドで調べよ
+  \item 例:
+\begin{lstlisting}
+$ @{\tt\underline{man ps}}@
+$ @{\tt\underline{man top}}@
+$ @{\tt\underline{man pstree}}@
+\end{lstlisting} %$
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{Unix: プロセス関連のシステムコール}
+\begin{itemize}
+\item \ao{\tt fork}
+  \begin{itemize}
+  \item プロセスを作る(コピーする)
+  \end{itemize}
+\item \ao{\tt execve} 
+  \begin{itemize}
+  \item 現プロセスで指定のプログラムを実行する
+  \item 変種: {\tt exec\{v,l\}p?e?} (引数の渡し方, 微妙な意味の違い)
+  \item 以下, 総称してexecと呼ぶ(実際にはexecという名前の関数はない)
+  \end{itemize}
+\item \ao{\tt exit}
+  \begin{itemize}
+  \item 現プロセスを終了する
+  \item {\tt \_exit}
+  \end{itemize}
+\item \ao{\tt waitpid}
+  \begin{itemize}
+  \item 子プロセスの終了待ち $+$ 処理
+  \item 変種: {\tt wait, wait3, wait4}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+  
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{子プロセスの生成〜終了〜処理}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \begin{enumerate}
+    \item<3-> fork 〜 プロセスが複製される. 親と子が両方, forkの続きを実行
+    \item<4-> 子プロセスが終了する(exitを呼ぶ, main関数がreturnするなど)
+    \item<5-> 親が処理する(wait, waitpidなどを呼ぶ)まで,
+      子プロセスは\ao{「ゾンビ(プロセス番号だけが存在する)状態」}
+    \item<6-> 親が処理を終えるとすべてがなくなる
+    \end{enumerate}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+\begin{center}
+\only<1>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_1.pdf}}%
+\only<2>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_2.pdf}}%
+\only<3>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_3.pdf}}%
+\only<4>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_4.pdf}}%
+\only<5>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_5.pdf}}%
+\only<6>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_6.pdf}}
+\end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{{\tt fork}}
+\begin{itemize}
+\item 呼び出したプロセスを複製
+\item {\tt fork()}続きが2プロセス(親と子)で実行される
+\item 親と子で返り値だけが違う
+  \begin{itemize}
+  \item 親: 子プロセスのプロセス番号
+  \item 子: 0
+  \end{itemize}
+\item 従って以下がテンプレート
+\begin{lstlisting}
+pid_t pid = fork();
+if (pid == -1) {
+  失敗 (子プロセスは作られていない)
+} else if (pid == 0) {          /* child */
+  子プロセス
+} else {          /* child */
+  親プロセス
+}
+\end{lstlisting}
+\item 注: {\tt pid\_t} はプロセス番号(process ID)の型; 実際は単なる整数
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{{\tt exit}}
+\begin{itemize}
+\item {\tt exit}を呼んだプロセスを,
+  指定した終了ステータス(exit status)で終了させる
+\item exit status : 0 .. 255の整数
+\begin{lstlisting}
+exit(status);
+  ...
+\end{lstlisting}
+当然ながらexit呼び出し以降(上記の{\tt ...})は実行されない
+\item {\tt main}関数が終了した場合も同じ効果
+  (従って{\tt main}関数の最後にわざわざ呼ばないのが普通)
+  \begin{itemize}
+  \item mainの返り値(return value)がexit status
+  \end{itemize}
+\item exit statusは親プロセスが取得可能
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{{\tt waitpid}}
+  \begin{itemize}
+  \item 基本は子プロセスの終了待ち$+$処理(ゾンビ状態を解消; プロセス番号の回収)
+  \item どの子プロセス(特定プロセス, どれでもよい, など)を対象とするか,
+    終了を待つ・待たない, などを指定可
+\begin{lstlisting}
+int ws;
+pid_t pid = -1;  /* -1 : どの子プロセスでも... */
+int options = 0; /* 0 : 終了するまで待つ */
+pid_t cid = waitpid(pid, &ws, options);
+if (cid == -1) {
+  失敗;
+} else {
+  ... wsに, 子プロセスcidに何が起きたかの情報 ...
+}  
+\end{lstlisting}
+\begin{itemize}
+\item 普通の終了: exitを呼んだ / mainがreturnした
+\item 異常終了: segmentation faultなど. 詳細は後の週で
+\item 停止, 再開 : 詳細略
+\end{itemize}
+\item 詳細は(これからいつも)manを参照
+\begin{lstlisting}
+$ @{\tt\underline{man waitpid}}@
+\end{lstlisting} %$
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{manコマンドの落とし穴}
+  \begin{itemize}
+  \item manコマンドでは, 色々なものが検索できる
+    \begin{itemize}
+    \item コマンド, システムコール, それ以外の関数(ライブラリ)など
+    \end{itemize}
+  \item 同じ名前の, コマンドと関数がある場合,
+    目当てでないほうが見つかってしまう場合がある
+  \item システムコールだと思ったものがライブラリ関数ということもよくある
+  \item {\tt -s}オプションで, 種類(正確にはマニュアルの「節」)を指定可能
+    \begin{itemize}
+    \item \ao{\tt -s 1} : コマンド
+    \item \ao{\tt -s 2} : システムコール
+    \item \ao{\tt -s 3} : ライブラリ関数
+    \end{itemize}
+  \item 例:
+\begin{lstlisting}
+$ man -s 1 wait    # waitコマンド
+$ man -s 2 wait    # waitシステムコール
+$ man -s 2 execv   # 見つからない
+$ man -s 3 execv
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{ゾンビ (defunct)}
+\begin{itemize}
+\item プロセス$C$が\ao{ゾンビ (defunct)} $\equiv$
+  $C$が終了しているが, その親が({\tt waitpid}などで)$C$の終了を確認していない
+\item 本質的には, \ao{$C$のプロセス番号を再利用できない}状態
+  \begin{itemize}
+  \item {\tt waitpid}が「$C$が終了した」と親に知らせるまでは,
+    $C$のプロセス番号を他のプロセスに再利用すると,
+    プロセス番号からプロセスを一意に特定できなくなるので
+  \end{itemize}
+\item {\tt waitpid} $\approx$ \ao{お葬式};
+  子プロセスに「成仏」「輪廻転生」してもらう
+\item 英語では, ``the parent {\it reaps} the child'' という
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{{\small 細かい注} {\tt waitpid}, ゾンビにまつわる注}
+  \begin{itemize}
+  \item Q. 子が終了する前に親が{\tt waitpid}等を呼んだら?
+    \begin{itemize}
+    \item A. 子が終了するまでreturnしない(waitという名の通り)
+    \end{itemize}
+  \item Q. 子が終了する前に親が終了できる?
+    \begin{itemize}
+    \item A. できる
+    \end{itemize}
+  \item Q. その場合, 誰がその子の葬式をする(その子はゾンビ状態のまま)?
+    \begin{itemize}
+    \item A. あるプロセス$C$の親が, $C$より先に終了したら,
+      全プロセスの先祖 (init) が$C$の親をすることになっている
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{子プロセスの生成〜exec}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \begin{enumerate}
+    \item<3-> fork 〜 プロセスが複製される. 親と子が両方, forkの続きを実行
+    \item<4-> 子プロセスがexecを実行
+    \end{enumerate}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+\begin{center}
+\only<1>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_1.pdf}}%
+\only<2>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_2.pdf}}%
+\only<3>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_3.pdf}}%
+\only<4>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_7.pdf}}%
+\only<5>{\includegraphics[height=0.7\textheight]{out/pdf/svg/process_8.pdf}}%
+\end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{exec}
+  \begin{itemize}
+  \item \ao{現プロセスで}, 指定したプログラムを実行する
+  \item 以下は{\tt /bin/ls} (いわゆる{\tt ls}コマンド)を{\tt -l}オプションで実行
+\begin{lstlisting}
+char * const argv[] = { "/bin/ls", "-l", 0 };
+execv(argv[0], argv);
+  ...
+\end{lstlisting}
+\item 注:
+  \begin{itemize}
+  \item execを呼び出した続き(上記{\tt ...}以降)は実行\aka{されない}
+  \item 呼び出したプロセスが, 今持っている状態をすべて忘れ,
+    指定したプログラムを実行するだけの人に\ao{化ける}
+  \item 特に, execが子プロセスを作るわけではない
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{{\small (細かい注)} execの変種}
+  \begin{itemize}
+  \item {\tt exec\{v,l\}p?e?}
+  \item ただし {\tt execlpe} は存在しない
+  \item つまり {\tt execv, \ao{execve}, execvp, execvpe, execl, execle, execlp}
+  \item \ao{\tt execve}だけがシステムコール, 残りはそれの亜種
+  \item {\tt v}と{\tt l} : 引数の渡し方({\tt v} : 配列; {\tt l} : 引数のリスト)
+  \item {\tt p} : 環境変数{\tt PATH}を参照してコマンドを検索する
+    \begin{lstlisting}
+execv("ls", argv);       // NG
+execv("/bin/ls", argv);  // OK
+execvp("ls", argv);      // OK
+    \end{lstlisting}
+  \item {\tt e} : 子プロセスの環境変数を指定する(ない場合は親を引き継ぐ)
+  \end{itemize}
+\end{frame}
+
+\end{document}

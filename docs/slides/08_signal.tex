@@ -1,0 +1,178 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\input{defs}
+\title{シグナル}
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{frame}
+\frametitle{目次}
+\tableofcontents
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%% 
+%\section{シグナル}
+%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{シグナルとは}
+  \begin{itemize}
+  \item イベント通知のためのAPI
+  \item イベント通知 $\rightarrow$ シグナルの発生(配達)
+    \begin{itemize}
+    \item CPUに対する割り込みの「ソフトウェア(プロセス)版」
+    \end{itemize}
+  \item どんなイベントに対してシグナルが発生する?
+    \begin{itemize}
+    \item エラー, 例外的事象
+      \begin{itemize}
+      \item Segmentation Faultも実はその一つ
+      \end{itemize}
+    \item 時刻の経過など
+    \item 明示的な送信(killシステムコール, killコマンド)
+    \item etc.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{シグナルを受け取る方法}
+  \begin{itemize}
+  \item 発生したシグナルを受け取るいくつかの方法
+    \begin{enumerate}
+    \item 登録しておいた関数(シグナルハンドラ)が呼ばれる (sigaction)
+    \item ファイルディスクリプタにデータが到着する (signalfd)
+    \item シグナルの到着を待つ関数 (sigwaitinfo) に返り値が返される
+    \end{enumerate}
+  \item デフォルトの動作(何も登録されていない場合)はシグナルにより異なり,
+    \begin{itemize}
+    \item プロセスが強制終了される
+    \item 無視される
+    \end{itemize}
+  \item ブロックする関数 (readなど) はシグナルを受け取るとリターンするものが多い
+    (ブロックしていてもシグナルに気付けるように)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{シグナルの例}
+  \begin{itemize}
+  \item []
+    \ao{青字}が特によく使う・見かけるもの
+    \begin{itemize}
+    \item \ao{\tt SIGINT} : interrupt (典型的には端末でCtrl-Cを叩くと発生)
+    \item {\tt SIGILL} : 不正命令の実行
+    \item \ao{\tt SIGSEGV} : 不正なメモリのアクセス(Segmentation Fault)
+    \item \ao{\tt SIGTERM} : プロセスの強制終了のためのシグナル(処理可能)
+      \begin{itemize}
+      \item {\tt kill}コマンドがデフォルトで送信するシグナル
+      \end{itemize}
+    \item \ao{\tt SIGKILL} :
+      プロセスの強制終了のためのシグナル(処理不可能)
+      \begin{itemize}
+      \item {\tt kill -9/-KILL}が送信するシグナル
+      \end{itemize}
+    \item {\tt SIGALRM} :
+      時間経過によって発生(alarm, setitimerシステムコール)
+    \item {\tt SIGXCPU} :
+      CPU使用量超過(処理不可能)
+    \item {\tt SIGUSER1, 2} :
+      明示的送信のための(自由に利用可能な)シグナル
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{シグナルの処理方法 (sigaction)}
+  \begin{itemize}
+  \item {\tt int sigaction({\it sig}, {\it act}, {\it oldact});}
+    \begin{itemize}
+    \item {\tt struct sigaction *} {\it act};
+    \item シグナル{\it sig}を受信した時の動作を{\it act}で指定
+    \end{itemize}
+  \item {\tt struct sigaction}の中身
+\begin{lstlisting}
+struct sigaction {
+  ...
+  /* 呼ばれる関数を指定するフィールド */
+  void (*@\ao{\tt sa\_sigaction}@)(int, siginfo_t *, void *); 
+  sigset_t @\ao{\tt sa\_mask}@;
+  int @\ao{\tt sa\_flags}@;
+    ...
+};
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{sigaction利用のテンプレート}
+\begin{lstlisting}
+/* シグナルハンドラ
+   @{\it sig}@を受け取ったときに行う動作 */
+void sigint_action(int sig, siginfo_t * info, void * arg) {
+  ...
+}
+
+
+int main() { 
+  ...
+
+  /* @{\it sig}@ を受け取ったら sigint_actionを呼ぶように設定 */
+  struct sigaction act;
+  act.sa_sigaction = sigint_action;
+  sigemptyset(&act.sa_mask);
+  act.sa_flags = SA_SIGINFO;
+  if (sigaction(@{\it sig}@, &act, 0) == -1) err(1, "sigaction");
+
+  ...
+}
+\end{lstlisting}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{sigactionが設定されたシグナルが配達されたときの動作}
+  \begin{itemize}
+  \item あるスレッド(*)で, (ちょうど割り込みが起きたのと似たように)
+    指定されたハンドラが実行される
+  \item ハンドラが終了すると, 続きが実行される
+  \item (*) あるスレッドはシグナルの種類により,
+    \begin{itemize}
+    \item そのプロセス中の(OSが適当に選んだ)1つのスレッド
+    \item シグナルの原因となる命令を実行したスレッド(SIGSEGV, SIGILLなど)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Segmentation Faultもシグナルの一つ}
+  \begin{itemize}
+  \item Segmentation Fault $=$ 不正なメモリアクセス時に発生 
+    \begin{itemize}
+    \item 割り当てられていないアドレスをアクセスした
+    \item 割り当てられてはいるが, 保護属性(読み・書き・実行)で
+      許可されていないアクセスが行われた
+    \end{itemize}
+  \item 関連システムコール
+    \begin{itemize}
+    \item {\tt mprotect(\ao{\it addr}, \ao{\it len}, \ao{\it prot});}
+    \item {\tt mmap(\ao{\it addr}, \ao{\it len}, \ao{\it prot}, {\it flags}, {\it fd}, {\it offs});}
+    \item {\it prot} --- {\tt PROT\_READ, PROT\_WRITE, PROT\_EXEC} (それらのbit和)
+    \end{itemize}
+  \item 例えば{\tt PROT\_WRITE}が設定されていない領域に書き込みを行うと,
+    そのスレッドに{\tt SIGSEGV}シグナルが配達される
+    
+  \item シグナルハンドラを設定していなければ, プロセスが終了する
+    (デフォルトのアクション)
+  \end{itemize}
+\end{frame}
+
+\end{document}
