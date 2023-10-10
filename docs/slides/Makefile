@@ -8,7 +8,8 @@
 # (2) make
 #
 latex := platex
-bibtex := bibtex
+#bibtex := bibtex
+bibtex := biber
 run_bibtex_and_latex_twice:=n
 
 # tex files
@@ -131,7 +132,7 @@ $(dvi) : %.dvi : %.tex $(deps) Makefile
 	rm -f out/*/*/*.xbb
 	TEXINPUTS=classes: $(latex) -shell-escape $<
 ifeq ($(run_bibtex_and_latex_twice),y)
-	BSTINPUTS=classes: $(bibtex) $*
+	BSTINPUTS=classes: $(bibtex) --sortdebug $*
 	TEXINPUTS=classes: $(latex) -shell-escape $<
 	TEXINPUTS=classes: $(latex) -shell-escape $<
 endif
@@ -141,35 +142,42 @@ endif
 # svg -> tex+pdf
 $(svg_tex) : out/tex/%.pdf_tex : %.svg
 	mkdir -p $(dir $@)
-	inkscape -D -z --file=$< --export-pdf=out/tex/$*.pdf --export-latex
+#	inkscape -D -z --file=$< --export-pdf=out/tex/$*.pdf --export-latex
+	inkscape $< -o out/tex/$*.pdf --export-type=pdf --export-latex
 
 # svg -> (standalone) pdf
 $(svg_pdf) : out/pdf/%.pdf : %.svg
 	mkdir -p $(dir $@)
-	inkscape -D -z --file=$< --export-pdf=$@
+#	inkscape -D -z --file=$< --export-pdf=$@
+	inkscape $< --export-type=pdf -o $@
 
 # svg -> eps
 $(svg_eps) : out/eps/%.eps : %.svg
 	mkdir -p $(dir $@)
-	inkscape -D -z --file=$< --export-eps=$@
+#	inkscape -D -z --file=$< --export-eps=$@
+	inkscape $< --export-type=eps -o $@
 
 define svg_layer_tex_pdf_eps_rule
 # layered svg -> unlayered svg
 out/svg/$(1)_$(2).svg : out/svg/%_$(2).svg : %.svg
 	mkdir -p $$(dir $$@)
-	inkscape -D -z --file=$$< --export-plain-svg=$$@ --export-id=$(3) --export-id-only # layer=$(2)
+#	inkscape -D -z --file=$$< --export-plain-svg=$$@ --export-id=$(3) --export-id-only # layer=$(2)
+	inkscape $$< --export-plain-svg -o $$@ --export-id=$(3) --export-id-only # layer=$(2)
 # unlayered svg -> tex+pdf
 out/tex/$(1)_$(2).pdf_tex : out/tex/%_$(2).pdf_tex : out/svg/%_$(2).svg
 	mkdir -p $$(dir $$@)
-	inkscape -D -z --file=$$< --export-pdf=out/tex/$$*_$(2).pdf --export-latex # layer=$(2)
+#	inkscape -D -z --file=$$< --export-pdf=out/tex/$$*_$(2).pdf --export-latex # layer=$(2)
+	inkscape $$< --export-type=pdf --export-latex -o out/tex/$$*_$(2).pdf # layer=$(2)
 # unlayered svg -> (standalone) pdf
 out/pdf/$(1)_$(2).pdf : out/pdf/%_$(2).pdf : out/svg/%_$(2).svg
 	mkdir -p $$(dir $$@)
-	inkscape -D -z --file=$$< --export-pdf=$$@ # layer=$(2)
+#	inkscape -D -z --file=$$< --export-pdf=$$@ # layer=$(2)
+	inkscape $$< --export-type=pdf $$@ # layer=$(2)
 # layered svg -> eps
 out/eps/$(1)_$(2).eps : out/eps/%_$(2).eps : out/svg/%_$(2).svg
 	mkdir -p $$(dir $$@)
-	inkscape -D -z --file=$$< --export-eps=$$@ # layer=$(2)
+#	inkscape -D -z --file=$$< --export-eps=$$@ # layer=$(2)
+	inkscape $$< --export-type=eps $$@ # layer=$(2)
 endef
 
 $(foreach svg,$(svg_svg),\
@@ -283,6 +291,8 @@ clean :
 	rm -f *.vrb
 	rm -f *.blg
 	rm -f *.bbl
+	rm -f *.run.xml
+	rm -f *.bcf
 
 delete :
 	rm -f dot/graph.dot
