@@ -1120,7 +1120,7 @@ int unlock(mutex_t * m) {
 \end{itemize}
 \end{frame}
 
-\section{休眠待機 vs. 頻忙待機}
+\section{休眠待機 vs. ビジーウェイト(繁忙待機?)}
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
   \frametitle{排他制御実装の別解?}
@@ -1220,7 +1220,7 @@ int scounter_dec'(scounter_t * s) {
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{休眠待機 vs. 頻忙待機}
+  \frametitle{休眠待機 vs. ビジーウェイト}
 %  \frametitle{futex (FUTEX\_WAIT), cond\_waitなどを呼ばずに待つことの問題}
   \begin{itemize}
   \item \ao{休眠待機 (blocking wait)}
@@ -1230,7 +1230,7 @@ int scounter_dec'(scounter_t * s) {
       待つ(ブロックする, 実行可能でなくなるようなシステムコールを呼ぶ)
     \item 前スライドの {\tt lock, scounter\_inc}
     \end{itemize}
-  \item \ao{頻忙待機 (busy wait, spin wait)}
+  \item \ao{ビジーウェイト・スピンウェイト (busy wait, spin wait)}
     \begin{itemize}
     \item 表面的には, {\tt while (!条件) \{ 何もしない \}} みたいな待ち方
     \item 本質的には, OSに「CPUを割り当てなくて良い」ことがわからない待ち方
@@ -1242,7 +1242,7 @@ int scounter_dec'(scounter_t * s) {
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{頻忙待機の問題点}
+  \frametitle{ビジーウェイトの問題点}
   \begin{itemize}
   \item[] 条件を待っているスレッド($W$)も, 
     次のpreemptionまで(数msのオーダ), CPUを使い続ける $\Rightarrow$
@@ -1264,7 +1264,7 @@ int scounter_dec'(scounter_t * s) {
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{頻忙待機の使いみち}
+  \frametitle{ビジーウェイトの使いみち}
   \begin{itemize}
   \item 基本は使わない
   \item すべてのスレッドが「同時に」実行されている(常にCPUが割り当てられている)
@@ -1278,11 +1278,11 @@ int scounter_dec'(scounter_t * s) {
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{スピンロック (頻忙待機で排他制御)}
+  \frametitle{スピンロック (ビジーウェイトで排他制御)}
   \begin{itemize}
-  \item 頻忙待機による排他制御は特に\ao{スピンロック}と呼ばれて,
+  \item ビジーウェイトによる排他制御は特に\ao{スピンロック}と呼ばれて,
     短いクリティカルセクションを不可分に実行するのに使われる
-  \item 効用はmutexと同様(違いは頻忙待機であること)
+  \item 効用はmutexと同様(違いはビジーウェイトであること)
   \item Pthread API
     \begin{itemize}
     \item {\tt \#include <pthread.h>}
@@ -1642,7 +1642,7 @@ while (...) {
   \frametitle{まとめ: 並行プログラミングは大変}
   \begin{itemize}
   \item 競合状態 (mutex, 条件変数)
-  \item 頻忙待機
+  \item ビジーウェイト
   \item デッドロック
   \item 1アドレスに対する不可分更新 (compare and swap)
   \item 2アドレス以上は?
