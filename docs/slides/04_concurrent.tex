@@ -960,7 +960,8 @@ while (1) {
 \end{frame}
 
 \section{休眠待機 vs. ビジーウェイト(繁忙待機?)}
-%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%
+\iffalse
 \begin{frame}[fragile]
   \frametitle{排他制御実装の別解?}
   \begin{itemize}
@@ -997,12 +998,13 @@ int unlock'(mutex_t * m) {
 \item そして後者の方が「ブロックする・起こす」オーバーヘッドも少ない
   \end{itemize}
 \end{frame}
+\fi
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{飽和カウンタでも}
+  \frametitle{飽和カウンタ再掲}
   \begin{itemize}
-  \item 再掲
+  \item inc
 \begin{lstlisting}
 int scounter_inc(scounter_t * s) {
   pthread_mutex_lock(&s->m);
@@ -1016,6 +1018,7 @@ int scounter_inc(scounter_t * s) {
   return x; }
 \end{lstlisting}
 
+\item dec
 \begin{lstlisting}
 int scounter_dec(scounter_t * s) {
   pthread_mutex_lock(&s->m);
@@ -1032,11 +1035,42 @@ int scounter_dec(scounter_t * s) {
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{飽和カウンタの別解?}
+  \frametitle{飽和カウンタの別解? (1)}
   \begin{itemize}
-  \item 条件変数は何のため? これでは何がいけないか?
-    
-  \item inc: 競合状態は{\tt s->x}だけなので, 不可分更新でmutexも不要
+  \item inc: {\tt cond\_wait}で寝たり起きたりは何のため? これじゃ何がダメ?
+\begin{lstlisting}
+int scounter_inc(scounter_t * s) {
+  pthread_mutex_lock(&s->m);
+  int x;
+  while (1) {
+    x = s->x;
+    if (x < s->capacity) break;
+    @\mura{\tt pthread\_mutex\_unlock(\&s->m); pthread\_mutex\_lock(\&s->m);}@ }
+  s->x = x + 1;
+  pthread_mutex_unlock(&s->m);
+  return x; }
+\end{lstlisting}
+
+\item dec:
+\begin{lstlisting}
+int scounter_dec(scounter_t * s) {
+  pthread_mutex_lock(&s->m);
+  int x = s->x;
+  s->x = x - 1;
+  @\mura{\tt /* cond\_broadcast不要 */}@
+  pthread_mutex_unlock(&s->m);
+  return x; }
+\end{lstlisting}
+
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{飽和カウンタの別解? (2)}
+  \begin{itemize}
+  \item inc: 競合状態は{\tt s->x}だけなので,
+    不可分更新命令を使えば謎めいたmutex unlock/lockも不要
 \begin{lstlisting}
 int scounter_inc'(scounter_t * s) {
   while (1) {
@@ -1047,7 +1081,7 @@ int scounter_inc'(scounter_t * s) {
 }}}}
 \end{lstlisting}
 
-\item dec: {\tt s->x}を減らすだけ. 寝てないので起こす必要もない
+\item dec: {\tt s->x}を不可分命令で減らすだけ. 起こす必要もない
 \begin{lstlisting}
 int scounter_dec'(scounter_t * s) {
   return fetch_and_add(&s->x, -1);
@@ -1056,8 +1090,43 @@ int scounter_dec'(scounter_t * s) {
 \end{itemize}
 \end{frame}
 
-
 %%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{一般に}
+  \begin{itemize}
+  \item もう少し一般には, 「条件$C$が成り立つまで待つ」を,
+    条件変数を用いたテンプレート
+\begin{lstlisting}
+pthread_mutex_lock(&m);
+while (1) {
+  @$C$@ = ...; /* 条件評価 */
+  if (@$C$@) break;
+  pthread_cond_wait(&c, &m);
+}
+ ...
+pthread_mutex_unlock(&m);      
+\end{lstlisting}
+\item のかわりに,
+\begin{lstlisting}
+pthread_mutex_lock(&m);
+while (1) {
+  @$C$@ = ...; /* 条件評価 */
+  if (@$C$@) break;
+  pthread_mutex_unlock(&m); pthread_mutex_lock(&m);
+}
+ ...
+pthread_mutex_unlock(&m);      
+\end{lstlisting}
+では何がいけないか?
+\item 場合により$C$を評価するのにlockが不要であれば,
+  \begin{lstlisting}
+while (! @$C$@) { }
+\end{lstlisting}
+では何がいけないか? 
+\end{itemize}
+\end{frame}
+
+  %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
   \frametitle{休眠待機 vs. ビジーウェイト}
 %  \frametitle{futex (FUTEX\_WAIT), cond\_waitなどを呼ばずに待つことの問題}
@@ -1096,9 +1165,9 @@ int scounter_dec'(scounter_t * s) {
       $\Rightarrow$ 重大な性能低下
     \end{enumerate}
   \end{itemize}
-  \begin{center}
-    \includegraphics[width=0.6\textwidth]{out/pdf/svg/busy_wait_problem.pdf}
-  \end{center}
+  % \begin{center}
+  %   \includegraphics[width=0.6\textwidth]{out/pdf/svg/busy_wait_problem.pdf}
+  % \end{center}
 \end{frame}
 
 %%%%%%%%%%%%%%%%% 

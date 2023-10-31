@@ -2,20 +2,20 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="221.60785mm"
    height="128.43137mm"
    id="svg2"
    version="1.1"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="busy_wait_problem.svg">
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="busy_wait_problem.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs4">
     <marker
@@ -25682,22 +25682,23 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.9087427"
-     inkscape:cx="444.47077"
-     inkscape:cy="276.10192"
+     inkscape:cx="444.57028"
+     inkscape:cy="275.65558"
      inkscape:document-units="px"
      inkscape:current-layer="g42561"
      showgrid="true"
      showguides="false"
      inkscape:snap-global="true"
-     inkscape:window-width="1848"
-     inkscape:window-height="1016"
-     inkscape:window-x="72"
+     inkscape:window-width="3840"
+     inkscape:window-height="2026"
+     inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0">
+     fit-margin-bottom="0"
+     inkscape:pagecheckerboard="0">
     <inkscape:grid
        type="xygrid"
        id="grid2985"
@@ -25714,7 +25715,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -25741,7 +25741,7 @@
        style="fill:#ff0000;stroke:#ff0000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker6888)" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12.03014278px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30075356"
+       style="font-style:normal;font-weight:normal;font-size:12.0301px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.300754"
        x="-913.77216"
        y="439.18311"
        id="text6878"><tspan
@@ -25749,12 +25749,12 @@
          id="tspan6983"
          x="-913.77216"
          y="439.18311"
-         style="font-size:21.33333397px;fill:#ff0000;stroke-width:0.30075356">W : while (!test_and_set( &amp;locked)) { </tspan><tspan
+         style="font-size:21.3333px;fill:#ff0000;stroke-width:0.300754">W : while (!test_and_set( &amp;locked)) { </tspan><tspan
          sodipodi:role="line"
          id="tspan6987"
          x="-913.77216"
          y="465.84976"
-         style="font-size:21.33333397px;fill:#ff0000;stroke-width:0.30075356">  futex(.., FUTEX_WAIT, ...) ; }</tspan></text>
+         style="font-size:21.3333px;fill:#ff0000;stroke-width:0.300754">  futex(.., FUTEX_WAIT, ...) ; }</tspan></text>
     <path
        style="fill:#000080;stroke:#000080;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker8299)"
        d="m -820,502.5197 h 200"
@@ -26472,11 +26472,11 @@
        x="-1024.2023"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none"
        xml:space="preserve"><tspan
-         style="font-size:21.33333397px;fill:#000000"
+         style="font-size:21.3333px;fill:#000000"
          y="347.82941"
          x="-1024.2023"
          sodipodi:role="line"
-         id="tspan9117">頻忙待機</tspan></text>
+         id="tspan9117">busy wait</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none"
@@ -26487,7 +26487,7 @@
          sodipodi:role="line"
          x="-1024.2023"
          y="507.82941"
-         style="font-size:21.33333397px;fill:#000000">休眠待機</tspan></text>
+         style="font-size:21.3333px;fill:#000000">休眠待機</tspan></text>
     <path
        inkscape:connector-curvature="0"
        id="path9125"
@@ -26504,7 +26504,7 @@
        x="-837.23877"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none"
        xml:space="preserve"><tspan
-         style="font-size:21.33333397px;fill:#0000ff"
+         style="font-size:21.3333px;fill:#0000ff"
          y="230.22266"
          x="-837.23877"
          sodipodi:role="line"
@@ -26513,7 +26513,7 @@
    id="tspan9743">U</tspan>: locked = 0</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12.03014278px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30075356"
+       style="font-style:normal;font-weight:normal;font-size:12.0301px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.300754"
        x="-890.11304"
        y="81.323212"
        id="text9135"><tspan
@@ -26521,7 +26521,7 @@
          id="tspan9133"
          x="-890.11304"
          y="81.323212"
-         style="font-size:21.33333397px;fill:#ff0000;stroke-width:0.30075356"><tspan
+         style="font-size:21.3333px;fill:#ff0000;stroke-width:0.300754"><tspan
    style="font-style:italic"
    id="tspan9741">W</tspan>: while (!test_and_set( &amp;locked)) {  }</tspan></text>
     <g
@@ -26886,8 +26886,8 @@
          sodipodi:role="line"
          x="-1024.2023"
          y="167.82941"
-         style="font-size:21.33333397px;fill:#000000"
-         id="tspan9587">頻忙待機</tspan></text>
+         style="font-size:21.3333px;fill:#000000"
+         id="tspan9587">busy wait</tspan></text>
     <g
        transform="matrix(0.14969926,0,0,0.15254748,-947.2949,129.88588)"
        style="stroke-width:0.44332832"
@@ -27280,7 +27280,7 @@
          sodipodi:role="line"
          x="-337.23877"
          y="390.22266"
-         style="font-size:21.33333397px;fill:#0000ff"><tspan
+         style="font-size:21.3333px;fill:#0000ff"><tspan
    style="font-style:italic"
    id="tspan9747">U</tspan>: locked = 0</tspan></text>
     <path
@@ -27301,7 +27301,7 @@
        x="-797.23877"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none"
        xml:space="preserve"><tspan
-         style="font-size:21.33333397px;fill:#0000ff"
+         style="font-size:21.3333px;fill:#0000ff"
          y="550.22266"
          x="-797.23877"
          sodipodi:role="line"
@@ -27324,9 +27324,9 @@
        id="text9725"
        y="301.32321"
        x="-910.11304"
-       style="font-style:normal;font-weight:normal;font-size:12.03014278px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30075356"
+       style="font-style:normal;font-weight:normal;font-size:12.0301px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.300754"
        xml:space="preserve"><tspan
-         style="font-size:21.33333397px;fill:#ff0000;stroke-width:0.30075356"
+         style="font-size:21.3333px;fill:#ff0000;stroke-width:0.300754"
          y="301.32321"
          x="-910.11304"
          id="tspan9723"
@@ -27343,14 +27343,14 @@
          sodipodi:role="line"
          x="-677.23877"
          y="330.22266"
-         style="font-size:21.33333397px;fill:#ff0000">locked == 1</tspan></text>
+         style="font-size:21.3333px;fill:#ff0000">locked == 1</tspan></text>
     <text
        id="text9733"
        y="250.22266"
        x="-397.23877"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none"
        xml:space="preserve"><tspan
-         style="font-size:21.33333397px;fill:#000000"
+         style="font-size:21.3333px;fill:#000000"
          y="250.22266"
          x="-397.23877"
          sodipodi:role="line"

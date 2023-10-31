@@ -16,7 +16,7 @@ run_bibtex_and_latex_twice:=n
 tex := $(wildcard 04_*.tex)
 # svg files
 #svg_svg := $(wildcard svg/*.svg)
-svg_svg := 
+svg_svg := svg/busy_wait_problem.svg
 # layered svg files
 #lsvg_svg := $(wildcard lsvg/*.svg)
 #lsvg_svg := $(wildcard svg/*.svg)
