@@ -518,7 +518,7 @@ barrier_wait(b);
     \item<2-> $m$をunlockする
     \item<2-> $c$の上で寝る(中断・ブロックする)
     \end{itemize}
-  \item [] <2->{を不可分に行う}
+  \item [] <2->{を\mura{不可分に}行う}
     \begin{itemize}
     \item<3-> 目覚めてリターンする際はまた$m$をlockしている
     \end{itemize}
@@ -748,6 +748,25 @@ pthread_mutex_unlock(&m);
 \begin{frame}[fragile]
   \frametitle{Lost wake up問題}
 
+  \begin{itemize}
+  \item<1-> 本来起こされるべき(ブロックしてはならない)人がブロックしてしまう問題
+  \item<7-> unlockとブロックが「不可分に」行われれば起きないことに注意
+  \end{itemize}
+
+\begin{center}
+\only<2>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/lost_wakeup_1.pdf}}%
+\only<3>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/lost_wakeup_2.pdf}}%
+\only<4>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/lost_wakeup_3.pdf}}%
+\only<5>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/lost_wakeup_4.pdf}}%
+\only<6->{\includegraphics[width=0.7\textwidth]{out/pdf/svg/lost_wakeup_5.pdf}}%
+\end{center}
+  
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Lost wake up問題}
+
   {\footnotesize 注: 関数名は適宜短縮している({\tt pthread\_mutex\_lock} $\rightarrow$ {\tt lock}など)}
   \vskip-5mm
 \begin{columns}[t]
@@ -940,186 +959,6 @@ while (1) {
 \end{itemize}
 \end{frame}
 
-\section{同期の実装}
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{同期はどのように実装されている?}
-  \begin{itemize}
-  \item 多くの, 同期のためのデータ構造は「排他制御 $+$ 条件変数」で実現できる
-    \begin{itemize}
-    \item 有限バッファ, バリア同期, セマフォ
-    \end{itemize}
-  \item では排他制御や条件変数は?
-  \end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{排他制御の実装}
-  \begin{itemize}
-  \item たとえばmutex ({\tt pthread\_mutex\_lock}) の概要
-\begin{lstlisting}
-int lock(mutex_t * m) {
-  while (1) {
-    if (ロックされていない) {
-      ロックする;
-      break;
-    } else {
-      ブロックする;
-}}}
-\end{lstlisting}
-\item 具体化 (3〜4行目)
-  \begin{columns}
-    \begin{column}{0.45\textwidth}
-\begin{lstlisting}
-typedef struct {
-  int @\ao{\tt locked;}@
-  ...
-} mutex_t;
-\end{lstlisting}
-    \end{column}
-    \begin{column}{0.0\textwidth}
-    \end{column}
-    \begin{column}{0.45\textwidth}
-\begin{lstlisting}
-int lock(mutex_t * m) {
-  while (1) {   
-    if (@\ao{\tt m->locked == 0}@) {
-      @\ao{\tt m->locked = 1}@;
-      break;
-    } else {
-      ブロックする;
-}}}
-\end{lstlisting}
-    \end{column}
-  \end{columns}
-  \end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{ここでも競合状態}
-  \begin{itemize}
-  \item []
-\begin{lstlisting}
-int lock(mutex_t * m) {
-  while (1)   
-    if (@\mura{\tt m->locked}@ == 0) {
-      @\mura{\tt m->locked}@ = 1;
-      break;
-    } else {
-      ブロックする;
-}}}
-\end{lstlisting}
-\item []
-  \begin{center}
-    {\footnotesize
-\begin{tabular}{|ll|ll|}
-   & スレッドA                       &    & スレッドB                      \\\hline
-3: & {\tt if (m->locked == 0) \{}    &    &                                \\
-   &                                 & 3: & {\tt if (m->locked == 0) \{}   \\
-4: & {\tt m->locked = 1;}            &    &                                \\
-   &                                 & 4: & {\tt m->locked = 1;}           \\
-\end{tabular}}
-\end{center}
-
-\item これを不可分に行うのに(当然!)排他制御は使えない
-\item $\Rightarrow$ 不可分更新命令
-\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{不可分更新命令}
-  \begin{itemize}
-  \item []
-\begin{lstlisting}
-int lock(mutex_t * m) {
-  while (1) {  
-    if (test_and_set(@\mura{\tt \&m->locked}@)) {
-      break;
-    } else {
-      @\mura{\tt ブロックする;}@
-}}}
-int unlock(mutex_t * m) {
-  @\mura{\tt m->locked = 0;}@
-  @\mura{\tt ブロックいるスレッドを起こす;}@
-}
-\end{lstlisting}
-\item 3〜4行目はこれで解決
-\item 「ブロックする」をどう実現するか? $\Rightarrow$ \ao{(Linux) futex}
-\item \mura{ここでもlost wake up問題}
-\end{itemize}
-
-\begin{center}
-  {\scriptsize
-\begin{tabular}{|rl|rl|}
-    & スレッドA                       &     & スレッドB         \\\hline
-3:  & {\tt if (test\_and\_set(\&m->lcoked)) \{} &     &                   \\
-    &                                 & 11:  & {\tt m->locked = 0;} \\
-    &                                 & 12: & {\tt 寝ているスレッドを起こす;} \\
-6:  & {\tt ブロックする;}             &     & \\
-\end{tabular}}
-\end{center}
-\end{frame}
-
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{futex}
-  \begin{itemize}
-  \item \ao{「if (u == v) ブロックする」を不可分}に実行
-    \begin{lstlisting}
-futex(&u, FUTEX_WAIT, v, 0, 0, 0);
-\end{lstlisting}
-  \item {\tt u}上でブロックしているスレッドを$n$個まで起こす
-\begin{lstlisting}
-futex(&u, FUTEX_WAKE, @$n$@, 0, 0, 0);}
-\end{lstlisting}
-\item 注: futexというシステムコールはあるが,
-  C言語から呼べる関数(glibc wrapper)は定義されていない. 以下を自分で定義
-  (参照: man futex)
-\item 
-  \begin{lstlisting}
-#include <sys/syscall.h>
-#include <linux/futex.h>
-#include <sys/time.h>
-int futex(int * uaddr, int futex_op, int val,
-          const struct timespec *timeout,
-          int *uaddr2, int val3) {
-  return syscall(SYS_futex, uaddr, futex_op,
-                 val, timeout, uaddr2, val3);
-}
-\end{lstlisting}
-\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{不可分更新命令 $+$ futexによる排他制御実装}
-\begin{lstlisting}
-int lock(mutex_t * m) {
-  while (!test_and_set(&m->locked)) {
-    /* m->locked == 1 だったらブロック */
-    @\ao{\tt futex(\&m->locked, FUTEX\_WAIT, 1, 0, 0, 0);}@
-  } }
-int unlock(mutex_t * m) {
-  @\mura{\tt m->locked = 0;}@
-  futex(&m->locked, FUTEX_WAKE, 1, 0, 0, 0);
-}
-\end{lstlisting}
-
-\begin{itemize}
-\item \ao{4行目} ; \mura{7行目} $\Rightarrow$ ブロック; 起こす;
-\item \mura{7行目} ; \ao{4行目} $\Rightarrow$ ブロックしない
-\end{itemize}
-
-\begin{itemize}
-\item 扱っている問題は条件変数とほとんど同じ
-\item 他のデータ構造も, 「排他制御 $+$ 条件変数」の代わりに,
-  「不可分更新命令 $+$ futex」で実現することも可能な場合が多い
-\end{itemize}
-\end{frame}
-
 \section{休眠待機 vs. ビジーウェイト(繁忙待機?)}
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
@@ -1293,6 +1132,187 @@ int scounter_dec'(scounter_t * s) {
     \item \ao{\tt int pthread\_spin\_unlock(\&s);} /* unlock */
     \end{itemize}
   \end{itemize}
+\end{frame}
+
+\section{同期の実装}
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{同期はどのように実装されている?}
+  \begin{itemize}
+  \item 多くの, 同期のためのデータ構造は「排他制御 $+$ 条件変数」で実現できる
+    \begin{itemize}
+    \item 有限バッファ, バリア同期, セマフォ
+    \end{itemize}
+  \item では排他制御や条件変数は?
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{排他制御の実装}
+  \begin{itemize}
+  \item たとえばmutex ({\tt pthread\_mutex\_lock}) の概要
+\begin{lstlisting}
+int lock(mutex_t * m) {
+  while (1) {
+    if (ロックされていない) {
+      ロックする;
+      break;
+    } else {
+      ブロックする;
+}}}
+\end{lstlisting}
+\item 具体化 (3〜4行目)
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+\begin{lstlisting}
+typedef struct {
+  int @\ao{\tt locked;}@
+  ...
+} mutex_t;
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.0\textwidth}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+\begin{lstlisting}
+int lock(mutex_t * m) {
+  while (1) {   
+    if (@\ao{\tt m->locked == 0}@) {
+      @\ao{\tt m->locked = 1}@;
+      break;
+    } else {
+      ブロックする;
+}}}
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{ここでも競合状態!}
+  \begin{itemize}
+  \item []
+\begin{lstlisting}
+int lock(mutex_t * m) {
+  while (1)   
+    if (@\mura{\tt m->locked}@ == 0) {
+      @\mura{\tt m->locked}@ = 1;
+      break;
+    } else {
+      ブロックする;
+}}}
+\end{lstlisting}
+\item []
+  \begin{center}
+    {\footnotesize
+\begin{tabular}{|ll|ll|}
+   & スレッドA                       &    & スレッドB                      \\\hline
+3: & {\tt if (m->locked == 0) \{}    &    &                                \\
+   &                                 & 3: & {\tt if (m->locked == 0) \{}   \\
+4: & {\tt m->locked = 1;}            &    &                                \\
+   &                                 & 4: & {\tt m->locked = 1;}           \\
+\end{tabular}}
+\end{center}
+
+\item これを不可分に行うのに(当然!)排他制御は使えない
+\item $\Rightarrow$ 不可分更新命令
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{不可分更新命令}
+  \begin{itemize}
+  \item []
+\begin{lstlisting}
+int lock(mutex_t * m) {
+  while (1) {  
+    if (test_and_set(@\mura{\tt \&m->locked}@)) {
+      break;
+    } else {
+      @\mura{\tt ブロックする;}@
+}}}
+int unlock(mutex_t * m) {
+  @\mura{\tt m->locked = 0;}@
+  @\mura{\tt ブロックいるスレッドを起こす;}@
+}
+\end{lstlisting}
+\item 3〜4行目はこれで解決
+\item 「ブロックする」をどう実現するか? $\Rightarrow$ \ao{(Linux) futex}
+\item \mura{今度はlost wake up問題!}
+\end{itemize}
+
+\begin{center}
+  {\scriptsize
+\begin{tabular}{|rl|rl|}
+    & スレッドA                       &     & スレッドB         \\\hline
+3:  & {\tt if (test\_and\_set(\&m->lcoked)) \{} &     &                   \\
+    &                                 & 11:  & {\tt m->locked = 0;} \\
+    &                                 & 12: & {\tt 寝ているスレッドを起こす;} \\
+6:  & {\tt ブロックする;}             &     & \\
+\end{tabular}}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{futex}
+  \begin{itemize}
+  \item \ao{「if (u == v) ブロックする」を不可分}に実行
+    \begin{lstlisting}
+futex(&u, FUTEX_WAIT, v, 0, 0, 0);
+\end{lstlisting}
+  \item {\tt u}上でブロックしているスレッドを$n$個まで起こす
+\begin{lstlisting}
+futex(&u, FUTEX_WAKE, @$n$@, 0, 0, 0);}
+\end{lstlisting}
+\item 注: futexというシステムコールはあるが,
+  C言語から呼べる関数(glibc wrapper)は定義されていない. 以下を自分で定義
+  (参照: man futex)
+\item 
+  \begin{lstlisting}
+#include <sys/syscall.h>
+#include <linux/futex.h>
+#include <sys/time.h>
+int futex(int * uaddr, int futex_op, int val,
+          const struct timespec *timeout,
+          int *uaddr2, int val3) {
+  return syscall(SYS_futex, uaddr, futex_op,
+                 val, timeout, uaddr2, val3);
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{不可分更新命令 $+$ futexによる排他制御実装}
+\begin{lstlisting}
+int lock(mutex_t * m) {
+  while (!test_and_set(&m->locked)) {
+    /* m->locked == 1 だったらブロック */
+    @\ao{\tt futex(\&m->locked, FUTEX\_WAIT, 1, 0, 0, 0);}@
+  } }
+int unlock(mutex_t * m) {
+  @\mura{\tt m->locked = 0;}@
+  futex(&m->locked, FUTEX_WAKE, 1, 0, 0, 0);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\item \ao{4行目} ; \mura{7行目} $\Rightarrow$ ブロック; 起こす;
+\item \mura{7行目} ; \ao{4行目} $\Rightarrow$ ブロックしない
+\end{itemize}
+
+\begin{itemize}
+\item 扱っている問題は条件変数とほとんど同じ
+\item 他のデータ構造も, 「排他制御 $+$ 条件変数」の代わりに,
+  「不可分更新命令 $+$ futex」で実現することも可能な場合が多い
+\item じゃあ, futexがlost wakeup しないことはどう保証する(短い答え: ビジーウェイト)? 
+\end{itemize}
 \end{frame}
 
 \section{(高度な話題) Futexの実装}

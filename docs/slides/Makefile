@@ -13,7 +13,7 @@ bibtex := biber
 run_bibtex_and_latex_twice:=n
 
 # tex files
-tex := $(wildcard 03_*.tex)
+tex := $(wildcard 04_*.tex)
 # svg files
 #svg_svg := $(wildcard svg/*.svg)
 svg_svg := 
@@ -172,12 +172,12 @@ out/tex/$(1)_$(2).pdf_tex : out/tex/%_$(2).pdf_tex : out/svg/%_$(2).svg
 out/pdf/$(1)_$(2).pdf : out/pdf/%_$(2).pdf : out/svg/%_$(2).svg
 	mkdir -p $$(dir $$@)
 #	inkscape -D -z --file=$$< --export-pdf=$$@ # layer=$(2)
-	inkscape $$< --export-type=pdf $$@ # layer=$(2)
+	inkscape $$< --export-type=pdf -o $$@ # layer=$(2)
 # layered svg -> eps
 out/eps/$(1)_$(2).eps : out/eps/%_$(2).eps : out/svg/%_$(2).svg
 	mkdir -p $$(dir $$@)
 #	inkscape -D -z --file=$$< --export-eps=$$@ # layer=$(2)
-	inkscape $$< --export-type=eps $$@ # layer=$(2)
+	inkscape $$< --export-type=eps -o $$@ # layer=$(2)
 endef
 
 $(foreach svg,$(svg_svg),\
