@@ -42,8 +42,8 @@
 \end{frame}
 
 %%%%%%%%%%%%%%%%% 
-\begin{frame}
-  \frametitle{プログラムとメモリ}
+\begin{frame}[fragile]
+  \frametitle{プログラム言語とメモリ}
   \begin{itemize}
   \item プログラムが使うデータはほぼ全てメモリの中にある
     \begin{itemize}
@@ -52,7 +52,7 @@
     \end{itemize}
 
   \item プログラム内では「変数」「配列」などに格納される
-    
+
   % \item コンピュータがやっていることは大雑把に言えば,
   %   \begin{itemize}
   %   \item 外部装置(HDD, ネットワークなど)からメモリにデータを移動
@@ -92,6 +92,12 @@
   \item C言語のポインタ$=$アドレス
     ($\leftarrow$ ポインタがよくわからないという人へ)
   \item ポインタ変数はアドレスを格納する変数
+  \item C言語では「変数」「配列」に対応するアドレスをあからさまに
+    (整数として)見ることが可能
+\begin{lstlisting}
+printf("%ld %ld %ld %ld\n", &x, a, &y, p);
+\end{lstlisting}
+    
   \end{itemize}
 \end{frame}
 
