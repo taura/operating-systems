@@ -396,21 +396,52 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{Unixメモリ割り当てAPI}
+  \frametitle{Unixメモリ割り当てAPI (1)}
   \begin{itemize}
   \item \ao{\tt int $e$ = brk($l$);}
     \begin{itemize}
-    \item データセグメントの終わりのアドレスを$l$にする
+    \item データ領域の終わりのアドレスを$l$にする
     \item $\Rightarrow$ $x < l$のアドレス$x$が「利用可能」になる(つまりメモリが割り当てられる)
     \end{itemize}
   \item \ao{\tt void * $a$ = sbrk({\it sz});}
     \begin{itemize}
-    \item データセグメントの終わりのアドレスを{\it sz}バイト増やし,
+    \item データ領域の終わりのアドレスを{\it sz}バイト増やし,
       増やす前のアドレスを返す
     \item $\Rightarrow$ $x \in [a, a+\mbox{\it sz})$
       のアドレスが利用可能になる(つまりメモリが割り当てられる)
     \item {\tt sbrk(0)}は「データセグメントの終わりのアドレス」を返す
     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{余談: なぜ変な名前(brk, sbrk)?}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \begin{itemize}
+      \item 古のUnixでのアドレス空間: 割当て領域を少数の連続領域(セグメント)に限定
+        \begin{itemize}
+        \item コード(テキスト)セグメント
+        \item スタックセグメント
+        \item データセグメント
+        \end{itemize}
+      \item データセグメントの終わりのアドレスを\ao{\bf break 値}と呼んでいた
+      \item 現代のOS:
+        MMUによりページ単位で任意に割当て・非割当領域を管理可能
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \includegraphics[width=1.0\textwidth]{out/pdf/svg/segments.pdf}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Unixメモリ割り当てAPI (2)}
+  \begin{itemize}
   \item \ao{\tt mmap, mremap, munmap} : より柔軟なメモリ割り当て, 開放, ファイルのマッピング(後述)
   \item \ao{\tt int $e$ = mprotect($a$, {\it sz}, {\it prot});}
     \begin{itemize}
@@ -421,7 +452,7 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{メモリ割り当て$=$「仮想」メモリの割当}
+  \frametitle{メモリ割り当て$=$「仮想」メモリの割当 $\neq$ 「物理」メモリの割当}
   \begin{itemize}
   \item brk, sbrk, mmapなどでメモリを割り当てることの効果
     \begin{itemize}
@@ -435,16 +466,24 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
       割当て済みであることを記述する(だけ)
     \item 物理メモリはすぐには割り当てられない
     \end{enumerate}
-    
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{メモリ割り当て$=$「仮想」メモリの割当 $\neq$ 「物理」メモリの割当}
+  \begin{itemize}
   \item 実際にアクセスが起きた際に
     \begin{enumerate}
     \item CPUがページフォルト例外を発生
     \item OSの例外処理(ページフォルト処理)が発動
+      \begin{itemize}
+      \item Unix: \ao{\bf マイナー}フォルトと呼び後述のメジャーフォルトと区別
+      \end{itemize}
     \item OSがアドレス空間記述表を見て,
       そのアクセスが実際には合法であることが確認されると,
       物理メモリが割り当てられる
       (\ao{\bf 要求時ページング})
-    \item Unix: \ao{\bf マイナー}フォルト
     \end{enumerate}
   \end{itemize}
 \end{frame}
@@ -472,7 +511,7 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
   \frametitle{ページ(スワップ)アウト・イン}
   \begin{itemize}
   \item 実際にアクセスが起きたページに物理メモリを割当(要求時ページング)
-  \item 物理メモリが足りなく(逼迫する)ことがあり得る
+  \item $\Rightarrow$ 当然, 物理メモリが足りなく(逼迫する)ことがあり得る
   \item OSは物理メモリが逼迫すると,
     一部の内容を2次記憶に退避して, 解放する(\ao{\bf ページアウト, スワップアウト})
   \item 退避されたページの, ページテーブルエントリは「物理ページ不在」とし,
@@ -482,6 +521,22 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
   \end{itemize}
 \end{frame}
 
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{マイナーフォルト vs. メジャーフォルト}
+  \begin{itemize}
+  \item マイナーフォルト: 割当てられたページへの\ao{初めての}アクセス時におこるページフォルト
+    \begin{itemize}
+    \item 要求時ページングをしている限り必然的に(1ぺーじにつき1度は)起こる
+    \item 実際の処理は物理メモリの探索 $+$ ゼロ初期化
+    \end{itemize}
+  \item メジャーフォルト: ページアウトされたページに対するアクセス時におこるページフォルト
+    \begin{itemize}
+    \item ページの内容を2次記憶から読み込む処理を伴う
+    \item マイナーフォルトより時間がかかる
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
@@ -502,7 +557,7 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{資源使用量を知る・制限するAPI}
+  \frametitle{資源使用量を知るAPI}
   \begin{itemize}
   \item \ao{\tt int $e$ = getrusage(RUSAGE\_SELF, {\it ru});}
     \begin{itemize}
@@ -514,6 +569,14 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
     \begin{itemize}
     \item 上記同様. ただし子プロセスに対して
     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+    
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{資源使用量を制限するAPI}
+  \begin{itemize}
   \item \ao{\tt int $e$ = setrlimit(RLIMIT\_{\it res}, {\it rl});}
     \begin{itemize}
     \item 呼び出したプロセスの資源{\it res}の使用量を制限
