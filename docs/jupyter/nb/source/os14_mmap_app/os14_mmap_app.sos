@@ -1,0 +1,238 @@
+<!--- md --->
+# オペレーティングシステム 演習 14
+
+#* mmapの課題
+<!--- end md --->
+
+<!--- md w --->
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+<!--- end md --->
+
+<!--- md --->
+# mmapを利用した高速な検索
+
+* 整列された配列の2分探索をするbsearchというライブラリ関数がある(man bsearch参照)
+* 以下は使用例 (配列aが昇順に整列されていることに注意)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile bsearch.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os14_mmap_app/bsearch.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -o bsearch -O3 -Wall bsearch.c
+<!--- end code --->
+
+<!--- md --->
+* 実行例
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+./bsearch 100
+./bsearch 200
+./bsearch 400
+./bsearch 390
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+* 以下で, 多数の32 bit整数が隙間なく, 128M個, 昇順に整列されたファイルを作る (512MB)
+<!--- end md --->
+
+<!--- code w kernel=python label=prob,ans --->
+<!--- include nb/source/include/os14_mmap_app/mk_sorted_file.py --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+* 多少(20秒くらい)かかるが気長に待つ
+<!--- end md --->
+
+<!--- code w kernel=python label=prob,ans --->
+n = 128 * 1024 * 1024
+mk_sorted_file("sorted.bin", n)
+<!--- end code --->
+
+<!--- md --->
+* 確認
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+ls -l sorted.bin
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+#*P mmapの有効な利用
+<!--- end md --->
+
+<!--- md --->
+* ファイル名と検索したい整数Kを与えられ, その整数がファイル中にあれば,
+```
+193659 found at 25850-th element
+```
+のように, その数(193659)がファイル中の何番目(最初の数を0-th elementとする)であるかを表示し, なければ,
+```
+19365 not found
+```
+のように, ないと答えるプログラムを, mmapを有効に用いて書け
+* マニュアルページなどを参照しながら必要な ヘッダファイルを #include して, 一から書いてみよ
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile mmap_bsearch.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -o mmap_bsearch -Wall mmap_bsearch.c
+<!--- end code --->
+
+<!--- md --->
+* テスト
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=sorted.bin
+if /usr/bin/time ./mmap_bsearch ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile mmap_bsearch_ans.c
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+gcc -o mmap_bsearch_ans -Wall mmap_bsearch_ans.c
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+data=sorted.bin
+if /usr/bin/time ./mmap_bsearch_ans ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./mmap_bsearch_ans ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+#*P readとの比較
+<!--- end md --->
+
+<!--- md --->
+同じ仕様のプログラムを, 以下の二つの方法でも実装せよ
+
+1. read関数でファイルを大きな配列に全て読み込み, bsearchを使う
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile read_bsearch.c
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -o read_bsearch -Wall -O3 read_bsearch.c
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+data=sorted.bin
+if /usr/bin/time ./read_bsearch ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile read_bsearch_ans.c
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+gcc -o read_bsearch_ans -Wall -O3 read_bsearch_ans.c
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+data=sorted.bin
+if /usr/bin/time ./read_bsearch_ans ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./read_bsearch_ans ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+
+<!--- md --->
+2\. read関数でファイルを先頭から一定数読んでは, 与えられた値と比較する
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile linear_search.c
+<!--- exec-include ./mk_version.py -D VER=5 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -o linear_search -Wall -O3 linear_search.c
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+data=sorted.bin
+if /usr/bin/time ./linear_search ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile linear_search_ans.c
+<!--- exec-include ./mk_version.py -D VER=6 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+gcc -o linear_search_ans -Wall -O3 linear_search_ans.c
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+data=sorted.bin
+if /usr/bin/time ./linear_search_ans ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./linear_search_ans ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+

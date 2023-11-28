@@ -1,0 +1,230 @@
+<!--- md --->
+
+#* オペレーティングシステム 演習 12
+
+#* 先読み
+<!--- end md --->
+
+<!--- md w --->
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+<!--- end md --->
+
+<!--- md --->
+# はじめに: 逐次(シーケンシャル)アクセス vs ランダムアクセス
+
+* ファイルがキャッシュにあるか否かで性能が異なることを見たが, <font color="blue">ファイルがキャッシュにない場合の性能もアクセスパターンによって大きく異なる</font>
+* 大雑把に言って, <font color="blue">「逐次的なアクセス」vs.「ランダムなアクセス」で大きく性能が異なる</font>
+* 以下は上記のファイル読み込みを変更し, 逐次 vs. ランダムを引数で切り替えられるようにしたもの(第5引数が追加されており, 0ならば逐次, それ以外の場合それを乱数の種として読み出す順番をシャッフルする. どちらの場合も最終的に同じ場所を読み出す)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile read_file_seq_or_random.c
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os12_prefetch/read_file.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o read_file_seq_or_random read_file_seq_or_random.c
+<!--- end code --->
+
+<!--- md --->
+* なお, 大きなデータをランダムに読み出すと, HDDの場合, 相当待たされることになるので以下は小さめ(64MB)で実験する
+
+* <font color="blue">64MBを4KBずつ逐次</font>読み出し(第5引数=0)
+
+* <font color="red">注:</font> 以下でデータ(`../os11_cache/data.bin`)やプログラム(`../os11_cache/drop_cache`)がないというエラーになったら, 前回のJupyter notebook (os11_cache) の適切なセルを実行すること
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+./read_file_seq_or_random ${data} 64m 3 4k 0 > s.dat
+<!--- end code --->
+
+<!--- md --->
+* <font color="blue">64MBを4KBずつランダム</font>読み出し(第5引数=123456 (0以外))
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+./read_file_seq_or_random ${data} 64m 3 4k 123456 > s.dat
+<!--- end code --->
+
+<!--- md --->
+
+# 逐次的なアクセスはなぜ速いのか?
+
+* まずはランダムアクセスの可視化をしてみよう
+* 以下はreadの呼び出し前と後を曲線で表示しており, <font color="blue">グラフの拡大表示を繰り返していくと, 各読み出し(readシステムコール)にかかった時間がわかるのでやってみよ</font>
+* 以下は時間節約のため16MBを1回だけ読み出す
+* 各4KBの読み出しにかかった時間がどのくらいかを見てみよ
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+./read_file_seq_or_random ${data} 16m 1 4k 123456 > r.dat
+<!--- end code --->
+
+<!--- md --->
+#* 可視化
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+<!--- include nb/source/include/os12_prefetch/read_file_vis.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+graph(["r.dat"])
+<!--- end code --->
+
+<!--- md --->
+* <font color="red">一部拡大など対話的な可視化をするために, 別の可視化専用のnotebook (os12_prefetch_vis.py) に行ってください</font> (SoS形式のnotebookだと動かないことが判明)
+<!--- end md --->
+
+<!--- md --->
+* 逐次アクセスと比べる
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+./read_file_seq_or_random ${data} 16m 1 4k 0 > s.dat
+<!--- end code --->
+
+<!--- md --->
+* 可視化
+  * 特にはじめの方を, 2本の線の間隔がわかるようになるまで拡大表示てみよ
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["s.dat"])
+<!--- end code --->
+
+<!--- md --->
+* <font color="blue">ここからOSが何をしているのかの片鱗が見て取れる</font>
+* ある<font color="blue">4KBのアクセスが終わるとその後しばらくのreadには, ほとんど時間がかからずに終了</font>していることが見て取れる(`read_enter`と`read_return`にほとんど隙間がない)
+* それは, それらの(すぐに終わる)readの発行時にはすでにそのデータがキャッシュ(メモリ)上に載っているからであり, それはOSが4KBの読み出しであっても, 「逐次的な読み出し」を察知するとその先のデータも一度に読み出(先読み)しているからであると考えられる
+* 実験結果から最大で32回分, したがって128KBくらいの読み出しを一度に出していると考えられる
+* 従ってランダムな(飛び飛びの)アクセスであっても一度にその程度の量を読み出すのであれば逐次読み出しと大差のない性能が得られると予想され, 実際そのとおりの結果になる
+
+* 128MBを逐次またはランダムに読み出す. ただし一度に128KB程度読み出す
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+./read_file_seq_or_random ${data} 128m 1 128k 0 > s.dat
+../os11_cache/drop_cache ${data}
+./read_file_seq_or_random ${data} 128m 1 128k 123456 > r.dat
+<!--- end code --->
+
+<!--- md --->
+
+# アプリケーション設計に対する指針
+
+* 逐次読み出し と ランダム読み出しの性能の違いはデータ処理アプリケーション設計の際にも重要な設計指針を与える
+* 勿論大きくは, 「データを読み出す量を最小にする」ことが効率化につながるわけだが, 一度に読み出すデータをある程度以下(2次記憶装置の「遅延 * 最大転送速度」に比べて極端に少なすぎる値)にしても, 2次記憶装置からの読み出し高速化にはつながらない
+* 例えば平均遅延が5ms, 最大の転送速度が100MB/secのHDDは,
+  * 1バイトの読み出しに5msかかる一方,
+  * 100KB の読み出しに 5ms + 100KB/100MB = 5ms + 1ms = 6ms しかかからない, ということになる
+* したがってディスク上で連続した100KB程度のデータであればその中のごく一部を読み出すような節約はあまり意味がないことになる
+* キャッシュに載っているデータであれば意味があるので, キャッシュの効果までを含めた, 効率的なデータ構造は自明な問題ではない
+
+* このことは大規模データからの検索やマイニングのようなアプリケーションで特に問題となる
+* 索引(木構造やハッシュ表)を使ってアクセスするデータを減らす(結果的にアクセスがランダムになりがち)のが良いのか, 全てのデータを逐次的に読んでしまうのが良いのか, という選択を迫られる
+
+# ランダムアクセスを高速にすることは可能か?
+
+* ディスク上で散らばった細かいデータを高速に読み出すことは可能なのだろうか?
+* ランダムな読み出しが遅い理由は, 転送速度が「1回の読み出し量 / 遅延」で律速されるからである
+* 性能を向上させる基本的な手段は複数のアクセスを並行して行うことである.
+* 以下の方法で実際にこれで性能が向上するかどうかは2次記憶装置の特性に大きく依存する
+* 複数の(バラバラな場所に対する)アクセスを複数, 並行して処理することができる装置であれば性能向上が見込める
+
+* たとえ話
+  * 引っ越しで, 大量の荷物を運びたい
+  * 荷物は大量で, 1台の車だと何往復もする必要がある
+  * 全部の荷物を運び終えるのに一台の車をビュンビュン飛ばして走る方法(同じ時間で往復できる数を増やす)もあるが, 公道ではすぐに限界が来るだろう
+  * そうではなくて何台もの車を同時に走らせれば運び終えるまでの時間は短くなる
+
+# readahead
+
+* <font color="blue">readaheadはこれから必要となる領域をOSに指示するAPIで, OSがファイルの指定された領域をキャッシュまで読み込む効果を持つ</font>
+* man readaheadを参照
+* readと異なり, データの到着を待たないため, 複数の要求をどんどん発行することができる
+* 以下は第6引数で, 何回分の読み出しをreadahead (先出し)しておくかを指定する
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile read_file_ahead.c
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os12_prefetch/read_file.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o read_file_ahead read_file_ahead.c
+<!--- end code --->
+
+<!--- md --->
+* 最後の引数 (p) をいろいろと変えて実行してみよ
+  * p = 1 は1つだけreadaheadする(readaheadしたデータを直後にreadするので先読みの効果は殆ど無い)
+  * p = 2 からは(装置により)効果が現れるはず. 措置が理想的に, 2つの読み出しを並行に(それぞれを単独の読み出しと同じ時間で)処理できるのなら性能が2倍になる
+  * 一般に, <font color="blue">措置が理想的にp個の読み出しをほぼ並行に(それぞれを, 単独の読み出しと同じ時間で)処理できるのなら性能がp倍になる</font>
+
+* <font color="blue">pを変えて観測してみよ</font>
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+p=1
+./read_file_ahead ${data} 16m 1 4k 123456 ${p} > r.dat
+<!--- end code --->
+
+<!--- md --->
+* 可視化
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["r.dat"])
+<!--- end code --->
+
+<!--- md --->
+# 複数スレッドで読み込み
+
+* readaheadを使う代わりに複数のスレッドで読み出すことでも, 複数の読み出し要求を並行して出すことができる
+* 以下は読み出し部分をOpenMPで並列化したもの
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile read_file_thread.c
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os12_prefetch/read_file.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -fopenmp -o read_file_thread read_file_thread.c
+<!--- end code --->
+
+<!--- md --->
+* 実行 (スレッド数thをいろいろ変えて実行してみよ)
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+th=1
+OMP_NUM_THREADS=${th} ./read_file_thread ${data} 16m 1 4k 123456 > r.dat
+<!--- end code --->
+
+<!--- md --->
+* 可視化
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["r.dat"])
+<!--- end code --->
+
