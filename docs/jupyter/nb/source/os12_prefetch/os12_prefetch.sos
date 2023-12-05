@@ -83,8 +83,13 @@ graph(["r.dat"])
 <!--- end code --->
 
 <!--- md --->
-* <font color="red">一部拡大など対話的な可視化をするために, 別の可視化専用のnotebook (os12_prefetch_vis.py) に行ってください</font> (SoS形式のnotebookだと動かないことが判明)
+* 一部を拡大するために, start=, end= という引数を指定する
+* 以下を適宜変更して望むところを拡大する
 <!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["r.dat"], start=0, end=500)
+<!--- end code --->
 
 <!--- md --->
 * 逐次アクセスと比べる
@@ -103,6 +108,7 @@ data=../os11_cache/data.bin
 
 <!--- code w kernel=python --->
 graph(["s.dat"])
+# graph(["s.dat"], start=0, end=10000)
 <!--- end code --->
 
 <!--- md --->
