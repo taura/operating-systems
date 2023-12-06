@@ -132,8 +132,10 @@
   \begin{columns}
     \begin{column}{0.60\textwidth}
       \begin{itemize}
-      \item 各プロセスは「現在のディレクトリ」(カレントディレクトリ)
+      \item 各プロセスは「現在のディレクトリ」(\ao{カレントディレクトリ})
         という属性があり, 相対パスは, 通常カレントディレクトリからの相対パス
+      \item カレントディレクトリの変更: {\tt chdir} システムコール,
+        シェルの {\tt cd} コマンド
       \end{itemize}
     \end{column}
     \begin{column}{0.40\textwidth}
