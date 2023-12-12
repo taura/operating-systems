@@ -16,7 +16,8 @@ run_bibtex_and_latex_twice:=n
 tex := $(wildcard 06_*.tex)
 # svg files
 #svg_svg := $(wildcard svg/*.svg)
-svg_svg :=
+#svg_svg := $(wildcard svg/malloc_mmap.svg)
+svg_svg := 
 # layered svg files
 #lsvg_svg := $(wildcard lsvg/*.svg)
 #lsvg_svg := $(wildcard svg/*.svg)

@@ -386,7 +386,39 @@ char * a = sbrk(@{\it sz}@);
 \end{itemize}
 \end{frame}
 
+
 %%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{munmap, mremap}
+  \begin{itemize}
+  \item {\tt int munmap($a$, $l$)} : $a$から$l$バイト(ページ単位)開放
+  \item {\tt $a'$ = mremap($a$, $l$, $l'$, {\it flags}, $a'$)} :
+    $a$から$l$バイト割り当てられていた領域を, $l'$バイトに拡張
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{補足: OSのメモリ割当(mmap, sbrk) vs. malloc, new}
+  \begin{itemize}
+  \item 比喩:
+    \begin{itemize}
+    \item OS $\approx$ お菓子工場
+    \item 言語処理系・ライブラリ $\approx$ お菓子屋
+    \item アプリ $\approx$ お菓子を買う子供
+    \end{itemize}
+  \item mmap, sbrk, etc. : ページ(4096バイトなど)単位での割当・開放
+  \item malloc, new, etc. : より細かい単位での割当・開放
+
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{out/pdf/svg/malloc_mmap.pdf}
+  \end{center}
+    
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+
 \section{ファイルシステム高速化のためのOSの機構}
 %%%%%%%%%%%%%%%%%
 
