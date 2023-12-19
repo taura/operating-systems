@@ -39,7 +39,7 @@ gcc -o bsearch -O3 -Wall bsearch.c
 <!--- end code --->
 
 <!--- md label=prob,ans --->
-* 以下で, 多数の32 bit整数が隙間なく, 128M個, 昇順に整列されたファイルを作る (512MB)
+* 以下で, 多数の32 bit整数が隙間なく, 256M個, 昇順に整列されたファイルを作る (512MB)
 <!--- end md --->
 
 <!--- code w kernel=python label=prob,ans --->
@@ -51,7 +51,7 @@ gcc -o bsearch -O3 -Wall bsearch.c
 <!--- end md --->
 
 <!--- code w kernel=python label=prob,ans --->
-n = 128 * 1024 * 1024
+n = 256 * 1024 * 1024
 mk_sorted_file("sorted.bin", n)
 <!--- end code --->
 
@@ -76,7 +76,7 @@ ls -l sorted.bin
 ```
 19365 not found
 ```
-のように, ないと答えるプログラムを, mmapを有効に用いて書け
+のように, ないと答えるプログラムを, mmapをbsearchを有効に用いて書け
 * マニュアルページなどを参照しながら必要な ヘッダファイルを #include して, 一から書いてみよ
 <!--- end md --->
 
@@ -86,7 +86,7 @@ ls -l sorted.bin
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -o mmap_bsearch -Wall mmap_bsearch.c
+gcc -o mmap_bsearch -Wall -O3 mmap_bsearch.c
 <!--- end code --->
 
 <!--- md --->
@@ -113,7 +113,7 @@ if /usr/bin/time ./mmap_bsearch ${data} 225789696 | grep "225789696 not found" ;
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->
-gcc -o mmap_bsearch_ans -Wall mmap_bsearch_ans.c
+gcc -o mmap_bsearch_ans -Wall -O3 mmap_bsearch_ans.c
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->
@@ -131,13 +131,11 @@ if /usr/bin/time ./mmap_bsearch_ans ${data} 225789696 | grep "225789696 not foun
 <!--- end code --->
 
 <!--- md label=prob,ans --->
-#*P readとの比較
+#*P readで2分探索
 <!--- end md --->
 
 <!--- md --->
-同じ仕様のプログラムを, 以下の二つの方法でも実装せよ
-
-1. read関数でファイルを大きな配列に全て読み込み, bsearchを使う
+同じ仕様のプログラムを, 「read関数でファイルを大きな配列に全て読み込み, その配列をbsearchで探索する」という方法でも実装せよ
 <!--- end md --->
 
 <!--- code w kernel=python points=1 --->
@@ -186,53 +184,77 @@ if /usr/bin/time ./read_bsearch_ans ${data} 389200408 | grep "389200408 not foun
 if /usr/bin/time ./read_bsearch_ans ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
 <!--- end code --->
 
-<!--- md --->
-2\. read関数でファイルを先頭から一定数読んでは, 与えられた値と比較する
+<!--- md label=prob,ans --->
+#*P 線形探索
+
+同じ仕様のプログラムを, 「read関数でファイルを先頭から一定数読んでは, 与えられた値と比較する」ことでも実装せよ
 <!--- end md --->
 
 <!--- code w kernel=python points=1 --->
-%%writefile linear_search.c
+%%writefile lin_search.c
 <!--- exec-include ./mk_version.py -D VER=5 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -o linear_search -Wall -O3 linear_search.c
+gcc -o lin_search -Wall -O3 lin_search.c
 <!--- end code --->
 
 <!--- code w kernel=bash --->
 data=sorted.bin
-if /usr/bin/time ./linear_search ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
 <!--- end code --->
 
 <!--- code kernel=python label=ans --->
-%%writefile linear_search_ans.c
+%%writefile lin_search_ans.c
 <!--- exec-include ./mk_version.py -D VER=6 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->
-gcc -o linear_search_ans -Wall -O3 linear_search_ans.c
+gcc -o lin_search_ans -Wall -O3 lin_search_ans.c
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->
 data=sorted.bin
-if /usr/bin/time ./linear_search_ans ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
-if /usr/bin/time ./linear_search_ans ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 26127088  | grep "26127088 found at 7466042-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 173640831 | grep "173640831 found at 49610854-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 33502494  | grep "33502494 found at 9572459-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 413005234 | grep "413005234 found at 118006295-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 261784903 | grep "261784903 found at 74798397-th element" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 88660114  | grep "88660114 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 347238073 | grep "347238073 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 417070716 | grep "417070716 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 389200408 | grep "389200408 not found" ; then echo OK ; else echo NG ; fi
+if /usr/bin/time ./lin_search_ans ${data} 225789696 | grep "225789696 not found" ; then echo OK ; else echo NG ; fi
 <!--- end code --->
+
+<!--- md label=prob --->
+#*P 速度比較
+
+mmap_bsearch, read_bsearch, lin_search の3つのプログラムを, 実行速度の観点で比較せよ. つまり, (大きなデータに対して)速いと思われる順を 理由とともに述べよ. 実際に実験して確認してみよ
+
+<!--- end md --->
+
+<!--- md w points=1 --->
+
+<!--- end md --->
+
+<!--- md label=prob --->
+#*P メモリ使用量比較
+
+mmap_bsearch, read_bsearch, lin_search の3つのプログラムを, メモリ消費量の観点で比較せよ. ファイルが一切キャッシュされていない状態で各プログラムを一度起動した際, 最大でどのくらいのメモリが消費されるか, を比較せよ.
+
+<!--- end md --->
+
+<!--- md w points=1 --->
+
+<!--- end md --->
 
