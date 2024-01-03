@@ -1,0 +1,406 @@
+<!--- md --->
+#* オペレーティングシステム 演習 10
+
+#* メモリ管理, ページング
+<!--- end md --->
+
+<!--- md w --->
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+<!--- end md --->
+
+<!--- md --->
+# 仮想記憶の状態を知るためのコマンド
+
+## free
+
+* システムメモリ量
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+free
+<!--- end code --->
+
+<!--- md --->
+## ps
+
+* プロセス一覧が主目的だが, プロセスのメモリ使用量も表示している
+  * VSZ : Virtual memory size 仮想メモリの使用量
+  * RSS : Resident Set Size 物理メモリの使用量
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+ps auxww | head
+<!--- end code --->
+
+<!--- md --->
+## /usr/bin/time
+
+* コマンドの実行にかかった時間を表示するというのが主目的だが実際には, プロセスの種々のリソース使用量(時間, CPU時間, メモリ, etc.)を表示する
+* 特に
+  * maxresident 物理メモリ利用量の最大値
+  * major pagefaults
+  * minor pagefaults
+を表示してくれる
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+/usr/bin/time ls
+<!--- end code --->
+
+<!--- md --->
+* manを見るとわかるがオプション次第で色々なものを表示してくれる
+* getrsuageというシステムコールのコマンド版
+
+## top
+
+* プロセス一覧が主目的だが, freeと同等の情報も表示している
+* 端末内での実行が基本
+
+```
+top
+```
+
+## vmstat
+
+* システム全体の仮想記憶関係のアクティビティ(使用されている物理メモリ量, スワップアウト, スワップインの量など)を継続的に表示してくれる
+* 以下は1秒毎に表示してくれる
+* <font color="red">放っておくと終了しないので適当なところで ■ ボタンを押して止める</font>
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+vmstat 1
+<!--- end code --->
+
+<!--- md --->
+# 要求時ページング
+
+* OSから割り当てられたメモリ領域は, 割り当てられた時点では物理メモリは割り当てられていない
+* あるページに初めてアクセスしたときに<font color="blue">ページフォルト</font>がおき, そのときにOSが物理ページを割り当てる
+* したがってメモリ割り当てそのものは大きな領域でもすぐに終わるし, 物理メモリ量を超える領域も割り当てることが出来る
+* その後実際にアクセスした領域に対して時間がかかる
+
+* 以下のプログラムは
+  * 大きな配列(Nバイト)を割り当てる
+  * それをある間隔(Sバイト)で何度もアクセスする. 配列の最後まで行ったら先頭に戻る. 正確にはi回目は(S * i) % Nバイト目をアクセスする
+  * それをしながら時折, 時間とページフォルト数を計測する
+  * ある回数ごとに一回, iの値を表示する
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile page_fault_rec.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os10_vm/page_fault_rec.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o page_fault_rec page_fault_rec.c
+<!--- end code --->
+
+<!--- md --->
+* 以下のコマンドは, 192MBの配列を4096バイトごとに, (256 * 192 * 3)回アクセスする
+* 回数は, 192MBの配列の全ページを3回アクセスする回数(256回=1MB)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=192; ./page_fault_rec ${N} 4096 $((256 * ${N} * 3)) 500
+<!--- end code --->
+
+<!--- md --->
+* <font color="purple">以下のNを変えて(大きくして)みよ</font>
+* よく見ると1回目と2回目以降で速度が違うことを目視してみよ
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=192; ./page_fault_rec ${N} 4096 $((256 * ${N} * 3)) 500
+<!--- end code --->
+
+<!--- md --->
+* 以下はこの結果を可視化する
+<!--- end md --->
+
+<!--- code w kernel=python --->
+<!--- include nb/source/include/os10_vm/page_fault_vis.py --->
+<!--- end code --->
+
+<!--- md --->
+* アクセス量 vs 時間の表示
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "t")
+<!--- end code --->
+
+<!--- md --->
+* getrusageというシステムコールでページフォルトの回数を取得できる
+
+* アクセス量 vs マイナーページフォルトの表示
+* マイナーページフォルトはページフォルトの中で, IOが発生しない(初めてのアクセスでおきる)もの
+* どのようなグラフが現れるか予想してから実行せよ
+* Nを変えて, 回数がどう変わるか, それが理にかなっているか確認せよ
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "minflt")
+<!--- end code --->
+
+<!--- md --->
+* アクセス量 vs メジャーページフォルトの表示
+* メジャーページフォルトはページフォルトの中で, IOが発生する(一度アクセスした後2次記憶に追い出されたページをまたアクセスしたときにおきる)もの
+* この実行でメジャーページフォルトはおきるか? どのようなグラフが現れるか考えてから実行せよ
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "majflt")
+<!--- end code --->
+
+<!--- md --->
+# cgroupによるメモリ使用量の制限
+
+* メジャーページフォルトは物理メモリが逼迫したときに起こるので, 通常はおこらない
+* 実際それが起きるような状況は, 「メモリが足りない」という状況で, コンピュータの動作事態に悪影響がある
+* Jupyterの実験環境は128GBのメモリを搭載しているが, 無理矢理128GBのメモリを使って実行したら, 悲惨なことが起きるので決してやらないこと
+* ここでは Linux のcgroupという仕組みを使って特定プロセスに対してメモリ量を制限して実行する
+* 細かい仕組みは省略するが, 以下(cg_mem_limit)は, cgroupを用いて256MBにメモリ使用量を制限した上で実行するコマンド
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=192; cg_mem_limit ./page_fault_rec ${N} 4096 $((256 * ${N} * 3)) 500
+<!--- end code --->
+
+<!--- md --->
+* 以下でNを変えて, 256MBよりも少し小さな, または少し大きな配列をアクセスするようにしてみよ
+* 256MBよりも大きな配列をアクセスしつつ, ストライド(以下の4096)を変えて見よ. 例えば8192にすると, 2ページに一回アクセスすることになる. 結果を予想しつつ実験せよ
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=192; cg_mem_limit ./page_fault_rec ${N} 4096 $((256 * ${N} * 3)) 500
+<!--- end code --->
+
+<!--- md --->
+* 時間
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "t")
+<!--- end code --->
+
+<!--- md --->
+* マイナーフォルト
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "minflt")
+<!--- end code --->
+
+<!--- md --->
+* メジャーフォルト
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "majflt")
+<!--- end code --->
+
+<!--- md --->
+# ページ置換の可視化
+
+* Linuxでは mincore というシステムコールを用いて, どのページに物理メモリが割り当てられているかを取得できる
+* 以下はそれを用いて, どのページに物理メモリが割り当てられているかを記録する
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile mincore_rec.c
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os10_vm/page_fault_rec.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o mincore_rec mincore_rec.c
+<!--- end code --->
+
+<!--- md --->
+## 実行
+
+* Nやストライドを変えて実行, 可視化してみよ
+* cg_mem_limit はプロセスの使用可能物理メモリ量を256 MBに制限するので以下のNが256に近づくかそれを超える当たりで挙動が大幅に変化する
+* それを確認せよ
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=192; cg_mem_limit ./mincore_rec ${N} 4096 $((256 * ${N} * 3)) 500
+<!--- end code --->
+
+<!--- md --->
+* その可視化プログラムは以下
+<!--- end md --->
+
+<!--- code w kernel=python --->
+<!--- include nb/source/include/os10_vm/mincore_vis.py --->
+<!--- end code --->
+
+<!--- md --->
+* 以下を実行すると動画ファイル(mincore.mp4)が生成, 表示される
+  * 動画と終了状態の静止画が両方表示されてしまうが気にしない
+* 動画の再生ボタンで再生する
+* 以下でNを, 256より十分小さな値(192)から256よりわずかに小さい値, 256を少し超える値などに変えて可視化してみよ
+* animate_mincoreの3つめのパラメータ(0.05)は保存される動画の再生速度(フレーム数)を調整するもので, 大きくすると早く(短時間で)再生され, 小さくすると遅くなる
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=192; cg_mem_limit ./mincore_rec ${N} 4096 $((256 * ${N} * 3)) 500
+<!--- end code --->
+
+<!--- code w kernel=python --->
+from IPython.display import Video
+animate_mincore("mincore.dat", "mincore.mp4", 0.05)
+Video("mincore.mp4")
+<!--- end code --->
+
+<!--- md --->
+## ランダムアクセス
+
+* 以下は, 2番めの引数を-1にすると配列をランダムにアクセスするようにしたもの
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile mincore_random_rec.c
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os10_vm/page_fault_rec.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o mincore_random_rec mincore_random_rec.c
+<!--- end code --->
+
+<!--- md --->
+## 実行
+
+* Nやストライドを変えて実行
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=192; cg_mem_limit ./mincore_random_rec ${N} $((256 * ${N} * 3)) 500
+<!--- end code --->
+
+<!--- md --->
+* 可視化
+<!--- end md --->
+
+<!--- md --->
+* 時間
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "t")
+<!--- end code --->
+
+<!--- md --->
+* マイナーフォルト
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "minflt")
+<!--- end code --->
+
+<!--- md --->
+* メジャーフォルト
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "majflt")
+<!--- end code --->
+
+<!--- md --->
+* アニメーション
+<!--- end md --->
+
+<!--- code w kernel=python --->
+from IPython.display import Video
+animate_mincore("mincore.dat", "mincore.mp4", 0.05)
+Video("mincore.mp4")
+<!--- end code --->
+
+
+<!--- md --->
+# madviseによるページング制御
+
+## 実行 (Nやストライドを変えて実行, 可視化してみよ)
+
+* cg_mem_limitは, 物理メモリ量を256MBに制限してプログラムを実行する
+* ./mincore_rec は N MB の配列を何度もスキャンする
+* LRU(を近似した)置換のせいで, 物理メモリ使用量が 256 MBを少しでも超えると, ページフォルト率がほぼ1になってしまう
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=260; cg_mem_limit ./mincore_rec ${N} 4096 $((256 * ${N} * 5)) 500
+<!--- end code --->
+
+<!--- md --->
+## madvise
+
+* madviseはOSにアクセスパターンを教えてページングアルゴリズムにヒントを与えるものだが, 中でもPAGE_OUTというアドバイスは, 指定した領域を即座にページアウトする, 直接的な指示になる
+* 以下はこれをつかって, 上記のプログラムのページングの挙動を変えて大幅に高速化する例である
+* 256MBがほぼ埋まったところで, 配列の後半, 256MBに収まらない部分を, madvise を使って PAGE_OUT する
+* 結果的に, 配列の前半約 256MB が常に物理メモリに載っていることになり, ページフォルト率を (N-256)/N 程度に抑えることが出来る
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile madvise_rec.c
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os10_vm/page_fault_rec.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o madvise_rec madvise_rec.c
+<!--- end code --->
+
+<!--- md --->
+## 実行
+
+* 速度の違いは可視化をしなくてもすぐにわかるはず
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%system
+! N=260; cg_mem_limit ./madvise_rec ${N} 4096 $((256 * ${N} * 5)) 500
+<!--- end code --->
+
+<!--- md --->
+* 可視化
+<!--- end md --->
+
+<!--- md --->
+* 時間
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "t")
+<!--- end code --->
+
+<!--- md --->
+* マイナーフォルト
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "minflt")
+<!--- end code --->
+
+<!--- md --->
+* メジャーフォルト
+<!--- end md --->
+
+<!--- code w kernel=python --->
+progress_plt("time_rusage.dat", "accessed", "majflt")
+<!--- end code --->
+
+<!--- code w kernel=python --->
+from IPython.display import Video
+animate_mincore("mincore.dat", "mincore.mp4", 0.05)
+Video("mincore.mp4")
+<!--- end code --->
