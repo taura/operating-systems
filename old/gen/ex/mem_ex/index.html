@@ -1,0 +1,945 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="content-script-type" content="text/javascript" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta name="author" content="haraken" />
+<meta name="description" content="オペレーティングシステムの
+メモリ管理に関する演習" />
+<meta name="keywords" content="" />
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+h1 {
+  font-size   : 24pt;
+  xfont-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #DDDDEE;
+}
+
+h2 {
+  font-size   : 20pt;
+  xfont-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+h3 {
+  font-size   : 18pt;
+  xfont-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+div {
+  font-size   : 16pt;
+  xfont-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 16pt;
+  xfont-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+
+<!--
+h1 {
+  background-color:#cfc;
+}
+h2 {
+  background-color:#88f;
+}
+h3 {
+  background-color:#ddf;
+}
+h4 {
+  background-color:#eef;
+}
+pre {
+  background-color:#efe;
+  font-size:150%;
+}
+-->
+</style>
+
+<title>
+オペレーティングシステムのメモリ管理に関する演習
+</title>
+
+</head>
+
+
+<body>
+<div class="header">
+</div>
+<div class="background">
+<div class="main">
+<div class="contents">
+
+<!-- コンテンツはここから -->
+
+<h1>オペレーティングシステムのメモリ管理を理解する演習</h1>
+<div>
+<p>
+goto <a href=../../../ >home page</a>.
+</p>
+
+<p>
+<a href=#mincore>演習5</a>をやるには，
+<font color=red>matplotlib, numpy</font>
+という二つのライブラリをインストールする必要があります．
+詳しくは<a href=#mincore>該当セクション</a>を見てください．
+</p>
+
+<p>
+  今日(2017/11/28) までに説明しているのは演習5までです.
+  (それ以降も作業としては簡単ですが演習としては後日また
+  時間があれば行います)
+</p>
+
+<p>
+  一部の演習は，あまりメモリ搭載量の多いマシンではやりにくい．
+  その場合，
+<a href=vm_and_linux.html>
+仮想マシンソフトウェアとゲストOSをインストール</a>
+しておくとよい. 
+もし今まだこの作業をやっていない場合,
+この作業を<font color=red>授業中にやることはおすすめしない.</font>
+以降の実験はLinuxであればどこでも行える.
+仮想マシンを使う理由は, 
+スラッシング(メモリを使いすぎてページングが多発した状態)
+を起こした時に, PC全体が使用不能, 不安定にならないようにするためである.
+スラッシングを起こさない範囲の実験は,
+普段使っているホスト環境で行えばよい.
+上記作業を行なっていない人は,
+まずスラッシングを起こさない範囲で実験を行い,
+その後, 仮想環境を構築すること.
+実際のところはメモリ搭載量が4GB程度のマシンであれば，
+実機でやっても大した問題はない．
+8GB, 16GBとなると，スラッシングを起こす実験には，
+その分多くの時間がかかるようになるし，どのくらい使うと
+スラッシングを起こすかの見極めにも時間がかかるようになる．
+</p>
+
+<!--
+<p>
+授業終了時は<a href=http://enq-maker.com/bpqDk9V>アンケート</a>
+へ回答をお願いします.
+</p>
+-->
+
+<p>
+メモリ管理の理解を深める(実感する)のが主な目的です.
+それが必要と思う人は前から順にやって行ってください.
+</p>
+
+<p>どれも簡単そうで仕方ないという人はいきなり
+<a href=#pagefaults>演習4</a>と, それ以降(だけ)をやっても良いです.
+</p>
+</div>
+
+<h2>はじめに</h2>
+<div>
+
+<p>オペレーティングシステムが提供している「仮想記憶」と呼ばれる
+メモリ管理方式について, 概念だけでなく実感として理解するために,
+以下の簡単な演習を行う. 理解してほしい概念は以下のとおり.
+<ul>
+<li>プログラムがOSに割り当ててもらうことができるメモリ(正確には,
+<font color=red>「仮想メモリ」</font>)の量は,
+  物理的に搭載しているメモリとは関係なく決まる.</li>
+
+<li>プログラムがOSに割り当ててもらっているメモリはページと呼ばれる
+単位(通常4KB程度の連続したアドレスの集合)ごとに管理され, 
+ある時点での一ページの状態は以下に分類される.
+<ol>
+<li>まだ一度も使われたことがなく, 物理メモリもディスクも消費していない</li>
+<li>物理メモリ上に存在する</li>
+<li>物理メモリ上に存在せず, ディスク上に存在する</li>
+</ol>
+あるページは, 割り当てられた当初は1. の状態で, 最初に使われた(loadもしくは
+sotre命令によって触られた)時に2. の状態になる(<font color=red>ディマンドページング,
+または要求時ページング</font>). それ以降, 他のページに
+物理メモリが割り当てられることにより, ディスク
+(<font color=red>ページング領域またはスワップ領域</font>)
+に追い出(<font color>ページアウト</font>)されると3.の状態になる. 
+以降はまた触れるとディスクからページが読み込ま
+(<font color=red>ページイン</font>さ)れ, 2.の状態になる. その後また追い出されると3. の状態, 
+... という具合.</li>
+</ul>
+実際のところ, ほとんどのページが1.または2.の状態にある状態が,
+コンピュータが「健全に」動作していると言える状態. 多くのページが2.と
+3.の遷移を繰り返すような状態は,アプリケーションは一応動くとは言うものの, 
+動作は極端に遅くなっている事が多い(<font color=red>スラッシング</font>).
+</p>
+</div>
+
+
+<h2>自分のコンピュータの物理メモリ, ページング領域の大きさを知る</h2>
+<div>
+色々な方法がある.
+<ul>
+<li>デスクトップのパネルに「システムモニタ」を追加し, 
+左クリック -> 「リソース」で, 
+  メモリとスワップの履歴のグラフの下に書いてある.
+これは自分のラップトップのように, 
+デスクトップ環境があるマシンでしか使えない. 
+例えばネットワーク経由でログインしたサーバなどでは使えないので,
+以下で紹介するもう少しプリミティブな方法も身につけるようにする.
+</li>
+
+<li><tt>top</tt>コマンドを使う.
+<blockquote>
+<pre>
+$ <font color=blue><b>top</b></font color=blue>
+</pre>
+</blockquote>
+で, 実行中のプロセスリストの上に以下のような表示がされる.
+<blockquote>
+<pre>
+top - 02:05:41 up 4 days,  2:08,  4 users,  load average: 0.82, 0.84, 0.65
+Tasks: 228 total,   2 running, 226 sleeping,   0 stopped,   0 zombie
+Cpu(s):  4.7%us,  2.1%sy,  0.1%ni, 93.0%id,  0.0%wa,  0.1%hi,  0.0%si,  0.0%st
+Mem:   8060800k total,  2076200k used,  5984600k free,    30972k buffers
+Swap:  3905528k total,   347908k used,  3557620k free,  1533120k cached
+
+ ...
+</pre>
+</blockquote>
+必要な情報はこのうちの, Mem: 8060800k total, の部分と,
+Swap:  3905528k totalの部分. これは, このマシンが物理メモリを約8GB搭載し,
+ページング領域を約4GB設定している事を示している.
+</li>
+
+<li><tt>free</tt>
+コマンドを使うと, topの上部に表示される情報が手っ取り早く
+表示される.
+<blockquote>
+<pre>
+$ <font color=blue><b>free</b></font>
+             total       used       free     shared    buffers     cached
+Mem:       8060800    2065488    5995312          0      30428    1524344
+-/+ buffers/cache:     510716    7550084
+Swap:      3905528     353404    3552124
+</pre>
+</blockquote>
+Mem: の最初の欄(上記の8060800)が搭載物理メモリ量,
+Swap: の最初の欄(上記の3905528)が設定されているページング領域の量で,
+ともにKB. つまりこのマシンは物理メモリを8GB搭載し, 
+ページング領域が約4GB設定されている. 
+</li>
+
+<li><tt>/proc/meminfo</tt>
+ファイルを表示すると, 
+メモリに関する情報が詳しく表示される.
+<blockquote>
+<pre>
+$ <font color=blue><b>cat /proc/meminfo</b></font>
+MemTotal:        8060800 kB
+MemFree:         5995852 kB
+  ...
+SwapTotal:       3905528 kB
+SwapFree:        3552324 kB
+  ...
+</pre>
+</blockquote>
+</li>
+</ul>
+</div>
+
+<h3><font color=blue>演習1</font></h3>
+<div>
+上記のどれかの方法を用いて, 
+自分のマシンの搭載物理メモリ量およびページング(swap)領域の大きさを取得, 
+記憶せよ.
+</div>
+
+<h2>これ以降の実験は...</h2>
+<div>
+<p>これ以降の実験は, コンピュータのメモリをぎりぎりまで使い,
+スラッシングを起こす実験が含まれている. 
+そのような実験は, 自分のマシンそのもの(ホスト環境)でやるのではなく,
+仮想マシンソフトウェア上に導入されたOS(ゲスト環境)上で行うこと.
+ゲスト環境がない場合, 
+スラッシングを起こすような実験は行わない,
+もしくは最悪, コンピュータを再起動しても良いようなつもりで行うこと.
+</p>
+</div>
+
+<h2>割り当て可能な<font color=red>仮想メモリ</font>サイズ,
+仮想メモリと<font color=red>物理メモリ</font>の違いを知る</h2>
+
+<div>
+以下の二つのプログラムをコンパイルし，引数 N を色々変えて実行してみよ．
+<ol>
+<li> <a href=alloc.c>alloc.c</a> : メモリを N MB 割り当てるだけのプログラム
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(int argc, char ** argv) {
+  if (argc <= 1) { fprintf(stderr, "usage: %s N\n", argv[0]); exit(1); }
+  unsigned long N = atol(argv[1]);
+  unsigned long sz = (N * 1024L * 1024L);
+  /* alloc N MB */
+  char * a = malloc(sz);
+  if (a == NULL) { perror("malloc"); exit(1); }
+  printf("# malloc(%lu) = %p\n", sz, a);
+  return 0;
+}
+</pre>
+</li>
+
+<li> <a href=alloc_and_scan.c>alloc_and_scan.c</a> : メモリを N MB 割り当てて，触るプログラム
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(int argc, char ** argv) {
+  if (argc <= 1) { fprintf(stderr, "usage: %s N\n", argv[0]); exit(1); }
+  unsigned long N = atol(argv[1]);
+  unsigned long sz = (N * 1024L * 1024L);
+  /* alloc N MB */
+  char * a = malloc(sz);
+  if (a == NULL) { perror("malloc"); exit(1); }
+  printf("# malloc(%lu) = %p\n", sz, a);
+  unsigned long i,j;
+  /* scan N MB three times */
+  for (i = 0; i < 3; i++) {
+    printf("# %ld-th scan\n", i);
+    for (j = 0; j < sz; j += 4096) {
+      a[j]++;			/* touch the page */
+    }
+  }
+  return 0;
+}
+
+</pre>
+</li>
+</ol>
+</div>
+
+<h3><font color=blue>演習2</font></h3>
+<div>
+<ol>
+<li>
+alloc.cをコンパイルし，色々な<i>N</i>を与えて実行し，
+何MBまで割り当てが成功するか，
+予測した上で調べてみよ．
+</li>
+
+<li>
+alloc_and_scan.cをコンパイルし色々な<i>N</i>を与えて実行し，
+実行時間が急激に遅くなる<i>N</i>のおおよその値を，
+予測した上で実験して見つけてみよ．
+</li>
+</ol>
+</div>
+
+<h2>実験3: vmstat</h2>
+<div>
+スラッシング(大量のページング)がおきている様子は, システムモニタでも観測できるが,
+コマンドラインでこれを観測するには, <tt>vmstat</tt>というコマンドを使うと良い.
+<blockquote>
+<pre>
+$ vmstat 1
+</pre>
+</blockquote>
+で1秒毎の, メモリ・IO関係の統計が表示される.
+
+<blockquote>
+<pre>
+$ vmstat 1
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 0  0 354496 7533472  24748 219036   14   24    20    31    0   10  1  1 98  0
+ 0  0 354496 7532480  24748 219652    0    0     0     0  314 1010  4  2 94  0
+ 0  0 354496 7532480  24748 219716    0    0     0     0  248  903  4  1 95  0
+ 0  0 354496 7532592  24748 219780    0    0     0     0  298 1013  4  1 95  0
+   ...
+</pre>
+</blockquote>
+
+注目は, 
+<ul>
+<li> free : 空き物理メモリ(上記では7.5GB程度) </li>
+<li> si : swap in (ページインの回数) </li>
+<li> so : swap out (ページアウトの回数) </li>
+</ul>
+で, 「健全な状態」ではsi, soが基本的には0のままである. 
+</div>
+
+<h3><font color=blue>演習3</font></h3>
+<div>
+vmstat 1でメモリの状態を表示しながら，
+alloc_and_scanを大きなNに対して実行してみよ．
+その間の上記のフィールドの値を観察してみよ
+(swpd, free, si, so, bi, boなど).
+</div>
+
+
+<a name=pagefaults></a>
+<h2>実験4: ページフォルトの回数を計測する</h2>
+<div>
+<p>
+基本的には，あるプロセスがOSから取得したページを初めて触った際にページフォルトが起きる．
+これは要求時ページング(Demand Paging)の結果である.
+このようなページフォルト
+を, Unixの用語では<font color=blue>「マイナーフォルト」</font>と呼んでいる.
+マイナーと呼ばれる所以は後にわかる.
+</p>
+
+<p>
+さらに, 物理ページをこえるメモリを使用している場合, 
+あるページを最後に触ってからまた触るまでの間に,
+そのページがディスクに追い出されてしまうことがある. 
+そのようなページに触った場合におきる
+ページフォルトを, Unixの用語では<font color=blue>「メジャーフォルト」
+</font>と呼んでいる.
+「メジャーフォルト」が継続的に起きている状態を
+スラッシングという．
+</p>
+
+<p>
+同じページフォルトでもマイナーとメジャーでは, 一回あたりのコストは,
+メジャーリーグ選手の給料とマイナーリーグ選手の給料並みに, 大きく違う.
+ここではalloc_and_scanに時間計測およびページフォルト回数の計測を追加して実験する．
+</p>
+
+
+<p>
+<a href=record_page_faults.c>このプログラム(record_page_faults.c)</a>を
+コンパイルして実行
+<blockquote>
+<pre>
+$ gcc -o record_page_faults record_page_faults.c
+$ ./record_page_faults <i>N</i>
+</pre>
+</blockquote>
+すると, <i>N</i> MBのメモリを確保し, 
+それを3回スキャンし, 以下の形式でデータを標準出力に出力する.
+<blockquote>
+触ったページ数  経過時間  マイナーフォルト回数 メジャーフォルト回数<br />
+触ったページ数  経過時間  マイナーフォルト回数 メジャーフォルト回数<br />
+触ったページ数  経過時間  マイナーフォルト回数 メジャーフォルト回数<br />
+    ...
+</blockquote>
+触ったページ数はすべてのスキャンを通じて触ったページ数の合計である
+(各スキャンの開始時に0にリセットしない).
+</p>
+
+<p>
+リダイレクトを用いてデータを保存したらそれをgnuplotで容易に可視化できる.
+例えば,
+<blockquote>
+<pre>
+$ ./record_page_faults 1000 &gt; a.dat
+</pre>
+</blockquote>
+としてデータをa.datに保存する. 
+それを以下のようにして, gnuplotで表示する.
+gnuplotは(仮想環境ではなく)ホストOSの方で実行する．
+ホストOSからa.datが読めるようにするには，
+<a href=../threads_processes/index.html#sshfs>sshfsを使う</a>のがおすすめ．
+</p>
+
+<p>
+<blockquote>
+<pre>
+$ <b>gnuplot</b>
+gnuplot&gt; <b>plot "a.dat" using 1:2 with lines</b>
+gnuplot&gt; <b>plot "a.dat" using 1:3 with lines</b>
+gnuplot&gt; <b>plot "a.dat" using 1:4 with lines</b>
+</pre>
+</blockquote>
+などとすると, それぞれ経過時間，マイナーフォルト，メジャーフォルトが表示される．
+横軸はアクセスしたページ数である．
+毎回長いコマンドを打つのはつらいので, コマンドを
+ファイル(例えば a.gpl)に保存した上で,
+<blockquote>
+<pre>
+$ <b>gnuplot a.gpl</b>
+</pre>
+</blockquote>
+としてもよい. a.gplの中身は例えば以下．pause -1 は，キー入力があるまで
+ウィンドを消さないで待っているというコマンド．
+</p>
+
+<blockquote>
+<pre>
+plot "a.dat" using 1:2 with lines
+pause -1
+plot "a.dat" using 1:3 with lines
+pause -1
+plot "a.dat" using 1:4 with lines
+pause -1
+</pre>
+</blockquote>
+</div>
+
+<h3><font color=blue>演習4</font></h3>
+<div>
+<ol>
+<li><a href=record_page_faults.c>record_page_faults.c</a>
+  をダウンロードしてコンパイルする.</li>
+<li>まず<i>N</i>として, 十分物理メモリに収まる値を指定し, 
+  上記データを可視化してみよ.</li>
+<li><i>N</i>を徐々に大きくして, 
+物理メモリを少し上回るくらいの<i>N</i>を指定し,
+上記データを可視化してみよ. これはスラッシングを起こす実験なので,
+無闇に大きな値を指定してはいけない. 
+くれぐれも仮想環境で行うこと．
+仮想マシンの搭載メモリは小さめに設定するほうが良い(128MB, 256MB程度)．
+</li>
+</ol>
+</div>
+
+<a name=mincore></a>
+<h2>mincore : どのページに物理メモリが割り当てられているか調べる</h2>
+<div>
+<p>
+Linuxにはmincoreというシステムコールがあり,
+指定されたアドレスの範囲にあるページ集合のうち,
+現在どのページに物理メモリが割り当てられているかを教えてくれる.
+これを使って, Linuxのページ置換方式が, 
+だいたいLRUに近いものになっていることを確認してみよう.
+</p>
+
+<p>
+<a href=record_incore.c>このプログラム(record_incore.c)</a>を
+コンパイルして実行
+<blockquote>
+<pre>
+$ gcc -o record_incore record_incore.c
+$ ./record_incore <i>N</i>
+</pre>
+</blockquote>
+すると, <i>N</i> MBのメモリを確保し, 
+それを3回スキャンし, 以下の形式でデータを標準出力に出力する.
+
+<blockquote>
+経過時間  最後にアクセスしたページ番号 Z0 O0 Z1 O1 ...<br />
+経過時間  最後にアクセスしたページ番号 Z0 O0 Z1 O1 ...<br />
+経過時間  最後にアクセスしたページ番号 Z0 O0 Z1 O1 ...<br />
+    ...
+</blockquote>
+ここでZ0, O0, Z1, O1, ... の部分は可変の整数で，
+全ページがresident (メモリ上にある)か否かのbitmapを，
+run length encoding したものである．
+</p>
+
+<p>これをアニメーションで可視化する
+<a href=vis_incore.py>ツール</a>を用意したので，
+ぜひ見てみると良い．
+ただし実行には二つのパッケージ
+python-numpy, python-matplotlibをインストールする必要がある．
+学科PCのLinuxなら以下のコマンドで実行できる．
+<pre>
+$ sudo apt-get install python-numpy python-matplotlib
+</pre>
+以下が成功すれば無事インストールできている．
+<pre>
+$ <font color=blue><b>python</b></font>
+Python 2.7.6 (default, Mar 22 2014, 22:59:56) 
+[GCC 4.8.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; <font color=blue><b>import matplotlib,numpy</b></font>
+</pre>
+実行例:
+<pre>
+$ ./record_incore &gt; a.log
+$ python vis_incore.py a.log
+</pre>
+</p>
+
+<p>
+アニメーションは実時間を反映しているので，
+マイナーページフォルト，
+メジャーページフォルト，
+ページフォルなしの時間の違いを感じることができる．
+スピードはファイル冒頭の，
+<t>animation_speed</t> をいじることで調節可能．
+</p>
+
+<p>
+また，全体としてLRU likeにページが管理されていること，
+それがこのようなアクセスパターンと相性が悪いことがよくわかる．
+</p>
+</div>
+
+<h3><font color=blue>演習5</font></h3>
+<div>
+<ol>
+<li><a href=record_incore.c>record_incore.c</a>
+  をダウンロードしてコンパイルする.</li>
+<li>例によってまず<i>N</i>として, 
+十分物理メモリに収まる値を指定し, 
+<a href=vis_incore.py>vis_incore.py</a>で可視化してみよ.
+</li>
+<li><i>N</i>を徐々に大きくし，
+メジャーフォルトがおこるギリギリの値に設定し,
+可視化してみよ. これはスラッシングを起こす実験なので,
+無闇に大きな値を指定してはいけない. 
+くれぐれも仮想環境で行うこと．
+仮想マシンの搭載メモリは小さめに設定するほうが良い
+  (128MB, 256MB程度)．</li>
+<li>record_incore.cを修正し，
+  アクセスパターンや繰り返し数を変えて実験してみよ．</li>
+<li>複数のプロセスを同時に立ち上げてみるのも面白い．
+(vis_incore.pyも同時に立ち上げれば，
+おおよそ実時間を反映した可視化になる)</li>
+<li>Linuxには，madviseというシステムコールで，
+仮想記憶システムにヒントを与えることができる．
+これを用いて，ページフォルト数(したがって実行速度)
+を改善できないかを
+  してみよ(できるか不明)．</li>
+</ol>
+</p>
+</div>
+
+<!--
+<a name=pindown></a>
+<h2>mlock : 
+仮想メモリの一部を物理メモリに常駐させる</h2>
+<p>
+Linuxには, mlockというシステムコールがあり,
+仮想メモリの一部が決して, ページアウトされないように
+(Pin Down)することができる.
+日本語でいえば, ページを物理メモリ上に「ピン止め」
+するということである.
+これは, 仮想記憶の精神---OSがいつでもプロセスから物理メモリを
+奪えるようにする, 
+それによりいつでも本当にメモリを必要としている他のプロセスに物理メモリを回せる---
+とはある意味で逆行した, 「ユーザの善意を前提とした裏口」である. もちろんめったに使うものではない.
+</p>
+
+<p>
+mlockを使ってある領域をピン止めすると, 
+結果的に他のプロセスが使える物理メモリを減らすことになる.
+これは普段であれば望ましくないが, 
+意図的にスラッシングを起こさせる実験のためには都合がよい.
+</p>
+
+<p>
+一般に意図的にスラッシングを起こさせる実験は, メモリが小さいマシンの方がやりやすい.
+理由の一つは, 4GB超の物理メモリを持つ32 bit環境では, 
+一プロセスだけでスラッシングを起こさせることは困難であることである.
+もう一つは, 一般にスラッシングは物理メモリ量を越えるメモリを
+短期間にアクセスするとおきるため, 物理メモリをたくさん積んだマシンで,
+スラッシングを起こすと, それだけ大量のページフォルトを起こすことを意味し,
+その分実験にも時間がかかることである. 少なめのメモリアクセスでスラッシングが発生する
+ためにはもともと物理メモリが小さいほうが望ましい.
+</p>
+
+<p>
+例として,
+<a href=pindown.c>指定された大きさのメモリをピン止めするプログラム(pindown.c)</a>を提供しておく.
+</p>
+
+<blockquote>
+<pre>
+$ gcc -o pindown pindown.c
+$ ./pindown <i>N</i>
+</pre>
+</blockquote>
+とすると<i>N</i> MBの領域を確保し, さらにピン止めする. 
+<font color=red>ただし通常の設定ではこれは失敗して,
+以下のようなエラーになる.</font>
+<blockquote>
+<pre>
+$ ./pindown 10
+mlock: Cannot allocate memory
+</pre>
+</blockquote>
+
+<p>
+それは, ピン止めできる領域の大きさはプロセスごとに制限されているためである.
+そもそも多数のプログラムが無闇にピン止めを行ったら仮想記憶の意味がないため,
+これはもっともな制限(安全弁)である. 
+ulimit というプログラムでこれを表示・設定できる.
+
+<blockquote>
+<pre>
+$ ulimit -a
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 20
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 16382
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1024
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8515
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) unlimited
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+</pre>
+</blockquote>
+
+<p>
+実際の数字は異なるかもしれないが,
+<blockquote>
+<pre>
+max locked memory       (kbytes, -l) 64
+</pre>
+</blockquote>
+とあるのがピン止めできるメモリ量は64KBまで, ということを示している.
+この設定を変更したければ,
+<blockquote>
+<pre>
+ulimit -l <i>N</i>
+</pre>
+</blockquote>
+のようにして変更できるが,
+制限を緩くする(増やす)設定変更は, 
+管理者(root)のみが実行可能である. 結論として以下の手順が必要となる.
+</p>
+
+
+<blockquote>
+<pre>
+$ sudo su
+# ulimit -l unlimited
+$ su <i>自分のユーザ名</i>
+$ ./pindown 10
+pinned 10 MB on memory, press RETURN to exit
+
+</pre>
+</blockquote>
+<p>
+もちろんどのように設定を行なっても, 
+物理メモリを超える大きさの領域を
+mlockすることはできない.
+</p>
+
+<h3><font color=blue>演習10</font></h3>
+<p>
+count_page_faults.c を変更し, 
+スキャンする領域の一部をpin downした上でスキャンを行うようにせよ.
+物理メモリを超える領域をスキャンする際,
+一部をpin downしても残りの領域でページフォルトが起きるのは避けられない.
+そのような場合でも, 一部をpin downすることで, 
+ページフォルトの回数を減らすことができるだろうか?
+</p>
+
+-->
+
+<h2><font color=blue>mmapの実践的ご利益</font></h2>
+<div>
+<p>
+ここに，mmapを用いて，
+<a href=create_by_mmap.c>ランダムな9文字の文字列を1行に一個，生成するプログラム</a>がある．
+なお，生成されたファイルは必ず<font color=blue>辞書順</font>に並んでいる．
+プログラムの中身を確認し，コンパイル・動作確認せよ．
+</p>
+
+<p>
+想定動作:
+<pre>
+$ <font color=blue>gcc -o create_by_mmap -Wall -Wextra -O3 create_by_mmap.c</font>
+$ <font color=blue>./create_by_mmap random_words 20</font>
+$ <font color=blue>cat random_words</font>
+ammdlmooa
+asbwxltsq
+eapmxxbod
+  ...
+stkpgkflh
+woocyvmug
+ydphynvbj
+ytaaeencl
+</pre>
+</p>
+
+<p>
+次に，
+<a href=read_n.c>
+readを用いて，
+与えられたファイルの先頭Nバイトを読み込むプログラム
+</a>
+がある．
+</p>
+</div>
+
+<h3><font color=blue>演習6</font></h3>
+<div>
+<ol>
+<li>このプログラムを変更して，
+ファイル名F, バイト数N，文字列X (9文字)を与えられ，
+Fの先頭Nバイト中から，X (と改行)のみからなる行があればその行番号を表示し，
+なければnot foundと表示するプログラムを作れ．
+ただし，検索には，2分探索を用いよ．
+2分探索は自分で実装しなくても， bsearch という関数がある
+(man bsearch)．
+想定する動作は以下の通り．
+<pre>
+$ <font color=blue>head -5000000 foo | tail -3</font>
+mmjwdfvec            ... 4999998 行目
+mmjwenpaa            ... 4999999 行目
+mmjwinvee            ... 5000000 行目
+# 7000000行目までからmmjwenpaaを検索 (4999999行目に見つかるはず)
+$ <font color=blue>./bsearch_by_read foo 70000000 mmjwenpaa</font>
+foo:4999999: mmjwenpaa
+# 7000000行目までからmmjwenpabを検索 (見つからないはず)
+$ <font color=blue>./bsearch_by_read foo 70000000 mmjwenpab</font>
+mmjwenpab not found
+</pre>
+</li>
+
+<li>さらに変更して，readを使う代わりに，
+mmapを使って先頭Nバイトを読むようにせよ．
+そのプログラムをbsearch_by_mmap(.c)と名付ける．
+想定する動作は上記と同じ．
+<pre>
+$ <font color=blue>head -5000000 foo | tail -3</font>
+mmjwdfvec
+mmjwenpaa
+mmjwinvee
+$ <font color=blue>./bsearch_by_mmap foo 70000000 mmjwenpaa</font>
+foo:4999999: mmjwenpaa
+$ <font color=blue>./bsearch_by_mmap foo 70000000 mmjwenpab</font>
+mmjwenpab not found
+</pre>
+</li>
+
+<li>大きなファイル (1GB以上，できるだけ大きく)を生成し，
+両者の速度を計測せよ．
+キャッシュのあり，なしの両方の状態で測定すること．
+横軸に N, 縦軸に所要時間を持つグラフを書け．
+所用時間はプログラムの中で，
+ファイルをopenする直前から，結果を表示する直前まで，計測すること．
+キャッシュからデータを追い出すには，Linuxであれば，
+<pre>
+$ <font color=blue>sudo sysctl -w vm.drop_caches=3</font>
+</pre>
+を使うのが簡単．それがなければ，
+物理メモリをたくさん(物理メモリ以上)
+使うプログラムを走らせれば良い．
+</li>
+</ol>
+</p>
+</div>
+
+<h2><font color=blue>キャッシュ・先読みの効果測定</font></h2>
+<div>
+これは，
+授業でも見せた，
+<a href=time_read.c>ファイルを逐次的に(sequential)，
+  またはランダムにアクセスするプログラム．</a>
+
+<pre>
+$ gcc -O3 time_read.c 
+$ ./a.out 
+usage: ./a.out filename [block_sz [n_times [s/r]]]
+</pre>
+
+<ul>
+  <li> block_szは一回に読み出す量</li>
+  <li> n_times は同じファイルを何度読むか</li>
+  <li> s/r は s または r (sはsequential, r はrandom)</li>
+</ul>
+
+大きなファイル(中身は何でも良い. 以下のA256)を作って，
+
+<pre>
+$ ./a.out A256 1024 3 s > s.txt
+$ gnuplot
+gnuplot> plot "s.txt"
+</pre>
+で，データ量 - 時間のグラフが表示できる．
+
+<p>
+ファイルを作る方法は何でも良い．自分でプログラムを書くのも簡単だが，
+ddコマンドでお手軽に作ることもできる．
+<pre>
+$ dd if=/dev/zero of=A256 bs=$((1024 * 1024)) count=256
+256+0 レコード入力
+256+0 レコード出力
+268435456 バイト (268 MB) コピーされました、 2.41821 秒、 111 MB/秒
+</pre>
+これで，中身が0だけの256MB (1024 * 1024 * 256 バイト)のファイルができる．
+中身が0がなんとなく不安であれば以下で中身が乱数のファイルができる．
+<pre>
+$ dd if=/dev/urandom of=A256 bs=$((1024 * 1024)) count=256
+256+0 レコード入力
+256+0 レコード出力
+268435456 バイト (268 MB) コピーされました、 26.4037 秒、 10.2 MB/秒
+</pre>
+</p>
+
+<p>
+この<a href=mkrandom.py>スクリプト</a>を使っても良い．
+中の 
+<pre>
+n = 256
+</pre>
+という行をいじればファイルサイズが変えられる．
+</p>
+</div>
+
+<h3>演習7</h3>
+<div>
+<p>
+<a href=time_read.c>このプログラム(time_read.c)</a>
+をダウンロード，コンパイルし，以下の手順でファイルの読み出し時間を測定せよ．
+<ol>
+  <li>ファイルを作る</li>
+  <li>キャッシュをクリア (例えば sudo sysctl -w vm.drop_caches=3 を実行)</li>
+  <li>./a.out ファイル名 1024 3 s (またはr) </li>
+</ol>
+1回目と2回目の違い，sとrによる一回目の違いを観測せよ．
+また，ランダム読み出し(r)を使った時に，1度に読み出すデータ量(2個目の引数)
+の違いによる違いを観測せよ．
+</p>
+
+<p>
+ランダム読み出しの性能は，ハードディスク(HDD)と半導体ディスク(SSD)では全く違う．
+自分のドライブがHDDなのかSSDなのかは意識して実験すること．
+両方のドライブを積んでいるマシンを持っている人は，
+ぜひ両方比べてみると良い．
+</p>
+</div>
+
+</div>
+</body>
+</html>

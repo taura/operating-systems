@@ -1,0 +1,256 @@
+<!--- md --->
+#* オペレーティングシステム 演習 13
+
+#* mmap
+<!--- end md --->
+
+<!--- md w --->
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+<!--- end md --->
+
+<!--- md --->
+# mmapでファイル読み込み
+
+* mmapでファイルを読み込む単純な例
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile mmap_read.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os13_mmap/mmap.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -O3 -Wall mmap_read.c -o mmap_read
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+# mmap_read.c の中身を表示
+./mmap_read mmap_read.c
+<!--- end code --->
+
+<!--- md --->
+# mmapでファイル書き込み
+
+* mmapでファイルに書き込む単純な例
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile mmap_write.c
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os13_mmap/mmap.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -O3 -Wall mmap_write.c -o mmap_write
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+./mmap_write hogehoge.txt
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cat hogehoge.txt
+<!--- end code --->
+
+<!--- md --->
+# mmapで(ファイルと無関係な)メモリ割当て
+
+* mmapはファイル読み書きとは無関係に, メモリ割り当て(のみ)のために使えることを示す例
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile mmap_alloc.c
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os13_mmap/mmap.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -O3 -Wall mmap_alloc.c -o mmap_alloc
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+./mmap_alloc
+<!--- end code --->
+
+<!--- md --->
+# mmapの性能
+
+## mmapでは実際に触った部分だけが読み込まれる
+
+* 以下は大きなファイル全体をmmapして, 返された領域を先頭から終わりまで, 1ページにつき1回(1バイト)触る(読む)プログラム
+* 1バイト触るごとに時刻とページフォルト数を計測する
+* ポイントは, mmapの呼び出し自身にはほとんど時間がかからないこと
+* 返された領域中のあるページを初めて触ったときにページフォルトがおき, OSがそこでページの中身を読み込む
+* 従ってmmapを使ってファイルを読むと, 「(mmapした領域の大きさとはほぼ無関係に)実際に触ったページの数に応じた時間しかかからない」という良い特性を持つ
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile read_by_mmap_rec.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os13_mmap/read_mmap_rec.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -O3 -Wall read_by_mmap_rec.c -o read_by_mmap_rec
+<!--- end code --->
+
+<!--- md --->
+* 可視化用プログラム
+<!--- end md --->
+
+<!--- code w kernel=python --->
+<!--- include nb/source/include/os13_mmap/read_mmap_vis.py --->
+<!--- end code --->
+
+<!--- md --->
+* 実行 (ファイルをキャッシュから追い出し, dataの先頭128MBを, {open, mmap, 触る}を3回繰り返す)
+* 適宜データの大きさ(128m), 繰り返し数(3)を変えてやってみよ
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+./read_by_mmap_rec ${data} 128m 3 > mmap.dat
+<!--- end code --->
+
+<!--- md --->
+* 可視化 (経過時間)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap.dat"], "t",)
+<!--- end code --->
+
+<!--- md --->
+  * 時間は, 実際に触ったページ数に比例している
+  * すなわちファイルのごく一部しか使わないアプリが全体をmmapしてもほとんどペナルティーはない
+
+* マイナーフォルト (getrusageで取得)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap.dat"], "minflt")
+<!--- end code --->
+
+<!--- md --->
+  * 1回読むのにおこるマイナーフォルトの数とページ数を比べてみよ. 何がわかるか? 
+  * 拡大表示して, 個々の点が見えるまで拡大してみよ
+
+* メジャーフォルト (getrusageで取得)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap.dat"], "majflt")
+<!--- end code --->
+
+<!--- md --->
+* 読み込みブロック数 (getrusageで取得)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap.dat"], "inblock")
+<!--- end code --->
+
+<!--- md --->
+  * getrusageのマニュアルによるとこの数字は "The number of times the filesystem had to perform input" でIOの「回数」だと思えば良いだろう
+  * 一回に何バイト位を読み込んでいると思われるか
+<!--- end md --->
+  
+<!--- md --->
+# mmap vs. read
+
+* 大きなファイル全体をmmapする代わりにファイル全体を実際にreadで読み込む
+* その後は同様, 1バイト触るごとに時刻とページフォルト数を計測する
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile read_by_read_rec.c
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os13_mmap/read_mmap_rec.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -O3 -Wall read_by_read_rec.c -o read_by_read_rec
+<!--- end code --->
+
+<!--- md --->
+* 実行 (ファイルをキャッシュから追い出し, {open, read, 触る}を3回繰り返す)
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+./read_by_read_rec ${data} 128m 3 > read.dat
+<!--- end code --->
+
+<!--- md --->
+* 可視化 (経過時間)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap.dat", "read.dat"], "t")
+<!--- end code --->
+
+<!--- md --->
+* マイナーフォルト (getrusageで取得)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap.dat", "read.dat"], "minflt")
+<!--- end code --->
+
+<!--- md --->
+* メジャーフォルト (getrusageで取得)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap.dat", "read.dat"], "majflt")
+<!--- end code --->
+
+<!--- md --->
+* 読み込みブロック数 (getrusageで取得)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap.dat", "read.dat"], "inblock")
+<!--- end code --->
+
+<!--- md --->
+* mmapとreadを比較したグラフから何が読み取れるか?
+  * mmap自身にはほとんど時間がかからない
+  * ファイル全体を1回読み終わるまでの時間はほとんど同じ
+  * 2回目以降も, readはファイル全体を読み込むのに多少時間がかかっている. これはデータをキャッシュからプロセスのメモリへコピーする時間. mmapは大きなデータをキャッシュから読み出す場合にも有効
+
+## mmapはメモリ消費量が少ない
+
+* 例えばあるプロセス160MBの領域を全て読み込んだとする
+* readだとカーネルがそのファイルをキャッシュに持つために160MB, プロセス自身が160MBのメモリを消費する
+* 複数のプロセスが同じことを行えば1プロセスに付き160MB必要になる
+* mmapだと, 共有マッピング(MAP_SHARED)であればカーネルがキャッシュに用いている物理メモリを共有できるし, プライベートマッピングであっても書き込みが起きるまでは物理メモリを共有できる
+* 複数のプロセスが同じことを行っても同様
+
+* 以下は cg_mem_limit でプロセスが使えるメモリ量を 256MB に制限して, ファイルの先頭160MBを3回読み込む (256 &lt; 160MB x 2 に注意)
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+data=../os11_cache/data.bin
+../os11_cache/drop_cache ${data}
+cg_mem_limit ./read_by_mmap_rec ${data} 160m 3 > mmap_mem_limit.dat
+../os11_cache/drop_cache ${data}
+cg_mem_limit ./read_by_read_rec ${data} 160m 3 > read_mem_limit.dat
+<!--- end code --->
+
+<!--- md --->
+* 可視化
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["mmap_mem_limit.dat", "read_mem_limit.dat"], "t")
+<!--- end code --->
+
+<!--- md --->
+* mmapの場合は2回目以降, キャッシュが効いている
+* readの場合は2回目以降もキャッシュが効いていない状態になっていることがわかるだろう
+
+* 多くのプロセスが同じことをやった場合に差はより顕著になる
+<!--- end md --->
+

@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="content-script-type" content="text/javascript" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta name="author" content="haraken" />
+<meta name="description" content="仮想マシンとLinuxのインストール" />
+<meta name="keywords" content="" />
+
+<style>
+<!--
+h1 {
+  background-color:#cfc;
+}
+h2 {
+  background-color:#88f;
+}
+h3 {
+  background-color:#ddf;
+}
+h4 {
+  background-color:#eef;
+}
+pre {
+  background-color:#efe;
+  font-size:150%;
+}
+-->
+</style>
+
+<title>
+仮想マシンとLinuxのインストール
+</title>
+
+</head>
+<body>
+<div class="header">
+</div>
+<div class="background">
+<div class="main">
+<div class="contents">
+
+<!-- コンテンツはここから -->
+
+<h1>仮想マシンソフトウェアとLinuxのインストール</h1>
+<h2></h2>
+goto <a href=../../../>home page</a>.
+
+<p>
+この授業では，ところどころでLinuxを使った演習を行う．
+また，メモリを使い切った時のOSの挙動など，
+いくつかの「危ない」実験も行う．
+それをするために，仮想マシンソフトウェアを用いて仮想環境を作り，
+その中にLinux OSを自分でインストールする．
+仮想環境は，メモリ量やCPU数なども自在に調節でき，
+実験環境として使いやすい．
+Linuxを普段使っていない人も，
+これで実験のためにLinux環境を使えるようになるし，
+普段学科PCのLinuxを使っているという人も，
+一度Linuxを自分でインストールしてみることは将来的にも有用だろう．
+</p>
+<p>
+このページでは，
+<ol>
+<li>Linuxの仮想マシンソフトウェアVirtualBoxのインストールし,
+<li>VirtualBox上に, 最小限のLinux OS環境をインストール
+</ol>
+する手順を説明する. とても簡単なのだが以下は大分懇切丁寧に書いてある.
+読まずにやってみてわからなくなったら読むくらいでも十分かも知れない.
+</p>
+
+<p>
+<font color=red>
+以下のこの手順は, 必ず自宅でやっておくこと.</font>
+何回か後に，この環境構築がすんでいることを前提として，
+演習・実験を行うので必ず済ませておくこと．
+</p>
+
+<h2>仮想マシンソフトウェアのインストール</h2>
+<p>
+<a href=https://www.virtualbox.org/><img src=https://www.virtualbox.org/graphics/vbox_logo2_gradient.png></a>
+</p>
+<p>
+学科PCには配布された状態で, VirtualBoxがインストールされているので,
+このステップは省略可能. 
+画面左端に, VirtualBoxのアイコンが出ているのでそれをクリックすれば,
+起動するはず.
+</p>
+
+<p>
+学科から貸出された以外のPCを使っている人は,
+<a href=#vm_install>本ページ末尾</a>
+の指示に従えばインストールできる.
+授業中にそれをやっている時間はないので, 家でやっておくこと．
+</p>
+
+<h2>Debian GNU/Linux インストーラCDのダウンロード</h2>
+<p>
+<a href=http://www.debian.org/>
+<img src=http://www.debian.org/Pics/openlogo-50.png>
+</a>
+</p>
+<p>
+<ol>
+<li>本演習では
+<a href=http://www.debian.org/>Deibian</a>
+というLinuxのディストリビューションを用いる.
+DebianはUbuntuの元となったディストリビューション.
+
+<li>Debianの最小構成(280MB程度)のインストーラCD
+
+<a href=http://cdimage.debian.org/debian-cd/8.2.0/multi-arch/iso-cd/debian-8.2.0-amd64-i386-netinst.iso>AMD64用のネットワークインストールCD</a>
+<font color=red>(2015.9.29現在)</font>
+をダウンロードせよ.
+
+上記リンクが古くなるなどして失敗する場合や，
+他の選択肢を見てみたい人は
+<a href=http://www.debian.org/CD/netinst/>こちら</a>
+のページからダウンロードしてください．その際，
+<ul>
+<li><font color=red>bittorrent 経由となっているものは使わない</font>
+<li>自分のOSが64 bit環境であれば，amd64, 32 bit環境であればi386
+を選択する．Linuxの場合どちらであるかは，uname -i コマンドでわかる．
+x86_64と出れば64 bit環境，i386と出れば32 bit環境．
+</ul>
+
+<li>次の作業の途中で使うので保存した場所を覚えておく.
+
+</ol>
+</p>
+
+
+<h2>VirtualBox上にLinux OS環境をインストール</h2>
+<p>
+仮想マシン環境でも実際の環境でも, インストール手順自体はほとんど同じである.
+違うのは仮想マシンを起動するところまで;
+実際のマシンだったらインストールCDを入れて起動するところが,
+仮想マシンの場合は, CDのイメージファイルを仮想CDとして起動するというだけの違い
+(CDを焼かなくていい分よほど楽だし地球にも優しい). 
+マシンが立ち上がった後のやり方はまるで同じである.
+また，以下はVirtualBoxという仮想マシンを用いているが，
+(おそらく)他の仮想マシン(VMware, KVM, MacのParallelsなど)でも，
+マシンが立ち上がった後のやり方はほとんど同じである.
+</p>
+
+<p>
+なので, 過去にもLinuxをインストールした経験があり, 
+自分が好きなLinux OSのディストリビューション(Ubuntuなど)
+なんかがある人はそれを入れても良い. が, この演習のための
+環境としてはやや余計なものが入りすぎているかもしれない(特に,
+デスクトップ環境を入れると小さなメモリでは動かない環境になるから,
+この演習の目的には不向きになるかも知れない).
+</p>
+
+<p>
+以下では, 極力余分なソフトが入らないLinux環境をVirtualBox内に構築する手順を, 
+Linuxインストール未経験を前提に説明する. 書くと長くなったがほとんどは
+ENTERキーを連打するだけである. ポイントとなるところだけ赤字と大きな
+図で説明してある. 後は適宜図をクリックすれば拡大できます.
+</p>
+
+<h3>VirtualBoxで新しい仮想マシンを作成</h3>
+<p>
+以下の説明中の画像はクリックすると拡大可能.
+確認する必要があるときなどは, 必要に応じて拡大してください.
+</p>
+
+<ol>
+<li>VirtualBoxを立ち上げ, "New"ボタンをクリック
+<blockquote>
+<a href=imgs/01new.png><img src=imgs/01new.png width=100pt></a>
+</blockquote>
+
+<li> OSを選べと言われるので, TypeはLinux, VersionはDebianとする.
+Nameは適当な名前をつける(スペースは含まないのが無難).
+<blockquote>
+<a href=imgs/02name.png><img src=imgs/02name.png width=100pt></a>
+</blockquote>
+
+<li>メモリ量を選べと言われるので, 
+<font color=red>少なめを選ぶ. たとえば
+<strike>128MB-256MB</strike>
+256MB-512MB</font>. 
+デスクトップ環境をインストールしなければこの程度で十分．
+後から変更することも可能.
+<blockquote>
+<a href=imgs/03mem.png><img src=imgs/03mem.png width=384pt></a>
+</blockquote>
+
+<li>(仮想)ハードディスクをどうするかと聞かるので, 
+そのままENTER (新しいのを作る).
+<blockquote>
+<a href=imgs/04hdd.png><img src=imgs/04hdd.png width=100pt></a>
+</blockquote>
+
+<li>(仮想)ハードディスクのタイプをどうするかと聞かれるので, 
+そのままENTER (VDI).
+<blockquote>
+<a href=imgs/05vdi.png><img src=imgs/05vdi.png width=100pt></a>
+</blockquote>
+
+<li>
+<li>(仮想)ハードディスクの割り当て方法をどうするかと聞かれるので,
+そのままENTER (dynamically allocate).
+<blockquote>
+<a href=imgs/06dynamically.png><img src=imgs/06dynamically.png width=100pt></a>
+</blockquote>
+
+<li>(仮想)ハードディスクのファイル名をどうするかと聞かれるので
+適当に答える.
+<blockquote>
+<a href=imgs/07file.png><img src=imgs/07file.png width=100pt></a>
+</blockquote>
+
+<li>(仮想)ハードディスクの作成・設定が終わった後の状態
+<blockquote>
+<a href=imgs/08created.png><img src=imgs/08created.png width=100pt></a>
+</blockquote>
+
+<li>
+<font color=red>
+肝心なのは, 仮想マシンがインストールCDから立ち上がる</font>
+ようにすることで,
+そのための設定. 設定項目の Storage をクリック
+<blockquote>
+<a href=imgs/09storage.png><img src=imgs/09storage.png width=386pt></a>
+</blockquote>
+
+<li>Storage treeの中でCDのマークを選ぶ. 
+そのattributesの中で, 右の方にCDのイメージファイルを選ぶメニューがある. 
+そこをクリックして "Choose a virtual CD/DVD disk file..." を選択
+<blockquote>
+<a href=imgs/10cd.png><img src=imgs/10cd.png width=386pt></a>
+</blockquote>
+
+<li>イメージファイルを選ぶダイアログが出てくるので,
+ダウンロードしたDebianインストーラCDのイメージファイルを選択.
+<blockquote>
+<a href=imgs/11debiancd.png>
+<img src=imgs/11debiancd.png width=386pt></a>
+</blockquote>
+
+<li>これで仮想マシンを起動する準備が完了. "Start"を押して起動すると,
+数秒でこのようなメニューにたどり着くはず. もしうまく立ち上がらない場合,
+インストーラCDのイメージファイルが
+きちんと仮想CDドライブとして設定されているのか, 
+仮想マシン自身がCDから立ち上がる設定になっているか, 
+などを確認しよう.
+<blockquote>
+<a href=imgs/12debian.png><img src=imgs/12debian.png width=100pt></a>
+</blockquote>
+
+<li>以降, ほとんどのステップはデフォルトの選択肢に yes と答えていくだけ.
+言語を選べと聞かれる. 日本語を選んでもよいがインストールが早く済むのは
+きっとEnglishなんだろうということでEnglishを選択.
+<blockquote>
+<a href=imgs/13lang.png><img src=imgs/13lang.png width=100pt></a>
+</blockquote>
+
+<li>場所はどこですかと聞かれる. きっとUnited Statesと答えても問題は
+無いんだろうけど一応, other を選択
+<blockquote>
+<a href=imgs/14other.png><img src=imgs/14other.png width=100pt></a>
+</blockquote>
+
+<li>
+そしてAsiaを選択
+<blockquote>
+<a href=imgs/15asia.png><img src=imgs/15asia.png width=100pt></a>
+</blockquote>
+
+<li>そしてJapanを選択
+<blockquote>
+<a href=imgs/16japan.png><img src=imgs/16japan.png width=100pt></a>
+</blockquote>
+
+<li>Localesを選べと言われるので, United Statesを選択
+(きっとここで日本語を選ぶとまた不要なものがインストールされるんだろう
+ということで. お好きにしてくれてOKです)
+<blockquote>
+<a href=imgs/17locale_us.png><img src=imgs/17locale_us.png width=100pt></a>
+</blockquote>
+
+<li>ホスト名を選べと言われるので適当に名付ける.
+<blockquote>
+<a href=imgs/18host.png><img src=imgs/18host.png width=100pt></a>
+</blockquote>
+
+<li>ドメイン名を選べと言われる. 
+ここは理由がなければ空にしておくのが無用な混乱を避ける方法.
+<blockquote>
+<a href=imgs/19domain.png><img src=imgs/19domain.png width=100pt></a>
+</blockquote>
+
+<li>ソフトをダウンロードするサーバの国を選べと言われる. 
+日本にいるのだから日本のサーバを選ぶのが正解.
+<blockquote>
+<a href=imgs/20mirror.png><img src=imgs/20mirror.png width=100pt></a>
+</blockquote>
+
+<li>具体的にサーバを選べと呼ばれる. 上の方から適当に選べばよい.
+<blockquote>
+<a href=imgs/21mirror_site.png><img src=imgs/21mirror_site.png width=100pt></a>
+</blockquote>
+
+<li>Proxyを設定したければどうぞと言われるが空のままにする
+<blockquote>
+<a href=imgs/22proxy.png><img src=imgs/22proxy.png width=100pt></a>
+</blockquote>
+
+<li>ルートパスワードを設定せよと言われる. 安全なものを選んで覚えておく.
+<blockquote>
+<a href=imgs/23rootpw.png><img src=imgs/23rootpw.png width=100pt></a>
+</blockquote>
+
+<li>もう一度と言われるので同じのを入れる.
+<blockquote>
+<a href=imgs/24rootpw_again.png><img src=imgs/24rootpw_again.png width=100pt></a>
+</blockquote>
+
+<li>一般ユーザを一人作れと言われる. まずは名前を聞かれるので適当に入れる.
+ここは本名を入れても良いのだが, ユーザ名のような(tau, denjoなど)を入れても
+差し支えない.
+<blockquote>
+<a href=imgs/25user.png><img src=imgs/25user.png width=100pt></a>
+</blockquote>
+
+<li>その人のユーザIDを聞かれる. さっき入れたものと同じものがデフォルトに
+なっているので, さっきの欄にスペース混じりを入れたとか言うのでない限り
+そのままでOK. こちらはスペースは含まないこと.
+<blockquote>
+<a href=imgs/26user_id.png><img src=imgs/26user_id.png width=100pt></a>
+</blockquote>
+
+<li>ユーザにもパスワードを.
+<blockquote>
+<a href=imgs/27userpw.png><img src=imgs/27userpw.png width=100pt></a>
+</blockquote>
+
+<li>もう一度.
+<blockquote>
+<a href=imgs/28userpw_again.png><img src=imgs/28userpw_again.png width=100pt></a>
+</blockquote>
+
+<li>ネットワーク経由で時刻の設定をするとかで少し時間がかかる. 
+場合によっては1分くらい
+かかるがここまでの処理が無事に行っていればネットワークにはつながっている
+はずなので, しばらく待っていればOKのはず.
+<blockquote>
+<a href=imgs/29ntp.png><img src=imgs/29ntp.png width=100pt></a>
+</blockquote>
+
+<li>(仮想)ハードディスクのパーティショニングなどを聞かれる.
+基本はデフォルトのままエンターキー連打でOK.
+<blockquote>
+<a href=imgs/30guided.png><img src=imgs/30guided.png width=100pt></a>
+</blockquote>
+
+<li>同様
+<blockquote>
+<a href=imgs/31select_part.png><img src=imgs/31select_part.png width=100pt></a>
+</blockquote>
+
+<li>同様
+<blockquote>
+<a href=imgs/32select_scheme.png><img src=imgs/32select_scheme.png width=100pt></a>
+</blockquote>
+
+<li>同様
+<blockquote>
+<a href=imgs/33finish.png><img src=imgs/33finish.png width=100pt></a>
+</blockquote>
+
+<li><font color=red>ここだけやや注意.</font>
+実際にディスクに書いていいかを最終確認する所で,
+デフォルトがNOになっているので, YESにしてから先へ進む.
+<blockquote>
+<a href=imgs/34yes_to_write_disk.png width=386pt>
+<img src=imgs/34yes_to_write_disk.png></a>
+</blockquote>
+
+
+<li>後は待つだけ. 数分から10分くらいすると基本部分のインストールが終わり,
+それが終わりかけたところで, 人気パッケージの調査に参加するかと聞かれるので,
+NOでもYESでも好きに答える.
+<blockquote>
+<a href=imgs/35survey.png><img src=imgs/35survey.png width=100pt></a>
+</blockquote>
+
+<li><font color=red>ここは肝心.</font>
+他にどんなソフトを入れたいかを聞いてくる.
+インストールが最短時間で終わるよう,
+<font color=red>デフォルトでついてくるチェックボックスをすべて外す.</font>
+<blockquote>
+<img src=imgs/36nosoftware.png>
+</blockquote>
+
+<li>すると以降のインストールは数十秒で終了し,
+grubを入れるかと聞いてくるのでYES.
+<blockquote>
+<a href=imgs/36nosoftware.png><img src=imgs/36nosoftware.png width=100pt></a>
+</blockquote>
+
+<li>すると以降のインストールは数十秒で終了し,
+grubを入れるかと聞いてくるのでYES.
+<blockquote>
+<a href=imgs/37grub.png><img src=imgs/37grub.png width=100pt></a>
+</blockquote>
+
+<li>インストールが終わって再起動しますと行ってくるのでYES.
+<blockquote>
+<a href=imgs/38install_done.png><img src=imgs/38install_done.png width=100pt></a>
+</blockquote>
+
+<li>起動OSの選択画面になるのでENTERもしくは放置すれば起動する.
+<blockquote>
+<a href=imgs/39grub.png><img src=imgs/39grub.png width=100pt></a>
+</blockquote>
+
+<li>Ubuntuと異なりグラフィックな画面は出ないが, 
+<font color=red>ものの数秒でで以下のようなログインプロンプト</font>
+にたどり着く.
+<blockquote>
+<a href=imgs/40login.png><img src=imgs/40login.png width=386pt></a>
+</blockquote>
+
+<li>設定したパスワードでrootでログインする.
+<blockquote>
+<a href=imgs/41root_login.png><img src=imgs/41root_login.png width=100pt></a>
+</blockquote>
+
+<li>うまく行けばこんなプロンプトにたどりつく.
+<blockquote>
+<a href=imgs/42login_done.png><img src=imgs/42login_done.png width=100pt></a>
+</blockquote>
+
+<li>このままここで作業をすることは原理的には不可能ではないが,
+画面の更新が遅いなど, 非常に使いにくい. 
+そのため, <font color=red>SSH というソフトウェア</font>
+で, 現在使っているマシン(学科PCだったら普段使っている
+Ubuntuのこと; 以下<font color=red>ホスト OS</font>)から, 
+仮想マシン中のLinux 
+(今入れたDebian; 以下<font color=red>ゲスト OS</font>)
+へ, <font color=red>遠隔ログイン</font>する. 
+なお，普段使っているホストOSが，Windowsな人は，
+ホストOS側にも，SSH （クライアント）をインストールする必要がある．
+例えば，<a href=http://www.chiark.greenend.org.uk/~sgtatham/putty/>
+Putty</a>, <a href=http://sourceforge.jp/projects/ttssh2/>
+Tera Term</a>
+などをインストールする．
+<br>
+以下は，SSHでゲストOSへログインできるようにするための，
+<font color=red>ゲストOS側の手順.</font>
+まず, ゲストOSにSSHをインストールするために, 
+<font color=red>ゲストOS (仮想マシン)内で</font>
+<pre>
+# <b>apt-get install openssh-server</b>
+</pre>
+というコマンドを実行.
+<blockquote>
+<a href=imgs/43install_ssh.png><img src=imgs/43install_ssh.png width=100pt></a>
+</blockquote>
+
+もちろん遠隔ログインという言葉は, 本来物理的に離れたところにある
+マシンにネットワーク経由でログインするときに使う. ここでホストOSから
+ゲストOSにログインするのは遠隔でも何でもないのだが, 使っているソフトや
+プロトコルは同じ. 
+
+<li>次にゲストOSに割り振られたIPアドレスを調べて,
+覚えるかメモする. コマンドは
+<pre>
+ifconfig
+</pre>
+<blockquote>
+<a href=imgs/44ifconfig.png><img src=imgs/44ifconfig.png></a>
+</blockquote>
+この写真では, 10.0.2.15というアドレスが割り振られている.
+おそらく誰がやっても同じ結果になる. IPアドレスが重複していて
+大丈夫なのかと不思議に思うのは正しい疑問. NATというものを
+使っているので大丈夫だとだけ答えておきます.
+
+<li>さて次に, ホストOSからゲストOSに, 
+sshコマンドで遠隔ログインする方法を説明する. 
+sshは本来,
+<pre>
+ssh ユーザ名@ホスト名
+</pre>
+や
+<pre>
+ssh ユーザ名@IPアドレス
+</pre>
+で, 指定したホスト名やIPアドレスを持つマシンへログインできる
+(ユーザ名部分はログイン元と先で同じであれば省略可)というものだが,
+<pre>
+ssh tau@10.0.2.15
+</pre>
+などとやっても残念ながらうまくいかない. 
+<font color=red>VirtualBoxでport forwardなる設定を行う必要がある.</font> 
+
+
+<li>そのためにVirtualBoxのメインのメニューに戻り,
+起動しているDebianを選択した上でNetworkをクリック.
+<blockquote>
+<a href=imgs/45network.png><img src=imgs/45network.png width=386pt></a>
+</blockquote>
+
+<li>advancedという項目が開かれていなければ選択して開く
+<blockquote>
+<a href=imgs/46advanced.png><img src=imgs/46advanced.png width=386pt></a>
+</blockquote>
+
+<li>Port Forwardingというボタンをクリック
+<blockquote>
+<a href=imgs/47portforward.png><img src=imgs/47portforward.png width=386pt></a>
+</blockquote>
+
+<li>右上隅の + ボタンをクリックして新しいルールを追加
+<blockquote>
+<a href=imgs/48add_portforward.png>
+<img src=imgs/48add_portforward.png width=386pt></a>
+</blockquote>
+
+<li><font color>ここでルールを写真の通り設定する</font>
+
+<blockquote>
+<a href=imgs/49ssh_portforward.png>
+<img src=imgs/49ssh_portforward.png></a>
+</blockquote>
+
+<table border=1>
+<tr>
+<td>Name</td> <td>Protocolo</td> 
+<td>Host IP</td> <td>Host Port</td>
+<td>Guest IP</td> <td>Guest Port</td>
+</tr>
+<tr>
+<td><font color=green>ssh</font></td> <td><font color=red>TCP</font></td> 
+<td><font color=red>127.0.0.1</font></td> <td><font color=green>2222</font></td>
+<td><font color=blue>10.0.2.15</font></td> <td><font color=red>22</font></td>
+</tr>
+</table border=1>
+赤字はそのとおり打つ. 
+<font color=blue>10.0.2.15</font>のところは, ifconfigで調べたアドレスを
+入れること. 緑の部分は変えてもよいが, <font color=green>2222</font>
+の部分は1024以上で, 
+他のアプリケーションに使われていないポート番号ということで,
+意味がよく分からなければ2222にしておく. この設定は全体として,
+localhost (ホストOS)の2222というポートと通信したい人がいたら,
+それを10.0.2.15の22というポートへ転送してくれという設定である.
+10.0.2.15の22というポートでは, sshのログインを受け付けるサーバ
+(先ほどインストールしたopenssh-serverのサーバ)が待ち受けている.
+
+
+<li>この設定がすんだら, ホストOSで端末を立ち上げて, sshコマンドを
+以下のように発行する.
+<pre>
+ssh -p 2222 localhost
+</pre>
+うまく行けば以下のようにログインできる. 
+以降の作業はこの端末から継続する.
+<blockquote>
+<a href=imgs/50ssh_ok.png><img src=imgs/50ssh_ok.png width=386pt></a>
+</blockquote>
+
+<a name=scp>
+<p>
+<li>ホストOSにあるファイルをゲストOSにコピーしたければ, 
+<font color=red>ホストOSで</font>端末を立ち上げてscpコマンドを使う. 
+<pre>
+$ scp -P 2222 ファイル名 ユーザ名@localhost:
+</pre>
+ssh同様, ユーザ名はホストOSと同じであれば省略可能.
+</p>
+
+<p>
+たとえば, ゲストOSのユーザ名がtauで, 
+そこにenshu.c というファイルをコピーしたければ,
+<pre>
+$ scp -P 2222 enshu.txt tau@localhost:
+enshu.txt                                      100% 3661     3.6KB/s   00:00   
+</pre>
+とする. 2行目のような表示が出てくれば成功という事.
+</p>
+
+<p>
+逆に, ゲストOSにあるファイルをホストOSにコピーしたければ,
+やはり, <font color=red>ホストOSで</font>端末を立ち上げ,
+<pre>
+$ scp -P 2222 ユーザ名@localhost:ファイル名 .
+</pre>
+とする. 「ファイル名」の部分には, 
+ゲストOS上の, ホームディレクトリからの
+相対パス名を指定する. 例えば,
+ゲストOS上で, ex というフォルダを作り, 
+その中の a.dat をコピーしたいのであれば,
+<pre>
+$ scp -P 2222 ユーザ名@localhost:ex/a.dat .
+</pre>
+とする.
+</p>
+
+<p>
+落とし穴が2つ
+<ul>
+<li>ポート番号の指定が, <tt>-p</tt> ではなく, 
+<font color=red><tt>-P</tt></font> (大文字のP)
+<li><font color=red>ホスト名の後にコロン( : ) をつける.</font> 
+付け忘れると, エラーにはならずに, ホストOSの中でファイルをcp
+しているのと同じ事になる(例えば上記であれば,
+tau@localhost というファイルができてしまう)ので注意.
+</p>
+
+<p>
+一般には : の後ろに,
+コピー先でのファイル名を指定できる(例: localhost:enshu/xyz.c). 
+: 以降が相対パス名('/'から始まらないパス名)
+であればゲストOSのホームディレクトリからの相対パス名になる.
+: 以降に何も書かなければホームディレクトリにコピーするという意味になる.
+</p>
+</ul>
+
+
+<li>何かソフトを入れるには, rootユーザになって,
+<font color=red><tt>apt-get install ソフト名</tt></font>
+というコマンド. 例えばEmacsを入れたければ,
+<pre>
+$ su 
+password ...
+# apt-get install emacs
+...
+# exit
+</pre>
+これまでデスクトップのGUIでしかこの手の作業をしたことがない人は,
+一度経験しておくと良いだろう
+(そのうち遠隔のサーバマシンで実験をする日が来る).
+
+<li>sudo を使い慣れていて, 毎回suしてパスワードを入れるのが面倒という人は,
+sudoを入れればよい. sudoを入れた後, visudoというソフトで, 
+自分をsudoコマンドを発行できる人間として設定する.
+<pre>
+$ su 
+password ...
+# apt-get install sudo
+...
+# visudo
+</pre>
+<blockquote>
+<a href=imgs/51sudo.png><img src=imgs/51sudo.png width=100pt></a>
+</blockquote>
+
+<li>visudoで立ち上がった画面では, root と書かれた行を真似して,
+自分を以下のように書き足す.
+<pre>
+tau   ALL=(ALL) ALL
+</pre>
+終了は Ctrl-x, 何やら聞かれるが, Y と答えてその後はENTER.
+<blockquote>
+<a href=imgs/52visudo.png><img src=imgs/52visudo.png width=100pt></a>
+</blockquote>
+
+<li>以降は必要なソフトは,
+<pre>
+sudo apt-get install ソフト名
+</pre>
+で入れられる.
+
+<li>ゲストOSの終了は, sshでログインした端末で,
+<pre>
+sudo halt
+</pre>
+や
+<pre>
+sudo shutdown -h now
+</pre>
+など. 間違えてホストOSを終了してしまわないように注意.
+ゲストOSがフリーズするなどして,
+強制的に終了せざるを得ない場合は仮想マシンのウィンドウを閉じても良い.
+
+
+</ol>
+
+<a name=vm_install>
+<h2>VirtualBoxのインストール手順</h2> 
+<ol>
+<li><a href=https://www.virtualbox.org/>VirtualBoxホームページ</a>の, 
+<a href=https://www.virtualbox.org/wiki/Downloads>ダウンロード</a>
+セクションへ行く.
+
+<li>
+<a href=https://www.virtualbox.org/wiki/Downloads>
+VirtualBoxのダウンロードページ</a>
+に行きそこから適切なバージョンを選ぶ.
+
+<li>ダウンロードしたものを保存してダブルクリックしても良いし,
+そのまま開いても良い. 勝手にインストーラが走ってくれるはず.
+
+そうならず, コマンドラインでやらなくてはいけなくなったら,
+Ubuntuの場合,
+<pre>
+sudo dpkg -i ダウンロードした.debファイル
+</pre>
+
+<li>これでVirtualBoxのインストールは完了で, メニューに追加されているはず.
+Dashの人は, vir.. あたりまで入れれば出てくるはず.
+</ol>
+
+
+
+
+<!-- コンテンツはここまで -->
+
+</div>
+</div>
+</div>
+</body>
+</html>

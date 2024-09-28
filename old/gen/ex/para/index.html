@@ -1,0 +1,879 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="content-script-type" content="text/javascript" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta name="author" content="haraken" />
+<meta name="description" content="オペレーティングシステム スレッドプログラミング演習" />
+<meta name="keywords" content="" />
+
+
+<title>
+オペレーティングシステム 並行プログラミング演習
+</title>
+
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+h1 {
+  font-size   : 24pt;
+  xfont-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #DDDDEE;
+}
+
+h2 {
+  font-size   : 20pt;
+  xfont-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+h3 {
+  font-size   : 18pt;
+  xfont-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+div {
+  font-size   : 16pt;
+  xfont-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 16pt;
+  xfont-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+MathJax.Hub.Config({
+  "HTML-CSS": { matchFontHeight: false }
+});
+</script>
+
+</head>
+<body>
+
+<!-- コンテンツはここから -->
+
+<h1>並行プログラミング演習</h1>
+
+<h2>お知らせ</h2>
+<div>
+  <ul>
+    <li>11/15 (火)に実施した，
+      本演習の課題提出締め切りですが，
+      <blockquote>
+	<font color=red>2017年1/16 (月) 23:59</font>
+      </blockquote>
+      とします．
+    </li>
+  </ul>
+</div>
+
+<h2>はじめに</h2>
+<div>
+  <p>
+    本演習と関係する<a href=../../slides/3-synchronization.pdf>スライド</a>
+  </p>
+<p>
+Unix (Linux)上でスレッドプログラミングを行う標準的なAPIである,
+POSIX thread (Pthread)プログラミングの演習を行います.
+スレッドは, 一つのプロセス(= プログラムを立ち上げた結果できるもの)
+内に複数作ることが出来, 
+それはオペレーティングシステムによってスケジュールされます.
+一つのプロセス内のスレッドはメモリを共有します.
+つまり, 
+あるスレッドがアドレスAに書き込み, 別のスレッドが同じアドレスAから読み出せば,
+両者の間で値を受け渡すことができます. 
+ただし, スレッドがどういうタイミングでスケジュールされるかは分からないため,
+値を正しく受け渡すには同期が必要です.
+</p>
+</div>
+
+<h2>やり方</h2>
+<div>
+<ul>
+  <li>問題を解くごとに投稿して下さい．</li>
+  <li>名前，学生証番号などはおそらくブラウザが覚えているとおもいます
+    （入力欄で下矢印キーなどでおそらく表示できる）．</li>
+  <li>締め切りを課してレポートとします
+    （締め切りは今日の進捗を見て後日知らせます．最も早くても１ヶ月後程度）．
+    今日の進捗によっては後日また授業時間内にやる時間を設けるかも知れません．
+  </li>
+</ul>
+</div>
+
+<h2>ウォームアップ</h2>
+<div>
+<p>
+Pthreadの使い方を学ぶため, 
+以下のプログラムをダウンロードし, 
+何をするプログラムか確認し，コンパイルし, 実行せよ.
+<ul>
+  <li><a href=src/pthread_hello.c>pthread_hello.c</a></li>
+</ul>
+
+一応やり方:
+<blockquote>
+<pre>
+$ <font color=blue>gcc pthread_hello.c -lpthread</font>
+</pre>
+</blockquote>
+</p>
+</div>
+
+<h2>おまけ: OpenMP</h2>
+<div>
+<p>
+PthreadのAPIはOSが直接提供するインタフェースとして覚えておく価値があるが, 
+使い始めるとすぐに面倒くさくなる. スレッドを作る, それにデータを渡す,
+などの決まりきったことのために毎度似た様なことをしなくてはいけなくなる.
+OpenMPという並列言語(といってもC言語を元にしたわずかな拡張)
+を使うとこのような定型的な処理はもっと簡単に書ける. 端的に言うと,
+<blockquote>
+<pre>
+#pragma omp parallel
+  文
+</pre>
+</blockquote>
+と書くだけで, 文を実行するスレッドがいくつか作られ,
+それが終了するのを待つ(作られたスレッドが実行するのは
+#pragma omp parallel「直後の」文．複数の文を実行したければ，
+{ ... } でくくれば良い).
+</p>
+
+<p>
+ここでいくつのスレッドを作るかはプログラム
+起動時の環境変数OMP_NUM_THREADSで指定できる.
+コンパイル時に -fopenmp というオプションをつけるとOpenMPが有効になる
+(つまり上の #pragma omp parallel という指示が無視されずに解釈される).
+つまり以下のようにしてコンパイルして実行する.
+</p>
+
+<blockquote>
+<pre>
+$ <font color=blue>gcc -fopenmp openmp_hello.c</font>
+$ <font color=blue>OMP_NUM_THREADS=5 ./a.out</font>
+</pre>
+</blockquote>
+
+<p>
+OpenMPを使うと, pthread_createのインタフェースに
+あわせるため(だけの)構造体の定義, pthread_createを呼び出す
+ためのループ, スレッドの終了を待つためのループなど煩雑な作業を省略できる.
+</p>
+
+<blockquote>
+<pre>
+#pragma omp parallel
+  f(a, b, c);
+</pre>
+</blockquote>
+と書くと, だいたい以下と似たようなことが行われるとイメージすればよい.
+
+コンパイラが以下のような構造体や関数を勝手に生成してくれる.
+<blockquote>
+<pre>
+typedef struct thread_arg {
+  int a;
+  int b;
+  int c;
+} * thread_arg_t;
+
+void * thread_func(void * _arg) {
+  thread_arg_t arg = _arg;
+  f(arg->a, arg->b, arg->c);
+  return 0;
+}
+</pre>
+</blockquote>
+
+上記 #pragma omp parallel の実行自身は以下のように
+pthread_createに置き換えられるとイメージしておけば良い．
+
+<blockquote>
+<pre>
+  ...
+  n_threads = atoi(getenv("OMP_NUM_THREADS"));
+  for (int i = 0; i < n_threads; i++) {
+    args[i].a = a;
+    args[i].b = b;
+    args[i].c = c;
+    pthread_create(&args[i].tid, NULL, thread_func, (void *)&args[i]);
+  }
+  for (int i = 0; i < n_threads; i++) {
+    pthread_join(args[i].tid);
+  }
+  ...
+</pre>
+</blockquote>
+
+<p>
+このようにOpenMPを使うと, pthread_createのインタフェースに
+あわせるため(だけの)構造体の定義, pthread_createを呼び出す
+ためのループ, スレッドの終了を待つためのループなど煩雑な作業を省略できる.
+</p>
+
+
+<p>
+pthreadの変わりにOpenMPを使ってみたいという人は,
+<a href=src/openmp_hello.c>openmp_hello.c</a>をダウンロードしてみよ.
+pthread_hello.c と見比べれば単純であることがわかるだろう.
+</p>
+
+<p>
+<font color=red>注 (去年の情報):</font> 
+Macを使っている人は，コンパイル時に，
+<pre>
+fatal error: 'omp.h' file not found
+</pre>
+というエラーを見ることになる人も多いだろう．
+これは，Macのgccがclang (LLVM)に置き換えられていて，OpenMPをサポートしてないからである．
+今後の課題でも問題が生じるので，諦めてVMで実行したり，
+電気系の学生であれば学科から支給されているPCを使ったりするほうが良い．
+Macを使いたいという人は，HomebrewやMacPortsを使うなどして，
+gccを新しくインストールすることで解決できる．
+<pre>
+$ brew install gcc49
+$ gcc-4.9 -fopenmp openmp_hello.c
+</pre>
+</p>
+</div>
+
+<h2>競合状態を確認する演習</h2>
+<div>
+
+このプログラム<a href=src/pthread_inc.c>pthread_inc.c</a>
+または<a href=src/openmp_inc.c>openmp_inc.c</a>
+をダウンロードして，エディタで眺めよ．
+
+このプログラムは，以下のような関数thread_func
+<pre>
+   ...
+long g = 0;
+void * thread_func(void * _arg) {
+  thread_arg_t arg = _arg;
+  long i;
+  long n_inc = arg-&gt;n_inc;
+
+  static long s = 0;
+  long l = 0;
+  for (i = 0; i &lt; n_inc; i++) { g++; }
+  for (i = 0; i &lt; n_inc; i++) { s++; }
+  for (i = 0; i &lt; n_inc; i++) { l++; }
+  for (i = 0; i &lt; n_inc; i++) { arg-&gt;c[0]++; }
+  for (i = 0; i &lt; n_inc; i++) { arg-&gt;p[0]++; }
+
+  printf("g = %ld, s = %ld, l = %ld, c[0] = %ld, p[0] = %ld\n",
+	 g, s, l, arg-&gt;c[0], arg-&gt;p[0]);
+
+  return 0;
+}
+</pre>
+を多数作って実行する．
+<pre>
+  struct thread_arg args[n_threads];
+  long a_counter[1] = { 0 };
+  int i;
+
+  /* スレッドを n_threads 個作る */
+  for (i = 0; i &lt; n_threads; i++) {
+    pthread_create(&args[i].tid, NULL, 
+		   thread_func, (void *)&args[i]);
+    args[i].idx = i;
+    args[i].n_inc = n_inc;
+    args[i].c[0] = 0;
+    args[i].p = a_counter;
+  }
+  /* 終了待ち */
+  for (i = 0; i &lt; n_threads; i++) {
+    pthread_join(args[i].tid, NULL);
+  }
+</pre>
+
+<p>
+<font color=red>問題:</font>
+競合状態(race condition)を作っているのはどの更新か
+(s++? g++? ...)? それぞれのプログラムを実行すると，
+printf("g = ...") で表示される値はどのようになるか?
+予想した上で実行せよ．
+</p>
+<p>また，各スレッドでそれぞれの更新されている場所
+のアドレスを表示してみよ．上記の結果と一貫していることを確かめよ．
+</p>
+
+<p>
+<iframe src="https://docs.google.com/forms/d/1NPKQtjD5eVnnwHNMf0Qtq6KTcRBPLroPRcpHccVNong/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+</div>
+
+<h2>排他制御の練習</h2>
+<div>
+<p>
+<font color=red>問題:</font> 先のプログラムに排他制御の呼び出し
+(マニュアルで, pthread_mutex_lock と関連する関数を調べよ)を加えて,
+このプログラムを修正し，全ての変数が正しく更新される
+(最終的に，行われた更新の回数だけ，変数が増加する)ようにせよ．
+</p>
+<p>
+<iframe src="https://docs.google.com/forms/d/1JKWMKvFvukeEdvQZLpEA0gv_pTWnrVhd8dn3vuEohwQ/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+</div>
+
+<h2>頻忙待機(spin lock)の練習</h2>
+<div>
+<p>
+このファイル<a href=src/spin.h>spin.h</a>をinclude 
+(<tt>#include "spin.h"</tt>)すると，
+以下のデータ構造と関数が使えるようになる．
+<ul>
+  <li><tt>spinlock_t s;</tt></li>
+  <li><tt>int spin_init(spinlock_t * s, int pshared);</tt></li>
+  <li><tt>int spin_lock(spinlock_t * s);</tt></li>
+  <li><tt>int spin_trylock(spinlock_t * s);</tt></li>
+  <li><tt>int spin_unlock(spinlock_t * s);</tt></li>
+</ul>
+それぞれ pthread_mutex_t, pthread_mutex_init, 
+pthread_mutex_lock, pthread_mutex_trylock, 
+pthread_mutex_unlockと同じ意味を持つが，
+違いは，spin_lockはlockが取得されるまで
+頻忙待機で待つことである．ちなみにspin_lock, spin_unlock
+の中身は以下のような感じ．
+<pre>
+int spin_lock(spinlock_t *lock) {
+  volatile int * x = &amp;lock-&gt;locked;
+  while (1) {
+    while (*x) { }
+    if (__sync_bool_compare_and_swap(x, 0, 1)) {
+      __sync_synchronize();
+      return 0;
+    }
+  }
+}
+
+int spin_unlock(spinlock_t *lock) {
+  assert(lock-&gt;locked);
+  __sync_synchronize();
+  lock-&gt;locked = 0;
+  return 0;
+}
+</pre>
+</p>
+
+<p>
+なお，実はLinuxにはこれと同等の機能として，
+<ul>
+  <li><tt>pthread_spinlock_t s;</tt></li>
+  <li><tt>int pthread_spin_init(pthread_spinlock_t * s, int pshared);</tt></li>
+  <li><tt>int pthread_spin_lock(pthread_spinlock_t * s);</tt></li>
+  <li><tt>int pthread_spin_trylock(pthread_spinlock_t * s);</tt></li>
+  <li><tt>int pthread_spin_unlock(pthread_spinlock_t * s);</tt></li>
+</ul>
+というものがある．POSIXの標準ではなく，Linux固有拡張．
+ここで提供したspin.hはそれと同じ機能を
+Linuxでなくても使えるようにこちらで提供したもの．
+引数の個数なども合わせてある(spin_initが意味もなく
+2個引数をとっているのもそれと合わせているためです．
+深い意味はないです)．
+</p>
+
+<p>
+<font color=red>問題:</font> 
+前問題のmutexを用いる代わりに，
+このspinlockを用いて同じ問題を解決せよ．
+</p>
+<p>
+<iframe src="https://docs.google.com/forms/d/1RAnQMGdXJCL-zSeIiolo3v5d6wmzT6LvCjx0QS5q6Rs/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+</div>
+
+<h2>排他制御(mutex, spinlock)を使わない不可分更新の練習</h2>
+<div>
+<p>
+多くのプロセッサには,
+メモリへの可算を不可分に行う命令や,
+授業で説明した, compare-and-swap 命令が備わっている.
+これらをつかうと排他制御をしなくても(一つのアドレスに対する)
+不可分な更新を行うことができる.
+</p>
+
+<p>
+gccではそれぞれ,
+<ul>
+
+<li> <font color=blue>__sync_fetch_and_add(T * p, T val);  </font>
+<br /> *p += val を不可分に
+</li>
+
+<li> <font color=blue>__sync_val_compare_and_swap(T * p, T old, T new); </font>
+<br /> if (*p == old) { *p = new; return old; } else { return new; } を不可分に
+</li>
+
+<li> <font color=blue>__sync_bool_compare_and_swap(T * p, T old, T new);  </font>
+<br /> if (*p == oldval) { *p = new; return 1; } else { return 0; } を不可分に
+</li>
+
+</ul>
+という関数として利用できる. 詳しくはgccのinfo (コマンドでinfo gccまたはEmacsで M-x info. 表示されなければ sudo apt-get install gcc-docでインストール)などを参照する. 
+</p>
+
+<p>
+<font color=red>問題:</font> 
+mutexやspinlockを使わず，
+__sync_bool_compare_and_swapまたは
+__sync_val_compare_and_swapを利用して
+同じ問題を解決してみよ．
+</p>
+
+<p>
+<iframe src="https://docs.google.com/forms/d/1vn_BgSLFdPwgzulvv7O7MrTf5t10HDTme_P-_AfAH0I/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+
+<p>注:
+この問題ではあきらかに__sync_fetch_and_addを使うのが簡単だが,
+compare_and_swapは色々な場面で有用なプリミティブなので,
+練習すると良い. 
+</p>
+</div>
+
+<h2>3種類の不可分更新の比較</h2>
+<div>
+<p>
+都合，同じ問題を解決するのに，
+<ul>
+  <li>mutexを用いたバージョン，</li>
+  <li>spinlockを用いたバージョン，</li>
+  <li>compare_and_swapを用いたバージョン，</li>
+</ul>
+の3通りができたことになる．
+</p>
+
+<p>
+<font color=red>問題:</font> 
+スレッド数を色々変えて，3つの性能を比較してみよ．特に，
+<ul>
+  <li>spinがmutexよりも大きく負けるのはどのようなスレッド数の時か</li>
+  <li>spinがmutexに勝るのはどのようなスレッド数の時か</li>
+  <li>それらのスレッド数で，
+    compare_and_swapを用いたバージョンの性能はどうか</li>
+</ul>
+予想してから，確かめてみよ．
+また，
+<pre>
+$ <font color=blue>taskset -c 0 ./pthread_inc_mutex 4 1000000</font>
+</pre>
+などとすると，4スレッドを作りつつも，それらを一つのCPU (この場合はCPU 0番)
+に割り当てることができる．
+この設定のある，なしで性能がどう変わるかも予想・実験せよ．
+</p>
+
+<p>
+<iframe src="https://docs.google.com/forms/d/1G5KDG-bsKrmYOxVGOTK5POCmKki6dP3J-K39g-O2Y0o/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+</div>
+
+<h2>スレッドセーフなデータ構造作成の練習</h2>
+<div>
+<p>
+有限バッファを作ることを考える．有限バッファとは，
+一定の大きさのデータの入れ物であり，
+スレッド間で値を受け渡すのに用いる．
+以下のデータ型と操作が定義されているものとする
+ソースコード(<a href=src/pthread_bb.c>pthread_bb.c</a>
+または<a href=src/openmp_bb.c>openmp_bb.c</a>)のコメント参照．
+
+<ul>
+  <li>型: <tt>bounded_buffer</tt></li>
+  <li><tt>bounded_buffer * bb = mk_bounded_buffer();</tt> (空の有限バッファを作る)</li>
+  <li><tt>int bb_enq(bounded_buffer * bb, long val);</tt> (valを挿入)</li>
+  <li><tt>long bb_deq(bounded_buffer * bb);</tt> 値を取り出す</li>
+</ul>
+</p>
+
+<p>
+ここで，
+<ul>
+  <li>bounded_bufferは容量が決まっている．ソースコード上のC (= 8)</li>
+  <li>bb_enq 時に満杯(データ数=C)であれば，空くまで(bb_deqが呼ばれるまで)待つ</li>
+  <li>bb_deq 時に空(データ数=0)であれば，空じゃなくなるまで(bb_enqが呼ばれるまで)待つ</li>
+  <li>bb_enq, bb_deqが複数のスレッドから呼ばれても正しく動作する</li>
+</ul>
+ものを目指す．
+</p>
+
+<p>
+不完全なソースコード
+(<a href=src/pthread_bb.c>pthread_bb.c</a>
+または<a href=src/openmp_bb.c>openmp_bb.c</a>)
+を用意してある．これは，
+<ul>
+  <li>bb_enq 時に満杯(データ数=C)であったら直ちに-1 (BB_FULL)を返す</li>
+  <li>bb_deq 時に空(データ数=0)であったら直ちに-1 (BB_EMPTY)を返す</li>
+  <li>複数スレッド間の排他制御などを一切していない</li>
+</ul>
+というもので，不完全である．一応コンパイル・実行は出来，以下のような動作
+(エラー)をする．
+<pre>
+$ <font color=blue>gcc -Wall -Wextra pthread_bb.c -lpthread</font>
+$ <font color=blue>./a.out 100 1 1</font>   # 100要素; 1 enqスレッド; 1 deqスレッド
+1 threads to enqueue, 1 threads to dequeue
+a.out: pthread_bb.c:123: enq_items: Assertion `r == 0' failed.
+a.out: pthread_bb.c:137: deq_items: Assertion `dequeued[val] == 0' failed.
+中止 (コアダンプ)
+$ <font color=blue>./a.out 8 1 1</font>   # 8要素; 1 enqスレッド; 1 deqスレッド
+1 threads to enqueue, 1 threads to dequeue
+OK
+8 items enqueued/dequeued in 0.000146 sec
+54827.503268 items/sec
+</pre>
+8要素以内であれば正しく動作する可能性がある(保証はされていない)．
+</p>
+
+<p>
+<font color=red>問題:</font>
+排他制御，条件変数などを使って，
+正しい動作をするようにせよ．色々なパラメータで確かめよ．
+多数の要素(少なくとも1000000)，
+多数のスレッド(enqスレッド数, deqスレッド数ともコア数よりもずっと多い，
+たとえば30とか)で動作するようにせよ．
+
+<pre>
+$ <font color=blue>./pthread_bb 1000000 1 1</font>
+1 threads to enqueue, 1 threads to dequeue
+OK
+1000000 items enqueued/dequeued in 0.098256 sec
+10177484.009357 items/sec
+$ <font color=blue>./pthread_bb 1000000 1 2</font>
+1 threads to enqueue, 2 threads to dequeue
+OK
+1000000 items enqueued/dequeued in 0.092740 sec
+10782826.880559 items/sec
+$ <font color=blue>./pthread_bb 1000000 1 10</font>
+1 threads to enqueue, 10 threads to dequeue
+OK
+1000000 items enqueued/dequeued in 0.420537 sec
+2377912.079190 items/sec
+$ <font color=blue>./pthread_bb 1000000 2 1</font>
+2 threads to enqueue, 1 threads to dequeue
+OK
+1000000 items enqueued/dequeued in 0.094636 sec
+10566807.412857 items/sec
+$ <font color=blue>./pthread_bb 1000000 2 2</font>
+2 threads to enqueue, 2 threads to dequeue
+OK
+1000000 items enqueued/dequeued in 0.109637 sec
+9121006.586916 items/sec
+$ <font color=blue>./pthread_bb 1000000 10 1</font>
+10 threads to enqueue, 1 threads to dequeue
+OK
+1000000 items enqueued/dequeued in 0.517317 sec
+1933050.509613 items/sec
+$ <font color=blue>./pthread_bb 1000000 10 10</font>
+10 threads to enqueue, 10 threads to dequeue
+OK
+1000000 items enqueued/dequeued in 0.797050 sec
+1254626.436180 items/sec
+$ <font color=blue>./pthread_bb 1000000 100 100</font>
+100 threads to enqueue, 100 threads to dequeue
+OK
+1000000 items enqueued/dequeued in 7.080064 sec
+141241.659929 items/sec
+</pre>
+</p>
+
+<p>
+<iframe src="https://docs.google.com/forms/d/16IIKUQzSdE-6ZKHROyGf-JI7L__EQH2eLrgdCcKU-Iw/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+
+</div>
+
+<h2>mutexとspin_lockの可視化</h2>
+<div>
+<p>
+頻忙待機の何がいけないかを可視化によって理解してみよう．
+このコード(<a href=src/pthread_visualize_lock.c>pthread_visualize_lock.c</a>
+または<a href=src/openmp_visualize_lock.c>openmp_visualize_lock.c</a>)
+は，以下のようなことをするスレッドをたくさん作る．
+<pre>
+ for ( ... ) {
+   lock(m);
+   think(1.0e-4);
+   unlock(m);
+   think(3.0e-5);
+ }
+</pre>
+
+think(s) は s秒間計算する(振りをする)という関数で，つまり上記は，
+ロックを取得して約 0.1ミリ秒計算をして, 
+ロックを開放して0.1ミリ秒計算，という動作を繰り返す．
+そして，ロックを呼び出した時刻(lockを呼び出す直前(A)),
+実際にロックが取得できた時刻呼び出した時刻(lockの直後(B)),
+unlockを呼び出した時刻(unlockの直前(C)), を記録する．
+<pre>
+ for ( ... ) {
+   ----------------- (A)
+   lock(m);
+   ----------------- (B)
+   think(1.0e-4);
+   ----------------- (C)
+   unlock(m);
+   think(1.0e-4);
+ }
+</pre>
+
+<pre>
+$ gcc pthread_visualize_lock.c -lpthread
+$ ./a.out 16 10000 mutex.txt
+</pre>
+とすると，mutex.txt に記録が残る．
+パラメータは最初の問題と同じで，
+上記は16個のスレッドがそれぞれ10000回ずつlock/unlockを行う．
+なおパラメータとしては，スレッド数 x 回数が数万程度におさえておく．
+</p>
+
+<p>
+このスクリプト<a href=src/vis_lock.py>vis_lock.py</a>はこうして出来た
+記録ファイルを，可視化のために svg ファイルに変換する．
+<pre>
+$ <font color=blue>./vis_lock.py mutex.txt mutex.svg</font>
+</pre>
+svgファイルは, webブラウザやinkscapeなどで可視化すると良い．
+<pre>
+$ <font color=blue>firefox mutex.svg</font>  # または google-chrome mutex.svg, firefox mutex.svg など
+</pre>
+</p>
+
+<p>
+<img src=lock_vis.png width=600 />
+</p>
+
+<p>色の薄い部分がlockを待っている時間((A)-(B))，
+濃い部分はlockを取得中の部分((B)-(C))である．
+白い部分は，unlockしてから次のlockを呼び出すまでの間である．
+</p>
+
+<p>
+<font color=red>問題:</font>
+白い部分，薄い部分，濃い部分の長さはどのように決まるのか?
+スレッド数やthinkのパラメータを変更して，自分の理解と一致するか確かめよ．
+</p>
+
+<p>
+<font color=red>問題:</font>
+プログラム中のpthread_mutex_t型の変数mを，
+(先に用いた<a href=src/spin.h>spin.h</a>の) spinlock_t
+に変更して，spin lockを用いるようにせよ．
+可視化結果がどのように変わるか見てみよ．
+そのようになるのはなぜかを考えよ．
+</p>
+
+<p>
+<iframe src="https://docs.google.com/forms/d/17IbeMq1pxYX41ZtrGYjZNqUpzQN3pPLBfAGSgjQXh9I/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+</div>
+
+<h2>並列処理の基本</h2>
+<div>
+<p>
+複数のCPUを使って計算を速くするという，
+本来の意味での並列処理をやってみよう．
+以下はPthread, OpenMPのどちらを用いてもできるが，
+OpenMPを使えばその有り難みがわかることだろう．
+</p>
+<p>題材としては，複素線積分の計算を取り上げる．
+以下は，複素関数 \( f(z) \), 
+曲線\(C\)のパラメータ表示\(z(t)\)  \((t : a \rightarrow b)\)が与えられ，
+複素線積分
+\[ \int_C f(z) dz \]
+を計算する関数である．
+</p>
+<pre>
+#include &lt;complex.h$gt;
+typedef complex double (*contour_t)(double);
+typedef complex double (*complex_fun_t)(complex double);
+
+complex double contour_integral(complex_fun_t f, contour_t z, 
+				double a, double b, long n) {
+  long i;
+  double dt = (b - a) / n;
+  complex double s = 0.0;
+  for (i = 0; i &lt; n; i++) {
+    double t = a + (i * (b - a)) / n;
+    s += f(z(t)) * (z(t + dt) - z(t - dt)) * 0.5;
+  }
+  return s;
+}
+</pre>
+
+<p>「複素線積分ってなんだっけ?」という人でも以下の実験をすることはできるが，
+一応書いておくと，定義は
+\[ \int_C f(z) dz = \int_a^b f(z(t)) z'(t) dt \]
+で(これは通常の実数を変数とする関数の積分)，上記のコードはそれを計算するのに，
+\([a,b]\)を\(n\)等分した点を\(a = t_0, t_1, \ldots t_n = b\)として，
+\[ 
+\begin{array}{ll}
+\approx & \sum_{i=0}^{n-1} f(z(t_i)) z'(t_i) dt \\
+\approx & \sum_{i=0}^{n-1} f(z(t_i)) \frac{z(t_{i+1} - t_{i-1})}{2 dt} dt \\
+\approx & \sum_{i=0}^{n-1} f(z(t_i)) \frac{z(t_{i+1} - t_{i-1})}{2}
+\end{array}
+ \]
+で近似している(\(dt = (b - a)/n\))．
+</p>
+
+<p>
+<a href=cint.c>src/cint.c</a>は，この関数を用いて，複素関数\(1/z\)を，
+正方形([-1,1] x [-1,1])の周に沿って半時計回りに一周，複素線積分した
+結果を求める．結果が，\(2\pi i\)になるはずであるというのは，
+複素解析の基本的な結果である．
+</p>
+
+<p>
+<font color=red>問題:</font>
+<a href=src/cint.c>cint.c</a>のcontour_integral関数を並列化し，
+色々なスレッド数で実行時間を計測してみよ．
+唯一問題となるのは s への足し算である．
+性能が良いと思われる方法を考えて試せ．
+</p>
+<p>
+<iframe src="https://docs.google.com/forms/d/1RTkEg49rv8mE7nFNZjN9XRk4vWOFdRdH591odntEbEc/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+</div>
+
+
+<h2>応用問題</h2>
+<div>
+<p>
+多少高度な例題として, 
+多項式f(z)の複素数根をすべて見つけるアルゴリズムを考える.
+原理は, 複素平面上の領域を考え, 
+その中に\(f(z)=0\)なる点が存在する範囲を徐々に狭めていくという原理である.
+それをやるには, 「この領域にはf(z)=0となる点は存在しない」ということが判定できなくてはならない.
+もう忘れたとは思うが, それを判定するために, 複素解析で有用な定理がある. 
+それは以下の<a href=https://ja.wikipedia.org/wiki/%E5%81%8F%E8%A7%92%E3%81%AE%E5%8E%9F%E7%90%86>
+    偏角の原理</a>というもの. 
+</p>
+
+<blockquote>
+\(f\)を多項式,
+\(D\)を複素平面上の領域, \(C\)をその境界(領域を左に見ながら回る向き)とする.
+このとき, \(C\)上で\(f(z) \neq 0\)ならば,
+\[ \frac{1}{2\pi i}\int_C \frac{f'(z)}{f(z)} dz = \mbox{$D$内の$f(z)$の零点の個数}\]
+ただし, 個数は重複度を込めて数える.
+</blockquote>
+
+<p>実際に解を求めていくには，まず，全ての解を含む(十分大きな領域)の周で
+積分をし，徐々にその領域を細分化し，解を含むところだけをさらに細分化していく
+(ある領域の周に沿った積分が0とわかったら，その領域をそれ以上細分化する必要はない)．
+</p>
+
+<p>土台として，多項式:
+\[ f(z) = z^6 - 1 \]
+に対し，領域
+\[ [-2.0,2.0] \times [-2.0,2.0] \]
+を \(5\times 5\)に細分化したそれぞれの領域の周で積分し，
+  結果を表示する<a href=src/cint_arg.c>プログラム</a>を示す．
+実行すると以下のような結果になる．
+<pre>
+$ ./a.out 
+contour integral of f'(z)/f(z) along square [-2.0,-1.2]x[-2.0,-1.2] = 0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [-2.0,-1.2]x[-1.2,-0.4] = 0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [-2.0,-1.2]x[-0.4,0.4] = 0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [-2.0,-1.2]x[0.4,1.2] = -0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [-2.0,-1.2]x[1.2,2.0] = -0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [-1.2,-0.4]x[-2.0,-1.2] = 0.000000000 + -0.000000000 i
+contour integral of f'(z)/f(z) along square [-1.2,-0.4]x[-1.2,-0.4] = 0.000000000 + 6.283185307 i
+contour integral of f'(z)/f(z) along square [-1.2,-0.4]x[-0.4,0.4] = 0.000000000 + 6.283185307 i
+contour integral of f'(z)/f(z) along square [-1.2,-0.4]x[0.4,1.2] = -0.000000000 + 6.283185307 i
+contour integral of f'(z)/f(z) along square [-1.2,-0.4]x[1.2,2.0] = -0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [-0.4,0.4]x[-2.0,-1.2] = 0.000000000 + -0.000000000 i
+contour integral of f'(z)/f(z) along square [-0.4,0.4]x[-1.2,-0.4] = 0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [-0.4,0.4]x[-0.4,0.4] = 0.000000000 + -0.000000000 i
+contour integral of f'(z)/f(z) along square [-0.4,0.4]x[0.4,1.2] = -0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [-0.4,0.4]x[1.2,2.0] = -0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [0.4,1.2]x[-2.0,-1.2] = 0.000000000 + -0.000000000 i
+contour integral of f'(z)/f(z) along square [0.4,1.2]x[-1.2,-0.4] = 0.000000000 + 6.283185307 i
+contour integral of f'(z)/f(z) along square [0.4,1.2]x[-0.4,0.4] = -0.000000000 + 6.283185307 i
+contour integral of f'(z)/f(z) along square [0.4,1.2]x[0.4,1.2] = -0.000000000 + 6.283185307 i
+contour integral of f'(z)/f(z) along square [0.4,1.2]x[1.2,2.0] = -0.000000000 + 0.000000000 i
+contour integral of f'(z)/f(z) along square [1.2,2.0]x[-2.0,-1.2] = 0.000000000 + -0.000000000 i
+contour integral of f'(z)/f(z) along square [1.2,2.0]x[-1.2,-0.4] = -0.000000000 + -0.000000000 i
+contour integral of f'(z)/f(z) along square [1.2,2.0]x[-0.4,0.4] = -0.000000000 + -0.000000000 i
+contour integral of f'(z)/f(z) along square [1.2,2.0]x[0.4,1.2] = -0.000000000 + -0.000000000 i
+contour integral of f'(z)/f(z) along square [1.2,2.0]x[1.2,2.0] = -0.000000000 + -0.000000000 i
+elapsed time : 2.856479883 sec
+</pre>
+\(z^6 - 1 = 0\)の解は単位円を6等分する点で，
+上記の結果もそれと一貫していることがわかるだろう．
+あとはこのプログラムを，解が存在する矩形だけをどんどん細分化するように
+拡張すれば，解を求めるプログラムにすることができる．
+</p>
+
+<p>
+<font color=red>問題:</font>
+<a href=src/cint_arg.c>cint_arg.c</a>を元にして，
+\(z^6 - 1 = 0\)の根を\(10^{-5}\)程度の精度で求め，
+表示するプログラムにせよ．
+また，解を求めるまでの時間もプログラム内で計測して表示すること
+(計算中に余計な表示を大量にすると時間もかかる上，
+計測が無意味になるので注意)．
+</p>
+<p>
+<iframe src="https://docs.google.com/forms/d/14v6iT6aNPHS6kxO-YlA4m8-VjHhpnHvjF5KOdgKjAUg/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+
+<p>
+<font color=red>問題:</font>
+そのプログラムを並列化し，速度向上を観測せよ．
+</p>
+<p>
+<iframe src="https://docs.google.com/forms/d/1TuK3D29tIIq_JrwlpitqHoAvlBuTxfaMPydgC3MtcGA/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</p>
+
+<p align=right>
+以上<a href=links_to_responses.html>。</a>
+</p>
+
+</body>
+</html>

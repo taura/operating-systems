@@ -1,0 +1,78 @@
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+h1 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #CCEECC;
+}
+
+h2 {
+  font-size   : 13pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #CCEECC;
+}
+
+h3 {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #DDFFDD;
+}
+
+h4 {
+  font-size   : 10pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #FFFFFF;
+}
+
+div {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+

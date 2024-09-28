@@ -124,23 +124,24 @@
     <div>
       <ul>
         <li class="ja">
-          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/"
-             target="_blank" rel="noopener">ITC-LMS</a>
+          <a href="https://utol.ecc.u-tokyo.ac.jp/"
+             target="_blank" rel="noopener">UTOL</a>
           で当該授業のページに行く
         </li>
         <li class="en">
-          Go to <a href="https://itc-lms.ecc.u-tokyo.ac.jp/"
-                target="_blank" rel="noopener">ITC-LMS</a>
+          Go to <a href="https://utol.ecc.u-tokyo.ac.jp/"
+                target="_blank" rel="noopener">UTOL</a>
           and open the page of the course
         </li>
         
         <li class="ja">
-          課題一覧の中から, "課題0: Jupyterパスワード" の,
+          課題一覧の中から, "課題0: Jupyterパスワード"
+          のような名前の課題 (授業によって違うかもしれない)の,
           「教員からのコメント」を見る(課題を提出する必要はない)
         </li>
         <li class="en">
           From the assignment list, find "Assignment 0: Jupyter password"
-          and get its "Comments from the instructor" (you don't have to submit
+          and get its "Comments from the instructor" (you do not have to submit
           a report for the assignment)
         </li>
         
@@ -166,17 +167,33 @@
 
         <li class="ja">
           「教員からのコメント」に
-<pre>user=u23xxx password=xxxxxxxx</pre>
-と書かれているのを見る. <a href="https://taulec.zapto.org:8000/"
-           target="_blank" rel="noopener">https://taulec.zapto.org:8000/</a>
+<pre>user=u24xxx password=xxxxxxxx</pre>
+と書かれているのを見る.
+<ul>
+  <li>計算科学概論の人は
+    <a href="https://tauleg.zapto.org:8000/"
+       target="_blank" rel="noopener">https://tauleg.zapto.org:8000/</a></li>
+  <li>それ以外の人は
+    <a href="https://taulec.zapto.org:8000/"
+       target="_blank" rel="noopener">https://taulec.zapto.org:8000/</a></li>
+</ul>
 にアクセスしてユーザ名とパスワードを入力してログイン. うまくいけばこのようなページが現れる.
         </li>
         <li class="en">
           Find something like
-<pre>user=u23xxx password=xxxxxxxx</pre>
+<pre>user=u24xxx password=xxxxxxxx</pre>
 in "comments from the instructor".
-Visit <a href="https://taulec.zapto.org:8000/"
+Visit
+<ul>
+  <li><a href="https://tauleg.zapto.org:8000/"
+         target="_blank" rel="noopener">https://tauleg.zapto.org:8000/</a>
+    if you are "Introduction to Computational Science" student, or
+  </li>
+  <li><a href="https://taulec.zapto.org:8000/"
          target="_blank" rel="noopener">https://taulec.zapto.org:8000/</a>
+    otherwise
+  </li>
+</ul>  
 and login with the user name and password. If nothing goes wrong, you will see a page like this.
         </li>
       </ul>
@@ -468,8 +485,8 @@ cat ~/.ssh/authorized_keys
         <li class="ja">以下のような結果が表示されれば成功</li>
         <li class="en">If you see something like this, you are all set</li>
 <pre>
-drwx------ 2 u2xxxx u2xxxx 4096 Oct  4 22:19 /home/u23xxx/.ssh
--rw------- 1 u2xxxx u2xxxx 394 Oct  4 22:19 /home/u23xxx/.ssh/authorized_keys
+drwx------ 2 u2xxxx u2xxxx 4096 Oct  4 22:19 /home/u24xxx/.ssh
+-rw------- 1 u2xxxx u2xxxx 394 Oct  4 22:19 /home/u24xxx/.ssh/authorized_keys
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9s/2Uiy187pQvMNVwlNMRTSNFnvj9EVwOPx9/qLuiQg086zXFB2eugxTL1Pw+ViQ  ...  ... uB/TiOnA0e6KDpU2h4 
 </pre>
         

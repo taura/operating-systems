@@ -1,0 +1,431 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" / >
+<title>オペレーティングシステム演習</title>
+
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+h1 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #BBDDBB;
+}
+
+h2 {
+  font-size   : 13pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #CCEECC;
+}
+
+h3 {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #DDFFDD;
+}
+
+h4 {
+  font-size   : 10pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #FFFFFF;
+}
+
+div {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>オペレーティングシステム演習<br>田浦健次朗</h1>
+<div>
+<font size=-1>(the page is encoded in UTF-8)</font>
+</div>
+
+<h2>準備</h2>
+<div>
+  <p>
+    演習を始めるに当たってgitlab
+    というサーバに自分のアカウントを作り,
+    こちらで用意したレポジトリをコピー(fork)
+    して自分のレポジトリを作る.
+  </p>
+  <p>
+    <font color=red>注:</font> 前回のものとは異なる手順に
+    なるので, 前回すでにgit cloneして作業を始めた人も,
+    以下の手順に従って始めて下さい.
+    すでにある程度コードを書いたという
+    人はすみませんが, 適宜手動で反映させて下さい.
+  </p>
+  
+  <ol>
+    <li>
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/"
+         target="_blank">田浦研で用意したgitlabサーバ</a>
+      に行き, ユーザを登録(Register)する.
+      なお, 後期実験で課題「大規模ソフトウェアを...」をやった
+      人はすでに登録済みのはずなのでそれを使えば良い.<br />
+
+      <a href="img/gitlab-register.png">
+        <img src="img/gitlab-register.png" width=300  />
+      </a>
+    </li>
+    <li>
+      登録が済んだらSign inする.
+    </li>
+    <li>
+      その上で
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi"
+         target="_blank">unagiトップページ</a>に行く. <br />
+      <a href="img/unagi-top.png">
+        <img src="img/unagi-top.png" width=300  />
+      </a>
+    </li>
+    <li>左上にある "Fork" というボタンを押すと, このレポジトリのコピーが
+      できる(以下<font color=blue>「自分のレポジトリ」</font>). <br />
+      <a href="img/button.png">
+        <img src="img/button.png" width=300  />
+      </a>
+      
+    </li>
+    <li>自分のレポジトリのトップページに行く.
+      ページ上部のメニューから Projects -&gt; Your Projects
+      を選べば, unagiという名前の, 自分のレポジトリが見つかるはずである.
+    </li>
+    <li>
+      自分のレポジトリのページを開きそのページのURLを
+      コピーし,
+      この<a href="https://docs.google.com/spreadsheets/d/1q5-z3qorha87zlhiSipemHfE-a3slUNXGx01ycN6fus/edit?usp=sharing"
+             target="_blank"> スプレッドシート</a>に貼りつける.
+      なおそのページのURLは,
+      https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/gitlab上でのUSER名/unagi
+      という文字列になっているはず. 例えばユーザ名がtauなら
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi"
+         target="_blank">
+        https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi
+      </a>
+    </li>
+    <li>いよいよ自分のレポジトリをダウンロード(clone)する.
+      以下(下線部)をコマンドライン(端末)で実行.
+      なお, Windowsな人でgitコマンドがないという人は,
+      <a href="#windows">Windows用のセットアップ</a>
+      を参照.
+<pre>
+$ <u>git clone https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/gitlab上でのUSER名/unagi.git</u>
+</pre>
+またはすでに<a href="#ssh_key">SSHのキーが登録</a>してある人は
+<pre>
+$ <u>git clone git@doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:gitlab上でのUSER名/unagi.git</u>
+</pre>
+どちらの場合もgit clone以降の文字列は,
+      自分のレポジトリのページで,
+HTTPSとかSSHとか書かれている右のURL部分をクリックし,
+コピーすればよい. 前者は HTTPS, 後者は SSH を選ぶとコピーできる<br />
+      <a href="img/button.png">
+        <img src="img/button.png" width=300  />
+      </a>
+    </li>
+  </ol>
+</div>
+
+<h2>以降の更新の取り込み</h2>
+<div>
+  <ul>
+    <li>
+      以降も田浦の方でレポジトリを変更することがある.
+      その変更を取り込む手順は以下.
+      <ol>
+        <li>git cloneして出来たフォルダに移動
+<pre>
+$ cd unagi # git cloneして出来たフォルダ
+</pre>
+        </li>
+        <li>
+git cloneしてできたフォルダに対して一度, 以下の作業を行う
+<pre>
+$ <u>git remote add upstream https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi.git</u>           
+</pre>
+または, SSHのキーが登録してある人は
+<pre>
+$ <u>git remote add upstream git@doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:tau/unagi.git</u>
+</pre>
+        </li>
+        <li>変更を取り込みたい時(作業を始める前に一度, または指示があった時)に
+以下を行う.          
+<pre>
+$ <u>git fetch upstream</u>
+$ <u>git merge upstream/master</u>
+</pre>
+        </li>
+      </ol>
+    </li>
+  </ul>
+</div>
+
+<a name=git> </a>
+<h2>gitの最小限の説明</h2>
+<div>
+  <p>以降の作業はgit cloneしてできたフォルダ内で作業をし,
+    作業結果は自分のレポジトリにcommit + pushする
+    ことで提出する.
+    以下の説明は大部分はgitを使って作業をする際の一般的な説明に
+    過ぎないので適宜, 巷の解説ページなども参照して下さい.
+    また, <a href="https://doss.eidos.ic.i.u-tokyo.ac.jp/html/git.html"
+             target="_blank">
+      別の演習のために書いたページ</a>も参照.
+  </p>
+  <p>
+  <ol>
+    <li>基本は, 提出に含めたいファイルに対して
+<pre>
+$ <u>git add ファイル名</u>
+</pre>
+を実行し,
+    </li>
+<li>次に
+<pre>
+$ <u>git commit -m "コメント"</u>
+</pre>
+を実行. コメントは変更内容の要約を書く. 最後に
+</li>
+<li>
+<pre>
+$ <u>git push</u>
+</pre>
+を実行してサーバに変更を送信する.
+</li>
+  </ol>
+  語感からは, commitという操作でサーバに変更が送信されそうな気がするが,
+  実際には push を行わないと送信されないので注意.
+  push したら自分のレポジトリのページを見に行けば,
+  変更点が反映されていることが確認できる.
+  </p>
+  <p>
+
+    <font color=red>注意</font>としては,
+<pre>
+$ <u>git add ファイル名</u>
+</pre>
+を実行しないと, 例え変更されたファイルであってもcommitには含まれない.
+多数のファイルを変更してどれをaddしてよいかわからない場合は,
+それぞれを手動でaddする代わりに commit コマンドに -a をつけるのでもよい.
+<pre>
+$ <u>git commit -m "コメント" -a</u>
+</pre>
+ただしこの場合も, 新たに追加したファイルについては, 明示的にaddしてやる必要がある. まとめると, もう一つのやり方は,
+  <ol>
+    <li>新たに追加したファイルに対して
+<pre>
+$ <u>git add ファイル名</u>
+</pre>
+を実行し,
+    </li>
+<li>次に
+<pre>
+$ <u>git commit -m "コメント" -a</u>
+</pre>
+を実行. 
+</li>
+<li>
+<pre>
+$ <u>git push</u>
+</pre>
+を実行してサーバに変更を送信する.
+</li>
+  </ol>
+  </p>
+  <p>
+    gitは, 複数台のマシン上にソースをcloneして,
+      その作業結果を転送するためにも使える. 例えばA, B二つの
+      マシンで作業をしているとし, Aで作業をした結果をBに送りたいときは,
+    <ul>
+      <li>A上で上記の, add, commit, pushを行う</li>
+      <li>B上でレポジトリの存在する場所に行って,
+        <pre>
+$ <u>git pull</u>
+        </pre>
+      </li>
+    </ul>
+  </p>
+  <p>その他覚えておくと良いコマンド.
+    <ul>
+      <li> git status : 変更されたがまだコミットしていないファイルなどを表示してくれる. また, ファイルとして存在しているがレポジトリにaddされていないファイルも表示してくれるので, ファイルのaddし忘れなどを防ぐのに役立つ
+      </li>
+      <li> git diff ファイル名 : 特定のファイルに対し, レポジトリにコミットされている版といま手元にある版の差分を表示してくれる. 自分がどんな変更をしたかを確認するのに使える.
+      </li>
+    </ul>
+  </p>
+</div>
+
+
+<a name=submit> </a>
+<h2>課題提出の手順</h2>
+<div>
+  <ul>
+    <li>どのようなファイル・報告を提出に含めるべきかは
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/tree/master/assignments"
+         target="_blank">課題ごとの指示</a>を参照.</li>
+    <li><a href="#git">上記</a>の手順に従い,
+      変更もしくは追加されたファイルをadd, commit, push する.</li>
+    <li>pushした後, 空のフォルダに改めてレポジトリをcloneして,
+      そこでまたテストを行う. ファイルの「commitし忘れ」がないかを
+      こうしてチェックする. </li>
+    <li>その上で 
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/portal/contents/lms"
+         target="_blank">
+        ITC-LMS</a>からその報告をする. 中身は全てgitで提出するため,
+      ITC-LMSへ提出するファイルは以下の内容を記した短いテキストファイルで良い.
+      <pre>
+        レポジトリのURLは,
+        https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/XXXXXXXXXX/unagi です.
+
+        (その他報告したいことがあれば書く)
+      </pre>
+    </li>
+    <li>
+      課題提出時のcommitの際のコメントは, 「課題1提出」などとする. 
+    </li>
+  </ul>
+</div>
+
+<h2>ソースコードのドキュメント</h2>
+<div>
+  <ul>
+    は
+    <a href="../doc/html/index.html" target="_blank">
+      こちら.
+    </a>
+    "Files" を選択して閲覧する.
+  </ul>
+</div>
+
+<h2>課題</h2>
+<div>
+  <ul>
+    <li>
+      以上の作業が済んだら課題に取り掛かる.
+    </li>
+    <li>
+      課題のドキュメントは
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/tree/master/assignments" target="_blank">
+        こちら
+      </a>
+      にあり, 以降もここに書き足していきます.
+    </li>
+    <li>
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/blob/master/assignments/FAQ.md" target="_blank">
+        聞かれた質問と情報
+      </a>をここに蓄えます
+    </li>
+    <li>
+      最初に
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/blob/master/assignments/00gdb.md" target="_blank">
+        デバッガでソースを追跡する練習
+      </a>
+      をするとよい. 
+    </li>
+    <li>
+      最初は
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/unagi/blob/master/assignments/01thread_get.md" target="_blank">
+        課題1-1
+      </a>
+    </li>
+  </ul>
+</div>
+
+<a name="ssh_key"></a>
+<h2>SSHキーの登録</h2>
+<div>
+  レポジトリをcloneしたり,
+    親レポジトリの設定(git remote add upstream)
+    をする際に指定するURLには, HTTPSのURLと,
+    SSHのURLがある. 前者は毎回パスワードを打たなくてはいけないので
+    不便. 後者を使うにはSSHの公開鍵を登録する必要がある.
+    「公開鍵って何?」という人は今日のところは一旦忘れて下さい.
+    以下は, 自分のSSH公開鍵がどこにあるかわかっている人向けの説明
+  <ul>
+    <li><a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/"
+           target="_blank">gitlabのトップページ</a>
+      に行く
+    </li>
+    <li>画面右上の丸い画像をクリック, プルダウンメニューを出して,
+      "Settings"を選択.
+    </li>
+    <li>現れたページの左のメニューから, "SSH Keys" を選択. <br />
+      <a href="img/user-settings.png">
+        <img src="img/user-settings.png" width=300  />
+      </a>
+      
+    </li>
+  </ul>
+</div>
+  
+<a name="windows"></a>
+<h2>Windows用のセットアップ</h2>
+<div>
+  とりあえずキーワードだけ. 詳細は加筆します.
+  とりあえず以下でぐぐってみてください.
+  なおunagiサーバはBash on Windowsでも動作することを確認しています.
+  <ul>
+    <li>Bash on Windows</li>
+    <li>Mingw</li>
+    <li>Cygwin</li>
+  </ul>
+</div>
+
+</body>
+</html>
+

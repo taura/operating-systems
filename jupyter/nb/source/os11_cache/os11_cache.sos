@@ -1,0 +1,251 @@
+<!--- md --->
+
+#* オペレーティングシステム 演習 11
+
+#* キャッシュ
+<!--- end md --->
+
+<!--- md w --->
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+<!--- end md --->
+
+<!--- md --->
+# はじめに
+
+* OSは一度読んだファイルはメモリ上に保持する<font color="blue">(キャッシュ)</font>
+* ファイル読み込み時にすでにキャッシュされていれば, ディスクからの読み出し(IO)は行われず, 読み出しが高速に行われる
+* キャッシュは物理メモリを消費するので, メモリ管理の節で述べたのと似た仕組み(LRUの近似)で管理される
+* つまりしばらく使われなかったファイルがキャッシュから追い出される
+* キャッシュにどれくらいのメモリが使われているかはこれまでも紹介したfree, vmstat, (端末上では) topなどで知ることができる
+
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+free
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+vmstat
+<!--- end code --->
+
+<!--- md --->
+* 以下ではファイルキャッシュの効果を体感する
+<!--- end md --->
+
+<!--- md --->
+# 準備: 適当な大きさのファイルを作る
+
+* 適当なサイズで, 中身がランダムなファイルを作るPythonプログラム
+<!--- end md --->
+
+<!--- code w kernel=python --->
+<!--- include nb/source/include/os11_cache/mk_random_file.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+mk_random_file("data.bin", 500 * 1000 * 1000)
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+ls -l 
+<!--- end code --->
+
+<!--- md --->
+#* 参考
+
+* プログラムを書かずにコマンドを駆使するなら以下 (ddコマンドは知っておくと良いので参考までに紹介)
+* ifは入力, ofは出力, bsは一度に読み書きする量, countはその回数なので以下は/dev/urandomというファイルから1000000 バイト読み出してdata.binに書く, を500回繰り返す
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+# 参考: 実行する必要なし
+dd if=/dev/urandom of=data.bin bs=$((1000 * 1000)) count=500
+<!--- end code --->
+
+<!--- md --->
+* `/dev/urandom`は読み出すたびに乱数を返す擬似ファイルなので, 上記は乱数でファイルを作ることになる
+* 実際は中身は何でも良い(ゼロでも良い)のだが, ゼロでは中身が正しく読めていることのチェックにならないので乱数で埋めておく
+* `/dev/urandom`の読み出しには無駄に時間がかかるし, 作るたびに異なるファイルできてしまうので, 以下のように自分でプログラムを書いてしまうほうが便利で速い
+<!--- end md --->
+
+
+<!--- md --->
+# ファイルをキャッシュから追い出すには?
+
+* キャッシュの効果を図るために, ファイルがキャッシュされた状態とそうでない状態を比べたいのだが, そうでない状態を作るのにトリックがいる
+* ファイルは作った直後もキャッシュされているので上記を実行した直後はおそらくキャッシュされている
+* ファイルをキャッシュから追い出すためにはいくつかの方法がある
+  1. <font color="blue">たくさんのプロセスメモリを消費して, 追い出す.</font> 例えば32GBのメモリを持つマシンなら32GBのメモリを割り当て, 実際にアクセスして物理メモリを32GB使うプロセスを走らせれば, おそらくキャッシュは全て追い出される. しかしこれは一時的にメモリ不足を引き起こし, 最悪の場合はスラッシングを引き起こす. やるなら自分専用の仮想マシンにしておくべきだろう
+  1. もう少し穏当には, <font color="blue">たくさんのキャッシュメモリを消費して追い出す.</font> 例えば32GBのメモリを持つマシンなら32GB以上のファイルを作ってそれを何度か読み出す. 果たして本当に追い出されるかは多少疑ったほうが良い(通常は古いものが追い出されるが, 小さいファイルや最近書き込まれたファイルのキャッシュを救って, 32GBの大きなファイルの一部を追い出すという判断がありえないわけではない). スラッシングなどの心配はないが, 32GBをディスクから読み出すのは時間がかかるし, これを何十人もの人が同時にやったら結構大変なことになる. 大きなメモリを持つマシンでこんなことを実験のためにやりたくはない
+  1. 管理者権限があればできる裏技. 以下はOSに直接, <font color="blue">キャッシュを開放するよう指示するコマンド</font>
+```
+sudo sysctl -w vm.drop_caches=3
+```
+管理者権限が必要である
+  1. <font color="blue">ユーザでも出来る上, 特定ファイルのキャッシュだけを開放できる裏技. `posix_fadvise`というシステムコール</font>でファイルへこれからどういうアクセスをするかのヒントを与えることが出来るがそのうちの, <font color="blue">`POSIX_FADV_DONTNEED`</font>というヒントを与えると, 指定した領域は当分不要とみなされ, キャッシュが開放される <font color="green">以下ではこれを使う</font>
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile drop_cache.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os11_cache/drop_cache.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o drop_cache drop_cache.c
+<!--- end code --->
+
+<!--- md --->
+* 以下で, 上で作った5つのファルをキャッシュから追い出せる
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+./drop_cache data.bin
+<!--- end code --->
+
+<!--- md --->
+# キャッシュをざっくり体感する
+
+* キャッシュされた状態とそうでない状態を比べたければ同じファイルを2度アクセスしてみれば良い
+
+* 1回目
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+time cat data.bin > /dev/null
+<!--- end code --->
+
+<!--- md --->
+* 2回目
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+time cat data.bin > /dev/null
+<!--- end code --->
+
+<!--- md --->
+* キャッシュは偉大で, 普段コンピュータがキビキビと動いている理由の一部は, よく使うもの(プログラムのコード, ライブラリなどを含め, 編集中のファイル, 何度も閉じたり開いたりしているファイルなど)がキャッシュ上に載っているからである
+* コンピュータを立ち上げた直後プログラムの立ち上げが遅いが, 2度目は速くなるということを感じたことがないだろうか? 今度意識してみてください
+
+# (参考) ファイルがキャッシュにあるかどうかを知る
+
+* ファイルがキャッシュにあるかどうかを知るのに fincore というコマンドがある
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+fincore data.bin
+<!--- end code --->
+
+<!--- md --->
+* 以下で追い出してまたチェックしてみよ
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+./drop_cache data.bin
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+fincore data.bin
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+# 再び読み出してみる
+time cat data.bin > /dev/null
+<!--- end code --->
+
+<!--- md --->
+* システムコールとしては実は, mincore を使ってる. ファイルをmmapしておいてその領域が物理メモリにあるか否かをmincoreで調べれば, 「物理メモリ上にある = キャッシュ上にある」という関係になっている
+
+* 以下は参考まで(fincoreの中身相当)
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile check_incore.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os11_cache/check_incore.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o check_incore check_incore.c
+<!--- end code --->
+
+<!--- md --->
+* 参考までに実行(fincoreと同じ)
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+./check_incore data.bin
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+./drop_cache data.bin
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+./check_incore data.bin
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+time cat data.bin > /dev/null
+<!--- end code --->
+
+<!--- md --->
+# キャッシュの効果を測定する
+
+* キャッシュの効果をきちんと測定してみよう
+* 以下は
+```
+./read_file F S R B > s.dat
+```
+で <font color="blue">ファイルF の先頭 S [MB] をR回読む. 但し一回の読み出し(read)で B [バイト]ずつ読み出す</font>
+* 読み出しごとに時刻を見て read に入った時点と readからリターンした時点を記録し, 標準出力に出す
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile read_file.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os11_cache/read_file.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -Wall -O3 -o read_file read_file.c
+<!--- end code --->
+
+<!--- md --->
+* 以下は記録を可視化するプログラム
+<!--- end md --->
+
+<!--- code w kernel=python --->
+<!--- include nb/source/include/os11_cache/read_file_vis.py --->
+<!--- end code --->
+
+<!--- md --->
+* 実行 (64MB を 4KBずつ読み出す; 3回繰り返す)
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+export data=data.bin
+./drop_cache ${data}
+./read_file ${data} 64m 3 4k > s.dat
+<!--- end code --->
+
+<!--- md --->
+#* 可視化
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+graph(["s.dat"])
+<!--- end code --->
+
+<!--- md --->
+# 結び
+
+* 効果(1回目と2回目の違い)は, ディスクの性能や読み出しパターンによっても異なる
+* 上記のプログラムを自分の手元にダウンロードして同じ実験をしてみることもオススメ
+
+* 今後生きてく上で, くれぐれも, <font color="blue">キャッシュから読んだときの性能 (&gt; 数GB/sec) がディスク装置の性能である</font>と誤解しないようにしましょう
+* 売られているHDD装置の性能: 1本でおおよそ100MB/sec
+* 売られているSSD装置の性能: 1本でおおよそ200-300MB/sec (PCI接続) 〜 1-2GB程度 (PCI接続)
+<!--- end md --->
+

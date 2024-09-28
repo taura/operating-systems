@@ -1,0 +1,464 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" / >
+<title>document_repositoryの構造</title>
+
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+h1 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #BBDDBB;
+}
+
+h2 {
+  font-size   : 13pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #CCEECC;
+}
+
+h3 {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #DDFFDD;
+}
+
+h4 {
+  font-size   : 10pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 1pt;
+  border-color     : #99A1AA;
+  background-color : #FFFFFF;
+}
+
+div {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>document_repositoryの構造<br /></h1>
+<div>
+<font size=-1>(the page is encoded in UTF-8)</font>
+</div>
+
+<h2>はじめに</h2>
+<div>
+  <p>この文書は今後も更新します.</p>
+</div>
+
+<h2>はじめに</h2>
+<div>
+  <p>
+    unagiサーバの基本的な機能は,
+    <ul>
+      <li>put: 文書(= ラベル(タイトルなど任意の文字列)と, 本体(任意の文字列))の登録</li>
+      <li>get: 文書の本体を任意の文字列で検索する</li>
+    </ul>
+    の二つである. 他にも, 全文書を返すなどの機能もあるが,
+    本質的なのは上記の二つ. 
+  </p>
+</div>
+
+<h2>unagiサーバの管理するデータ構造(これまで)</h2>
+<div>
+  <p>
+    unagiサーバ内部では,
+    登録された文書を<tt>document_repo_t</tt> というデータ構造で管理している.
+    したがってunagiサーバの機能の中核部分はこの, <tt>document_repo_t</tt>
+    に文書を登録, 検索する機能である.
+  </p>
+  <p>
+    以下でunagiサーバのデータ構造を説明する.
+    この節では, 最終的な目標である永続化や索引付けの機能を持たない,
+    単純なバージョンを説明する.
+  </p>
+  <p>
+    サーバが扱うデータ構造を図示したものが以下である.<br />
+
+    <img src="figs/layers/document_repository_1.svg" width=500 />
+
+      <ul>
+        <li><tt>sv</tt>は, unagiサーバのデータ全ての起点(<tt>server_t</tt>).
+          <tt>server_t</tt>の中にはその一要素として,
+          文書レポジトリを表す型
+          <tt>document_repo_t</tt>の要素(<tt>repo</tt>)を持たせておく.
+          <tt>server_t</tt>の定義を, (不要部分を省略して)示すと以下
+          (コードは<tt>document_repository.h</tt>を参照).
+<pre>          
+typedef struct {
+     ...
+  document_repo_t repo[1]; /** ドキュメントレポジトリ */
+} server_t;
+</pre>
+        </li>
+        <li>図中ピンクの部分が上記の<tt>repo</tt>.
+          なお, 図中 <tt>sv-&gt;</tt>から始まる記号で,
+          <tt>sv</tt>を起点にそのデータへアクセスするための
+          式(要素名をたどるための式)を示している.
+        </li>
+        <li>
+          <tt>document_repo_t</tt>の定義は以下.
+<pre>
+typedef struct {
+  document_array_t da[1];       /** putされたドキュメントの配列 */
+} document_repo_t;
+</pre>
+        </li>
+        <li><tt>document_array_t</tt>は<tt>document_t</tt>型を要素とする
+          <font color=blue>可変長 (=拡張可能)</font>配列
+          (C++の<tt>std::vector&lt;document_t&gt;</tt>に相当)で,
+          溢れたら容量を拡張する. よく出てくるパターンなので,
+          図中の↓によって, 拡張されるかもしれない配列を示すことにする.
+          定義は以下.
+<pre>
+typedef struct {
+  size_t sz;                    /** 配列aのサイズ */
+  size_t n;                     /** 現在埋まっている要素数(n &lt= sz)  */
+  document_t * a;               /** ドキュメントの配列 */
+} document_array_t;
+</pre>
+このような配列を作るにはあふれるたびに配列を1要素ずつ拡張するのではなく,
+容量を等比級数的に(x2倍とか, x3/2倍とか)拡大するのが常套手段である
+(何故か考えてみよ).
+したがって実際の<tt>a</tt>のサイズ(格納しうるデータ数)と,
+実際に埋まっているデータ数には差が有りうる. 前者を<tt>sz</tt>,
+後者を<tt>n</tt>という要素で管理する.
+        </li>
+        <li>
+          <tt>document_t</tt>は実質的には, ラベル(label)と文書の中身(data)の組である.
+          それぞれは単なる<tt>char *</tt> (文字配列の先頭アドレス)である.
+文字列の終わりがわかるようにするために, 合わせて長さ(バイト数)も格納する.       <pre>
+typedef struct {
+  char * label;                 /* ラベル  */
+  size_t label_len;             /* ラベルの長さ(バイト数)  */
+  char * data;                  /* データ(ドキュメントのテキスト)  */
+  size_t data_len;              /* データの長さ(バイト数) */
+} document_t;
+</pre>
+        </li>
+        <li>新しい文書の挿入は単に, 文書の配列
+          (<tt>sv-&gt;repo-&gt;da</tt>)の末尾
+          (<tt>sv-&gt;repo-&gt;da-&gt;n</tt>番目)に
+          その文書を入れるだけである.<br />
+
+          <img src="figs/layers/document_repository_2.svg" width=500 />
+
+          <br />ただし配列が満杯でないことを確認し,
+          満杯の場合は拡張する.
+        </li>
+        <li>このデータ構造においては,
+          検索は, 文書の配列(<tt>sv-&gt;repo-&gt;da</tt>)に格納されている
+          全文書の全データ(<tt>sv-&gt;repo-&gt;da-&gt;a[...].data</tt>を,
+          頭から終わりまでスキャンすることで行う.
+        </li>
+      </ul>
+  </p>
+
+  <h2>文書の登録と検索の関数</h2>
+  <p>
+    文書の登録, 検索に関連する関数は以下の通り.
+    これら以外に初期化(init)や終了(destroy)などの関数もあるが省略する.
+    <ul>
+      <li>
+<pre> /* 登録 */
+ssize_t document_repo_add(document_repo_t * repo, document_t d);
+</pre>
+      </li>
+      <li>
+<pre> /* 検索 */
+query_result_t document_repo_query(document_repo_t * repo, char * query, size_t query_len);
+</pre>
+      </li>
+    </ul>
+  </p>
+  
+  <p>
+    文字列を検索(query)した結果<tt>query_result_t</tt>という,
+    データ構造が返される.
+    <tt>query_result_t</tt>は, 
+    検索した文字列が出現した位置を取得可能な何らかのデータ構造で,
+    <tt>query_result_t</tt>のポインタに対して,
+    <pre>
+      occurrence_t query_result_next(query_result_t * qr);
+    </pre>
+    という関数を呼び出すと, ひとつ(次)の出現位置(<tt>occurrence_t</tt>)
+    が返される.
+    それは, 文書とその中の位置(<tt>offset</tt>)の組である.
+<pre>
+typedef struct {
+  document_t doc;            /* 検索文字列が出現したドキュメント */
+  size_t offset;             /* doc中で検索文字列が出現した位置  */
+} occurrence_t;
+</pre>
+したがって全ての出現位置を得るにはqueryの結果返された<tt>query_result_t</tt>
+に対して, 繰り返し<tt>query_result_next</tt>を呼び出す.
+これ以上出現がなくなったときには, そうとわかる特別な
+値を要素に入れて返すことにする.
+  </p>
+<p>
+まとめると, 全ての出現位置を得るため
+雛形は以下になる.
+<pre>
+   query_result_t qr = document_repo_query(repo, query, query_len);
+   while (1) {
+     occurrence_t o = query_result_next(&qr);
+     if (!o.doc.label) break;
+     ... o.doc.data[o.offset] から query が出現する ...
+   }
+</pre>
+このインタフェースが守られていれば,
+<tt>query_result_t</tt>の中身は,
+検索のアルゴリズムに応じて中身を変更可能であることに注意.
+</p>
+<p>
+なお, 上でも述べたとおり検索結果は概念的には出現結果の並びなので,
+それらを全て含んだ配列(ポインタ)を返す, というインタフェースも可能だが,
+出現位置は潜在的には非常に多数になりうる. 
+それらを返すためだけに大量のメモリを消費することを避けるために,
+このようなインタフェースになっている.
+ファイルの中身を読むのに,
+openして, readを繰り返し呼び出すと次々にデータが返され, ファイルの
+終端まで達すると, 0 が返される, というのに似たインタフェースで,
+よく現れるパターンである.
+データベースの検索結果などもこのようなインタフェース返されることが多い.
+</p>
+</div>
+
+<h2>以降の内容</h2>
+<div>
+<p>
+  以下の点を解決した<tt>document_repo_t</tt>を実装するのが目標.
+  <ul>
+    <li>データの永続化:
+      データをファイルに保存する,
+      サーバ立ち上げ時にファイルからデータを読み込む</li>
+    <li>索引付け:
+      検索を効率的に行う. </li>
+  </ul>
+</p>
+</div>
+
+<h2>データの永続化</h2>
+<div>
+  <p>データを永続化するための基本は,
+    <ul>
+      <li>保存: 終了時や適当なタイミングで,
+        登録された文書をファイルに出力する</li>
+      <li>読み込み: 起動時や適当なタイミングで,
+        ファイルからデータを読み込み登録された文書を復元する</li>
+    </ul>
+    とうことである.
+  </p>
+  <p>
+    これを行うために, 上記で図示したデータ構造をたどって,
+    順にファイルに保存して行くことも可能である. 擬似コードで書けばこんな感じ
+    (全く確かめてもいない擬似コードなので変だと思ったらそれは多分,
+    こちらの間違いであるが, 言いたいことは伝わるものと思います).
+<pre>
+FILE * wp = fopen(保存先ファイル, "wb");
+document_repo_t repo = sv->repo;
+document_array_t da = repo->da;
+save(wp, repo, sizeof(document_repo_t));
+save(wp, da->a, sizeof(document_t) * da->n);
+for (long i = 0; i &lt; da->n; i++) {
+  save(wp, da->a[i].label, da->a[i].label_len);
+  save(wp, da->a[i].data, da->a[i].data_len);
+}
+fclose(wp);
+</pre>
+<tt>save(wp, p, len)</tt>は,
+アドレス<tt>p</tt>から始まる<tt>len</tt>バイトを
+<tt>wp</tt>に格納する(機能としてはほぼ<tt>fwrite</tt>と同じ).
+  </p>
+  <p>
+対応する, 復元のためのコードはこんな感じ.
+<pre>
+FILE * rp = fopen(保存先ファイル, "wb");
+document_repo_t repo = sv->repo;
+document_array_t da = repo->da;
+load(rp, repo, sizeof(document_repo_t));
+da->a = malloc(sizeof(document_t) * da->sz);
+load(rp, da->a, sizeof(document_t) * da->n);
+for (long i = 0; i &lt; da->n; i++) {
+  da->a[i].label = malloc(da->a[i].label_len);
+  load(rp, da->a[i].label, da->a[i].label_len);
+  da->a[i].data = malloc(da->a[i].data_len);
+  load(rp, da->a[i].data, da->a[i].data_len);
+}
+fclose(rp);
+</pre>
+<tt>load(rp, p, len)</tt>は,
+<tt>rp</tt>から<tt>len</tt>バイトを読み込んで,
+アドレス<tt>p</tt>以降に格納する(機能としてはほぼ<tt>fread</tt>と同じ).
+  </p>
+  <p>このやり方は概念的には単純であるし,
+    メモリ上のデータ構造がどんなものであろうと,
+    対応できるので, 永続化のためにデータ構造をわざわざ変更しなくても良い,
+    という利点がある.
+  </p>
+
+  <p>一方, 保存の際に細かい書き込みを多数行ったり,
+    復元の際に細かい読み込みとmallocを多数行うのは,
+    あまり望ましくはなく, できれば全てのlabelや
+    すべてのdataを, ひとつの大きな連続領域に格納して,
+    一回の読み書きですべてを保存・復元できたほうが良い.
+  </p>
+
+  <p>
+    このため, 
+    ---実は(以下で述べる)それ以外の理由もあってそちらの方が重要なのだが---
+    まずは準備としてデータ構造を以下のように変更する.
+  </p>
+
+  <p>
+    <img src="figs/layers/document_repository_3.svg" width=700 />
+  </p>
+
+  <p>
+    主な違いはすべてのlabel,
+    すべてのdataをそれぞれ一つの大きな連続領域
+    (<tt>repo-&gt;labels-&gt;a</tt>と
+    <tt>repo-&gt;data-&gt;a</tt>)
+    に格納していることである.
+    そのためにそれらの領域も拡張可能な配列
+    (<tt>char_buf_t</tt>)になっている.
+  </p>
+
+  <p>
+    新しい文書が追加されるとデータ構造は以下のように変化する.
+  </p>
+  
+  <p>
+    <img src="figs/layers/document_repository_4.svg" width=700 />
+  </p>
+
+  <p>このデータ構造を永続化するには,
+    起点となるデータ構造 <tt>document_repo_t</tt>
+    とそこからさされる3つの配列
+    (<tt>repo-&gt;da-&gt;a</tt>,
+    <tt>repo-&gt;labels-&gt;a</tt>,
+    <tt>repo-&gt;data-&gt;a</tt>)
+    をファイルに格納すれば良い.
+  </p>
+</div>
+
+<h2>検索のための索引 (接尾辞配列)</h2>
+<div>
+  <p>永続化と合わせて,
+    検索(get)を高速にするための索引を導入する.
+    ようするにデータを
+    索引には様々な方式がある.
+    ここで用いているのは「接尾辞配列 (suffix array)」
+    というもので, 短く言えば, 文字列を辞書順に並べておいて,
+    二分探索をするというものである.
+    詳細はそのうち書くとして今の所データ構造が
+    以下のように更に拡張されるとだけ理解しておけば良い.
+    永続化する際にはもちろんこの部分の永続化も必要になる.
+  </p>
+
+  <p>
+    <img src="figs/layers/document_repository_5.svg" width=700 />
+  </p>
+</div>
+
+<h2>課題概要予告</h2>
+<div>
+  <ul>
+    <li>データ構造を上記のように変更して, 索引の機能までを
+      実装した検索エンジン himono_server を提供する</li>
+    <li>himono_server には永続化の機能は実装されていない</li>
+    <li>課題はそれに永続化機能を以下の二つの方法で実装すること
+      <ul>
+        <li>read, writeを用いてファイルのデータを読み書きする</li>
+        <li>mmapを用いてファイルのデータを読み書きする</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!--
+  
+  <p>一方で, データが大きくなったときのことを考えると問題がある.</p>
+  <p>
+    例えばまずはデータは大きいが, 一応コンピュータの主記憶に収まる
+    範囲(例えば3GB)を想像してみよ. 
+    <ul>
+      <li>上記の保存操作を行うたびに必ず3GB分のファイル書き込みが必要</li>
+      <li>上記の読み込み操作を行うたびに必ず3GB分のファイル読み出しが必要</li>
+    </ul>
+    IOの速度はざっと, ハードディスク一本で100MB/sec (0.1GB/sec)程度,
+    SSDでその数倍をイメージしておけば良い(実際にはそれよりも遅い).
+    3GBを0.1GB/secで読み書きすると, 起動と停止だけだけで30秒ということになる.
+  </p>
+  <p>さらに問題なのはデータを全て主記憶に収められないときである.
+    この方法では, 検索する際のデータは全て主記憶上に展開されていることを
+    前提としていて, 終了, 起動を経ても同じデータが復帰できるように保存
+    しているだけなので, 結局主記憶を越えるデータを扱うことは困難である.
+    具体的には, 上記の読み込み時(load)にたくさんのスワップ
+    (メジャーページフォルト)を起こしながらデータを読むことになるし,
+    データの追加や検索の際にもしょっちゅうスワップを起こすことになる.
+  </p>
+</div>
+
+<h2>データの永続化</h2>
+<div>
+</div>
+-->
+
+</body>
+</html>
+
