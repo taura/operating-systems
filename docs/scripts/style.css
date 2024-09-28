@@ -21,7 +21,7 @@ h1 {
   border-width     : 1pt 1pt 0pt 15pt ;
    
   border-color     : #99A1AA;
-  background-color : #CCEECC;
+  background-color : #99BBDD;
 }
 
 h2 {
@@ -33,7 +33,7 @@ h2 {
   border-width     : 1pt 1pt 0pt 15pt ;
    
   border-color     : #99A1AA;
-  background-color : #CCEECC;
+  background-color : #AACCEE;
 }
 
 h3 {
@@ -44,7 +44,7 @@ h3 {
   border-style     : solid;
   border-width     : 1pt 1pt 0pt 1pt;
   border-color     : #99A1AA;
-  background-color : #DDFFDD;
+  background-color : #BBDDEE;
 }
 
 h4 {

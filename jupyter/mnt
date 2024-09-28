@@ -1,8 +1,9 @@
 #!/bin/bash
 
-if [ "$1" = "u" ]; then
-    fusermount -u ../../../make_env/ansible/files/plain
-else
-    gocryptfs ../../../make_env/ansible/files/enc ../../../make_env/ansible/files/plain
-fi
+# if [ "$1" = "u" ]; then
+#     fusermount -u ../../make_env/ansible/files/plain
+# else
+#     gocryptfs ../../make_env/ansible/files/enc ../../make_env/ansible/files/plain
+# fi
 
+sshfs taulec-ansible: taulec

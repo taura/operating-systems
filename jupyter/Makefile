@@ -20,4 +20,4 @@ aux_srcs += $(wildcard nb/source/os2023_exam/include/vers/2/check_buy2.c)
 users_csv := users.csv
 
 feedback_class := os
-include ../../../jupyter_tools/authoring/jupyter_tools.mk
+include ../../jupyter_tools/authoring/jupyter_tools.mk
