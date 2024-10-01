@@ -169,11 +169,11 @@ gcc hello.c -o hello
 
 * ただしそれをやりたいなら SSH ログインをマスターする方がきっと良い
 * 今すぐ必要ではないが後の週の課題で必要になる
-* SSHログインのやり方は, [Jupyter環境の使い方](https://taura.github.io/operating-systems/html/jupyter.html)を参照
+* SSHログインのやり方は, [Jupyter環境の使い方](https://taura.github.io/programming-languages/html/jupyter.html)を参照
 <br/>
 
 * to do them, however, you probably want to master SSH login described below instead
 * you don't have to do this immediately, but need it in later assignments
-* see [How to access Jupyter environment](https://taura.github.io/operating-systems/html/jupyter.html?lang=en) for how to set up SSH
+* see [How to access Jupyter environment](https://taura.github.io/programming-languages/html/jupyter.html?lang=en) for how to set up SSH
 <!--- end md --->
 

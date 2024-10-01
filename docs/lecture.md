@@ -10,7 +10,7 @@
 
 * <font color=blue>(投稿日: 2024/10/01)</font> 10/02 予定
   1. [イントロ](slides/00_intro.pdf)
-  1. [Jupyter環境お試し](html/jupyter.html)
+  1. [Jupyter環境お試し](https://taura.github.io/programming-languages/html/jupyter.html)
     * Jupyter環境ユーザ名・パスワード入手 (UTOLの課題)
     * `os00_intro`
     * `os01_install_linux`
