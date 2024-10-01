@@ -16,6 +16,8 @@
     * `os01_install_linux`
   1. [プロセス](slides/01_process.pdf)
     * `os02_process`
+  1. 振り返り課題 (毎週; 授業の翌日まで)
+  1. [本日の宿題](https://app.learnwiz.one/events/operating-system-2024-01) OSをなにかに例えて下さい (締め切り: 明日まで). UTokyo Accountでサインインして下さい.
 * <font color=blue>(投稿日: 2024/9/28)</font> 2024年版HP開設
 
 
