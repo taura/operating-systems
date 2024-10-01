@@ -84,7 +84,7 @@ time.sleep(10.0)
 ## `%%writefile` で始まるセル / Cells starting with `%%writefile`
 
 * `%%writefile filename` で始まるセルは SHIFT + Enter でその中身を指定されたファイルに保存する
-* Pythonセルのように見えるが典型的にはCプログラムを保存して後にBashセルでコンパイル, 実行するために用いられる
+* Pythonではあるが典型的にはCプログラムを保存して後にBashセルでコンパイル, 実行するために用いられる
 
 * Pressing SHIFT + Enter on cells that begin with `%%writefile filename` save the contents of the cell into the specified file
 * They look like Python cells, but they typically contain C programs which are then compiled and executed by bash cells
@@ -92,7 +92,7 @@ time.sleep(10.0)
 
 <!--- code w kernel=python --->
 %%writefile hello.c
-/* a C cell */
+/* a Python cell that just saves the contents into a file (hello.c) */
 #include <stdio.h>
 int main() {
     printf("hello\n");
