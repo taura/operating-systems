@@ -13,11 +13,12 @@ bibtex := biber
 run_bibtex_and_latex_twice:=n
 
 # tex files
-tex := $(wildcard *.tex)
+tex := $(wildcard 00_*.tex)
 # svg files
 #svg_svg := $(wildcard svg/*.svg)
 #svg_svg := $(wildcard svg/malloc_mmap.svg)
-svg_svg := 
+svg_svg :=
+svg_svg += svg/what_is_os.svg
 # layered svg files
 #lsvg_svg := $(wildcard lsvg/*.svg)
 #lsvg_svg := $(wildcard svg/*.svg)
