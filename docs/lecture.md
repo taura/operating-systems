@@ -8,7 +8,16 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2024/10/01)</font> 10/02 予定
+  1. [イントロ](slides/00_intro.pdf)
+  1. [Jupyter環境お試し](html/jupyter.html)
+    * Jupyter環境ユーザ名・パスワード入手 (UTOLの課題)
+    * `os00_intro`
+    * `os01_install_linux`
+  1. [プロセス](slides/01_process.pdf)
+    * `os02_process`
 * <font color=blue>(投稿日: 2024/9/28)</font> 2024年版HP開設
+
 
 # スライド
 
