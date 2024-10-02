@@ -18,7 +18,7 @@
     * `os02_process`
   1. 振り返り課題 (毎週; 授業の翌日まで)
   1. [本日の宿題](https://app.learnwiz.one/events/operating-system-2024-01) OSをなにかに例えて下さい (締め切り: 明日まで). UTokyo Accountでサインインして下さい.
-    * 最大参加者数100人を認識しておらず一部の人が入れないと連絡を受けました。上記に入れなかった人は[こちら](https://app.learnwiz.one/events/operating-system-2024-01-2nd) からお願いします
+    * <font color=red>一部の人が入れないと連絡を受けました。上記に入れなかった人は</font>[こちら](https://app.learnwiz.one/events/operating-system-2024-01-2nd) からお願いします(一つのイベントの最大参加者数100人であることをを認識しておりませんでした)
 * <font color=blue>(投稿日: 2024/9/28)</font> 2024年版HP開設
 
 
