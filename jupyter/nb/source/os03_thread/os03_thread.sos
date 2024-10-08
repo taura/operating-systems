@@ -85,7 +85,7 @@ gcc -Wall thread_create.c -o thread_create -lpthread
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-python thread_create.py
+python3 thread_create.py
 <!--- end code --->
 
 <!--- md --->

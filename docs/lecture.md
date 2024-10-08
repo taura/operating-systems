@@ -8,6 +8,13 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2024/10/08)</font> 10/09 予定
+  1. [プロセス](slides/01_process.pdf)
+  1. 演習 `os02_process`
+  1. [スレッド](slides/02_threads.pdf)
+  1. 演習 `os03_thread`
+  1. [スケジューリング](slides/03_scheduling.pdf)
+
 * <font color=blue>(投稿日: 2024/10/01)</font> 10/02 予定
   1. [イントロ](slides/00_intro.pdf)
   1. [Jupyter環境お試し](https://taura.github.io/programming-languages/html/jupyter.html)
