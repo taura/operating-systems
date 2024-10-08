@@ -58,7 +58,7 @@
 
 <!--- code w kernel=python --->
 %%writefile sched_rec.c
-<!--- exec-include ./mk_version.py -DVER=1 nb/source/include/os04_sched/sched_rec.c --->
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os04_sched/include/sched_rec.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -117,7 +117,7 @@ lscpu
 <!--- end md --->
 
 <!--- code w kernel=python --->
-<!--- include nb/source/include/os04_sched/sched_vis.py --->
+<!--- include nb/source/os04_sched/include/sched_vis.py --->
 <!--- end code --->
 
 <!--- md --->
@@ -153,8 +153,8 @@ wait
 <!--- end md --->
 
 <!--- code w kernel=python --->
-#sched_vis(["sched.{}".format(i) for i in range(8)])
-sched_vis(["sched.{}".format(i) for i in range(8)], start_t=1.0, end_t=1.5)
+sched_vis(["sched.{}".format(i) for i in range(8)])
+#sched_vis(["sched.{}".format(i) for i in range(8)], start_t=1.0, end_t=1.5)
 <!--- end code --->
 
 <!--- md --->
@@ -181,4 +181,39 @@ taskset -c 0-3 ./sched_rec 3
 * 自分だけの環境で走らせると結果の予測はしやすい
 
 <!--- end md --->
+
+<!--- md --->
+## PythonでもCでも同じ
+
+* プログラムがどの言語で書かれていてもOSがやることは同じであることを見せておく
+* sched_rec.c と同じことをする Python プログラム
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+%%writefile sched_rec.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os04_sched/include/sched_rec.py --->
+<!--- end code --->
+
+<!--- code md --->
+* 上記と同様, 8 プロセスを4 仮想コア上で走らせる例
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+for i in $(seq 0 7); do
+  taskset -c 0-3 python3 sched_rec.py 3 > sched.${i} &
+done
+wait
+<!--- end code --->
+
+<!--- md --->
+
+* 可視化
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+sched_vis(["sched.{}".format(i) for i in range(8)])
+#sched_vis(["sched.{}".format(i) for i in range(8)], start_t=1.0, end_t=1.5)
+<!--- end code --->
 

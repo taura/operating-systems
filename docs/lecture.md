@@ -9,6 +9,7 @@
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
 * <font color=blue>(投稿日: 2024/10/08)</font> 10/09 予定
+  1. [前回の宿題](https://app.learnwiz.one/events/operating-system-2024-01) (人数制限を超えましたと言って入れなかった人は[こちら](https://app.learnwiz.one/events/operating-system-2024-01-2nd), ただし今はどちらも入れるようになっていると思います)に「いいね」を付けて下さい
   1. [プロセス](slides/01_process.pdf)
   1. 演習 `os02_process`
   1. [スレッド](slides/02_threads.pdf)
