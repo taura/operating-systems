@@ -4,7 +4,7 @@
 #mk_nb_flags := --dbg 2
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/os??_*/*.sos)
+nb_srcs += $(wildcard nb/source/os0?_*/*.sos)
 #nb_srcs += $(wildcard nb/source/os12_*/*.py)
 #nb_srcs += $(wildcard nb/source/os14_*/*.sos)
 # nb/source/os12/*.py

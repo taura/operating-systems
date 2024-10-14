@@ -1,6 +1,6 @@
 <!--- md ---> 
 
-#* オペレーティングシステム 演習 07
+#* オペレーティングシステム 演習 06
 
 #* 条件変数
 
@@ -22,11 +22,14 @@
 * 条件変数は汎用的な同期機構であり, つまり, 「待つ(ブロックする)」「起こす」という二つの操作だけを提供する
 * どういう条件で待つか, 起こすかというのは条件変数を使う方が決める
 
-* [pthread_cond_init](https://linux.die.net/man/3/pthread_cond_init)
-* [pthread_cond_destroy](https://linux.die.net/man/3/pthread_cond_destroy)
-* [pthread_cond_wait](https://linux.die.net/man/3/pthread_cond_wait)
-* [pthread_cond_signal](https://linux.die.net/man/3/pthread_cond_signal)
-* [pthread_cond_broadcast](https://linux.die.net/man/3/pthread_cond_broadcast)
+## C
+
+* C言語 Pthreadの条件変数関連のAPIは以下
+  * [pthread_cond_init](https://linux.die.net/man/3/pthread_cond_init)
+  * [pthread_cond_destroy](https://linux.die.net/man/3/pthread_cond_destroy)
+  * [pthread_cond_wait](https://linux.die.net/man/3/pthread_cond_wait)
+  * [pthread_cond_signal](https://linux.die.net/man/3/pthread_cond_signal)
+  * [pthread_cond_broadcast](https://linux.die.net/man/3/pthread_cond_broadcast)
 
 * テンプレートは,
   * 何かデータ構造を見て, 望む状態_C_になっていなければ待つ
@@ -45,7 +48,38 @@ while (1) {
 pthread_mutex_unlock(m);
 ```
 
+## Python
+
+* Python threadingの条件変数関連のAPIは以下
+* Pthreadと少し違うのは m を条件変数を作る際に渡すことができること
+  * c = threading.Condition([m]) # m は Lock() オブジェクト
+    * mを省略するとmを新しく作ったのと同じ意味になる
+  * c.acquire()  # m.acquire() と同じ
+  * c.release()  # m.release() と同じ
+  * c.wait()     # pthread_cond_wait 相当
+  * c.notify()   # pthread_cond_signal 相当
+  * c.notify_all() # pthread_cond_broadcast 相当
+
+* テンプレートは,
+  * 何かデータ構造を見て, 望む状態_C_になっていなければ待つ
+  * さらにそのデータ構造を変更して, 必要であれば待っているかもしれない人を起こす
+というもので, それを以下のようにして実現する
+
+```
+c.acquire()
+while 1:
+    ...
+    if 望む状態: break
+    c.wait() # ...じゃないので寝る
+}
+変更
+場合により, c.notify_all() # またはc.notify()
+c.release()
+```
+
 # 飽和カウンタ
+
+## C 
 
 * 条件変数を使うもっとも簡単な例題として, 飽和カウンタを作ってみよう
 * 飽和カウンタは上で作ったcounter_tとほぼ同じAPI (名前は scounter_t としておこう)
@@ -79,7 +113,7 @@ long scounter_get(scounter_t * c);
 
 <!--- code w kernel=python --->
 %%writefile scounter.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os07_cond_var/scounter.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os06_cond_var/include/scounter.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -113,11 +147,68 @@ gcc -Wall -fopenmp -o scounter scounter.c
 * 条件変数を使ってこれを直すのが課題である
 <!--- end md --->
 
-<!--- md label=prob,ans --->
-#*P 条件変数を使った飽和カウンタ
+<!--- md --->
+## Python
+
+* Python 版 API  
+  * データ型
+```
+class scounter:
+  ...
+```
+  * 値0 のscounterを作る
+```
+s = scounter(capacity)
+```
+  * +1 する (返り値: 深い意味はないが, 元の値を返すとする)
+```
+s.inc()
+```
+  * -1 する (返り値: 深い意味はないが, 元の値を返すとする)
+```
+s.dec()
+```
+  * 今の値を返す
+```
+s.get()
+```
+
+* 以下は capacity を無視した版 (mutex は使っているが条件変数は使っていない)
 <!--- end md --->
 
-<!--- md label=prob,ans --->
+<!--- code w kernel=python --->
+%%writefile scounter.py
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os06_cond_var/include/scounter.py --->
+<!--- end code --->
+
+<!--- md --->
+* 実行は以下
+```
+python3 scounter.py INCするスレッド数 DECするスレッド数 INC(DEC)する回数 CAPACITY
+```
+
+* 例えば以下は 3スレッドがincを呼び, 2スレッドがdecを呼ぶ
+* inc, decはそれぞれ3スレッド, 2スレッドの合計で, 10000回ずつ呼ばれる
+* capacityも10000で, inc (dec)の回数と同じにしているので, カウンタは実際には飽和しない
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+python3 scounter.py 3 2 10000 10000
+<!--- end code --->
+
+<!--- md --->
+* 一方, inc回数 &gt; 容量とすると, ほとんどの場合, 途中でエラーになる
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+python3 scounter.py 3 2 100000 10000
+<!--- end code --->
+
+<!--- md --->
+#*P 条件変数を使った飽和カウンタ (C)
+<!--- end md --->
+
+<!--- md --->
 * 下掲のプログラムを変更して, 任意のスレッド数, inc (dec) 回数, capacity で正しく動作するようにせよ
 * 寝ているスレッドを起こすのに `pthread_cond_broadcast` を使うべきか, `pthread_cond_signal` でもよいか考えよ
   * ヒント: 実は後者ではダメ. なかなか気づきにくい落とし穴がある. Terminal + GDBで調査でもしないとなかなか気づかないだろう
@@ -126,7 +217,7 @@ gcc -Wall -fopenmp -o scounter scounter.c
   
 <!--- code w kernel=python points=1 --->
 %%writefile scounter.c
-<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os07_cond_var/scounter.c --->
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os06_cond_var/include/scounter.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash points=1 --->
@@ -135,14 +226,14 @@ gcc -Wall -fopenmp -o scounter scounter.c
 
 <!--- code kernel=python label=ans --->
 %%writefile scounter_ans.c
-<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os07_cond_var/scounter.c --->
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os06_cond_var/include/scounter.c --->
 <!--- end code --->
 
 <!--- code kernel=bash label=ans --->
 gcc -Wall -fopenmp -o scounter_ans scounter_ans.c
 <!--- end code --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
 * 以下でテストせよ
   * テストは, 「単純(超探しやすい)」かつ「バグが発生しやすいケース」で行うのが基本
   * 今回の場合, 容量1というケースが最もバグが発生しやすい(見逃されにくい)と思われる
@@ -158,7 +249,7 @@ gcc -Wall -fopenmp -o scounter_ans scounter_ans.c
 ./scounter_ans 1 1 100000 1
 <!--- end code --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
 * まともな容量でのテスト
 <!--- end md --->
 
@@ -169,7 +260,7 @@ gcc -Wall -fopenmp -o scounter_ans scounter_ans.c
 ./scounter_ans 1 1 100000 1000
 <!--- end code --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
 * 多数のスレッドでのテスト
 <!--- end md --->
 
@@ -194,11 +285,82 @@ gcc -Wall -fopenmp -o scounter_ans scounter_ans.c
 ./scounter_ans 10 10 1000000 1000
 <!--- end code --->
 
-<!--- md label=prob,ans --->
-#*P 両側飽和カウンタ
+
+<!--- md --->
+#*P 条件変数を使った飽和カウンタ (Python)
 <!--- end md --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
+* 下掲のプログラムを変更して, 任意のスレッド数, inc (dec) 回数, capacity で正しく動作するようにせよ
+<!--- end md --->
+  
+<!--- code w kernel=python points=1 --->
+%%writefile scounter.py
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os06_cond_var/include/scounter.py --->
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile scounter_ans.py
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os06_cond_var/include/scounter.py --->
+<!--- end code --->
+
+<!--- md --->
+* 以下でテストせよ
+  * テストは, 「単純(超探しやすい)」かつ「バグが発生しやすいケース」で行うのが基本
+  * 今回の場合, 容量1というケースが最もバグが発生しやすい(見逃されにくい)と思われる
+
+* 単純かつバグが発生しやすいケース (うまく動かなければ適宜 100000 を減らして, なるべく小さい数でテストをするのが基本. 本気でデバッグが必要なら terminal を使うことを推奨)
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 scounter.py 1 1 100000 1
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+python3 scounter_ans.py 1 1 100000 1
+<!--- end code --->
+
+<!--- md --->
+* まともな容量でのテスト
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 scounter.py 1 1 100000 1000
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 scounter_ans.py 1 1 100000 1000
+<!--- end code --->
+
+<!--- md --->
+* 多数のスレッドでのテスト
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 scounter.py 10 1 100000 1000
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 scounter_ans.py 10 1 100000 1000
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 scounter.py 1 10 100000 1000
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 scounter_ans.py 1 10 100000 1000
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 scounter.py 10 10 1000000 1000
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 scounter_ans.py 10 10 1000000 1000
+<!--- end code --->
+
+<!--- md --->
+#*P 両側飽和カウンタ (C)
+<!--- end md --->
+
+<!--- md --->
 * どうせならカウンタの上限を定めるだけでなく, 下限も定めたい. ここでは0ということにしておこう
 * つまり, 0のときに dec が行われたらそこでも待つようにする
 * 下掲のプログラムを変更して, 任意のスレッド数, inc (dec) 回数, capacity で正しく動作するようにせよ
@@ -207,7 +369,7 @@ gcc -Wall -fopenmp -o scounter_ans scounter_ans.c
 
 <!--- code w kernel=python points=1 --->
 %%writefile tcounter.c
-<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os07_cond_var/scounter.c --->
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os06_cond_var/include/scounter.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash points=1 --->
@@ -216,7 +378,7 @@ gcc -Wall -fopenmp -o tcounter tcounter.c
 
 <!--- code kernel=python label=ans --->
 %%writefile tcounter_ans.c
-<!--- exec-include ./mk_version.py -D VER=5 nb/source/include/os07_cond_var/scounter.c --->
+<!--- exec-include ./mk_version.py -D VER=5 nb/source/os06_cond_var/include/scounter.c --->
 <!--- end code --->
 
 <!--- code kernel=bash label=ans --->
@@ -259,9 +421,63 @@ gcc -Wall -fopenmp -o tcounter_ans tcounter_ans.c
 <!--- end code --->
 
 <!--- md --->
+#*P 両側飽和カウンタ (Python)
+
+* Pythonで同じことを行え
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile tcounter.py
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os06_cond_var/include/scounter.py --->
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile tcounter_ans.py
+<!--- exec-include ./mk_version.py -D VER=5 nb/source/os06_cond_var/include/scounter.py --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 tcounter.py 1 1 100000 1
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 tcounter_ans.py 1 1 100000 1
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 tcounter.py 1 1 100000 1000
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 tcounter_ans.py 1 1 100000 1000
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 tcounter.py 10 1 100000 1000
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 tcounter_ans.py 10 1 100000 1000
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 tcounter.py 1 10 100000 1000
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 tcounter_ans.py 1 10 100000 1000
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 tcounter.py 10 10 1000000 1000
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 tcounter_ans.py 10 10 1000000 1000
+<!--- end code --->
+
+
+<!--- md --->
 # 有限バッファ
 
 * 有限バッファは, 固定長の配列で, スレッド間でデータを受け渡すためのデータ構造
+
+## Cの有限バッファ
 * APIは
   * bounded_buffer_t bb[1];
   * bounded_buffer_init(bb, capacity);
@@ -280,7 +496,7 @@ gcc -Wall -fopenmp -o tcounter_ans tcounter_ans.c
 
 <!--- code w kernel=python --->
 %%writefile bbuf.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os07_cond_var/bbuf.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os06_cond_var/include/bbuf.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash points=1 --->
@@ -344,18 +560,91 @@ gcc -Wall -fopenmp -o bbuf bbuf.c
 ./bbuf 1 1 1 1000 100
 <!--- end code --->
 
-<!--- md label=prob,ans --->
-#*P 有限バッファの実装
+
+
+<!--- md --->
+## Python の有限バッファ
+
+* APIは
+  * bb = bounded_buffer(capacity)
+  * bb.put(x)
+  * x = bb.get()
+
+以下は未完成版で,
+* capacity個のデータが既に保持されているときにputされたら, 0を返す(そうでなければ1を返す)
+* 1個もデータがないときにgetされたら, -1を返す (putするデータ(従ってgetされるデータ)は0以上とする)
+という動作をする
 <!--- end md --->
 
-<!--- md label=prob,ans --->
+<!--- code w kernel=python --->
+%%writefile bbuf.py
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os06_cond_var/include/bbuf.py --->
+<!--- end code --->
+
+<!--- md --->
+```
+python3 bbuf.py put_threads get_threads sync_between_puts_and_gets n capacity
+```
+ 
+で起動する. 動作はC版と同じ
+
+同様に, 未完成バージョンは以下の条件であれば動作する
+ * put_threads == 1
+ * get_threads == 1
+ * sync_between_puts_and_gets == 1
+ * capacity >= n
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py 1 1 1 1000 1000
+<!--- end code --->
+
+<!--- md --->
+以下はどれもエラーになる
+
+* putとgetが並行
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py 1 1 0 1000 1000
+<!--- end code --->
+
+<!--- md --->
+* 複数のputが並行
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py 2 1 1 1000 1000
+<!--- end code --->
+
+<!--- md --->
+* 複数のgetが並行
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py 1 2 1 1000 1000
+<!--- end code --->
+
+<!--- md --->
+* capacity < n
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py 1 1 1 1000 100
+<!--- end code --->
+
+<!--- md --->
+#*P 有限バッファの実装 (C)
+<!--- end md --->
+
+<!--- md --->
 * 有限バッファへmutex, 条件変数を導入し, 複数のスレッドが並行に動き, capacity < n であっても正しく動くようにせよ
 * 構造は, 両側飽和カウンタとよく似ているので参考にせよ
 <!--- end md --->
 
 <!--- code w kernel=python points=1 --->
 %%writefile bbuf.c
-<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os07_cond_var/bbuf.c --->
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os06_cond_var/include/bbuf.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash points=1 --->
@@ -364,14 +653,14 @@ gcc -Wall -fopenmp -o bbuf bbuf.c
 
 <!--- code kernel=python label=ans --->
 %%writefile bbuf_ans.c
-<!--- exec-include ./mk_version.py -D VER=5 nb/source/include/os07_cond_var/bbuf.c --->
+<!--- exec-include ./mk_version.py -D VER=5 nb/source/os06_cond_var/include/bbuf.c --->
 <!--- end code --->
 
 <!--- code kernel=bash label=ans --->
 gcc -Wall -fopenmp -o bbuf_ans bbuf_ans.c
 <!--- end code --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
 * 色々なパラメータで実行してみよ
 <!--- end md --->
 
@@ -382,7 +671,7 @@ gcc -Wall -fopenmp -o bbuf_ans bbuf_ans.c
 ./bbuf_ans 1 1 1 10 10
 <!--- end code --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
 * 以下でテストせよ
 
 * putとgetが並行
@@ -395,7 +684,7 @@ gcc -Wall -fopenmp -o bbuf_ans bbuf_ans.c
 ./bbuf_ans 1 1 0 100000 100
 <!--- end code --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
 * 多数のput/getが並行
 <!--- end md --->
 
@@ -413,7 +702,7 @@ gcc -Wall -fopenmp -o bbuf_ans bbuf_ans.c
 ./bbuf_ans 20 10 0 100000 100
 <!--- end code --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
 * 極端にcapacityが少ない
 <!--- end md --->
 
@@ -429,6 +718,86 @@ gcc -Wall -fopenmp -o bbuf_ans bbuf_ans.c
 <!--- end code --->
 <!--- code w kernel=bash label=ans --->
 ./bbuf_ans 30 20 0 100000 1
+<!--- end code --->
+
+
+<!--- md --->
+#*P 有限バッファの実装 (Python)
+<!--- end md --->
+
+<!--- md --->
+* 有限バッファへmutex, 条件変数を導入し, 複数のスレッドが並行に動き, capacity < n であっても正しく動くようにせよ
+* 構造は, 両側飽和カウンタとよく似ているので参考にせよ
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile bbuf.py
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os06_cond_var/include/bbuf.py --->
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile bbuf_ans.py
+<!--- exec-include ./mk_version.py -D VER=5 nb/source/os06_cond_var/include/bbuf.py --->
+<!--- end code --->
+
+<!--- md --->
+* 色々なパラメータで実行してみよ
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py 1 1 1 10 10
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 bbuf_ans.py 1 1 1 10 10
+<!--- end code --->
+
+<!--- md --->
+* 以下でテストせよ
+
+* putとgetが並行
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py  1 1 0 100000 100
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 bbuf_ans.py 1 1 0 100000 100
+<!--- end code --->
+
+<!--- md --->
+* 多数のput/getが並行
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py  10 20 0 100000 100
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 bbuf_ans.py 10 20 0 100000 100
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py 20 10 0 100000 100
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 bbuf_ans.py 20 10 0 100000 100
+<!--- end code --->
+
+<!--- md --->
+* 極端にcapacityが少ない
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py  20 30 0 100000 1
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 bbuf_ans.py 20 30 0 100000 1
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 bbuf.py 30 20 0 100000 1
+<!--- end code --->
+<!--- code w kernel=bash label=ans --->
+python3 bbuf_ans.py 30 20 0 100000 1
 <!--- end code --->
 
 
