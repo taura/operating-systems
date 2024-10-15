@@ -9,6 +9,7 @@
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
 * <font color=blue>(投稿日: 2024/10/15)</font> 10/16 予定
+  1. [OSをなにかに例える話](https://app.learnwiz.one/events/operating-system-2024-01) 遅ればせながら「いいね」がついたものを表示しています
   1. [スケジューリング](slides/03_scheduling.pdf)
   1. 演習 `os04_sched`
   1. [並行処理と同期](slides/04_concurrent.pdf) 排他制御
