@@ -1,0 +1,457 @@
+<!--- md ---> 
+
+#* オペレーティングシステム 演習 05
+
+#* 並行処理, 競合状態, 排他制御
+
+<!--- end md --->
+
+<!--- md w ---> 
+
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+
+<!--- end md --->
+
+<!--- md --->
+# 競合状態
+
+* 複数のスレッドが同じ変数を, 並行にアクセスしている
+* それらのスレッドの内少なくとも1つが書き込みをしている
+
+状態を競合状態と呼び, ほとんどの場合, スレッドの実行タイミングによって答えが変わる --- つまりほとんどの場合, 間違った --- プログラムになる
+
+* 以下は最も単純な例
+* 2スレッドが大域変数 g を多数回更新する
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile race_increment.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os05_mutex/include/race_increment.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+gcc -Wall -o race_increment race_increment.c -lpthread
+<!--- end code --->
+
+<!--- md --->
+* 以下を何度も実行し結果が正しくない(ことがある)か確かめよ
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+./race_increment 1000000
+<!--- end code --->
+
+<!--- md --->
+# OpenMP
+
+* Pthreadでプログラムを書くと, ちょっとしたことをスレッドにやらせるのにいちいち, 別の関数を作り, 引数を構造体に詰めて, それを受け取ったほうがまた構造体から要素を取り出して, ... という処理が実に煩わしい
+* OpenMPという, 並列処理のためのC言語の機能を使うと簡単なスレッド処理はずっと簡潔に書けるので以降はそれを使う(Pthreadの代わりをするための最低限の機能のみ使う)
+* 以下はOpenMPの一番簡単なプログラム
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile omp_hello.c
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os05_mutex/include/omp_hello.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+gcc -Wall -fopenmp -o omp_hello omp_hello.c
+<!--- end code --->
+
+<!--- md --->
+以下のOMP_NUM_THREADS=3の数字をいろいろ変えて実行してみよ.
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+OMP_NUM_THREADS=3 ./omp_hello
+<!--- end code --->
+
+<!--- md --->
+#* OpenMP超概説
+
+```
+#pragma omp parallel
+  S /* Cの文 */
+```
+を実行すると,
+* OMP_NUM_THREADS=.. で指定された数のスレッドが出来る
+* 各スレッドがSを実行する
+
+という動作をする
+
+* コンパイルの際には `-fopenmp` というオプションを指定する
+* 注意1 上記は`parallel`と名付けられてはいるが, 同じ文(S)を複数のスレッドが「重複して」実行する指示であり, Sを「並列化」(分割して高速化)する文ではない
+* 注意2 複数のスレッドで実行されるのは #pragma omp parallel の直後の1文のみで, それ以降は再び1スレッドの実行に戻る(上述のomp_helloの実行を参照). 複数の文をスレッドに実行させたければ複合文 { ... } を用いればよい
+
+* スレッド数はOMP_NUM_THREADSで指定する代わりにプログラム内で以下のように指定することも可能.
+```
+#pragma omp parallel num_threads(n)
+  S
+```
+* Sの実行中に以下の関数を呼び出すと, 
+  * omp_get_num_threads() --- Sを実行しているスレッド数(OMP_NUM_THREADSやnum_threadsで指定した数)を返す
+  * omp_get_thread_num() --- その中での呼び出したスレッドの番号を返す(0, 1, ..., スレッド数-1)
+
+* 以下は上述した競合状態を持つプログラムをOpenMPで書き直したもの
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile race_increment_omp.c
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os05_mutex/include/race_increment.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+gcc -Wall -fopenmp -o race_increment_omp race_increment_omp.c
+<!--- end code --->
+
+<!--- md --->
+以下を何度も実行して見よ
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+OMP_NUM_THREADS=3 ./race_increment_omp 1000000
+<!--- end code --->
+
+<!--- md --->
+* 上述したとおり上記は「各スレッドが」$n$回の更新を行う. 並列処理でしばしば必要なのは合計n個の仕事を何個かのスレッドで分け合って高速化するというもので, そのための構文が `#pragma omp for`
+* 詳しいことは省略して,
+
+```
+#pragma omp parallel
+{
+  ...
+#pragma omp for
+  for (int i = 0; i < n; i++) {
+    T;
+  }
+}
+```
+
+と書くと, for文のn回の繰り返しが `#pragma omp parallel` で作られたスレッド間で分け合って実行されるということだけ覚えれば良い.
+
+* 以下は上述したプログラムを, 全スレッド合計で, 与えられた$n$回更新するようにしたもの
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile race_increment_n.c
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os05_mutex/include/race_increment.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+gcc -Wall -fopenmp -o race_increment_n race_increment_n.c
+<!--- end code --->
+
+<!--- md --->
+以下を何度も実行して見よ
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+OMP_NUM_THREADS=3 ./race_increment_n 1000000
+<!--- end code --->
+
+<!--- md --->
+# Python
+
+* Python でもスレッドを使う限り, 当然同じ問題が生ずる
+* ただし, 話すと脇道にそれるので今は省略(後述)理由(Global Interpreter Lock)によって, `g += 1` のような短い操作の排他性は保証されるようで, 以下の例では問題は生じないようである (ただし, それが言語仕様で保証されているなどとは思わないほうが無難)
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile race_increment_working.py
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os05_mutex/include/race_increment.py --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 race_increment_working.py 1000000 2
+<!--- end code --->
+
+<!--- md --->
+* 少し余計な処理(関数呼び出し)を挟んで, 実質的に同じプログラムを以下のように書き換えると問題が(無事?)観測できる
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile race_increment.py
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os05_mutex/include/race_increment.py --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 race_increment.py 1000000 2
+<!--- end code --->
+
+<!--- md --->
+* 以下はスレッド数によらず合計で$n$回incrementするもの
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile race_increment_parallel_for.py
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os05_mutex/include/race_increment.py --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 race_increment_parallel_for.py 1000000 2
+<!--- end code --->
+
+<!--- md --->
+# 課題前の準備
+
+* 以下の課題に取り掛かる前に, しくじったときのリカバリーの仕方を覚える必要がある
+* 「しくじり」とは何らかの理由でプログラムが終了しないケース
+  * そうなるとセルの左が [*] となったまま数字にならず, 他のセルでSHIFT + ENTERしても反応しなくなる
+* 同期を伴うプログラムで間違うとそういうことになる
+* リカバリー(走っているプログラムの強制終了)の仕方
+  * まず, 仕様上は画面上部の停止■ボタンで停止することにはなっているが停止しないこともしばしば
+  * ■で停止しなかった場合は, 
+  * 左上の「Jupyter」メニューでJupyterのトップページに戻る
+  * File -&gt; New -&gt; Terminal を選択してターミナルを開く
+  * コマンドラインプロンプトが現れたら以下のコマンドを実行
+    * やりかた1
+```
+ps auxww | grep 実行しているプログラム名
+```
+または
+```
+pgrep -fa 実行しているプログラム名
+```
+どちらかによってプロセスIDを突き止めたら
+```
+kill プロセスID
+```
+    * やりかた2
+1をなんどか経験して, 誤爆の心配がないとわかったら
+```
+killall 実行しているプログラム名
+```
+    * やりかた3
+```
+top
+```
+を実行. 'u'で自分のユーザIDを持つプロセスだけを表示. killしたいプロセスが見つかったら'k' (キャンセルは ESC)
+
+* Jupyterのターミナルの代わりに直接SSHでログインしてもよい(推奨)
+* 懸命な諸君はお気づきだろうが, プログラミング自体をSSHでログインしてコマンドラインや好きなエディタで行っても良い(Jupyter上よりもvimやEmacsでプログラムが書く方がよいという人はそうしてもよい)
+* エディタなど複雑な画面表示を行うプログラムはJupyterターミナルでの実行は推奨しない
+* そうすれば, GDBなどデバッグ用のツールも使える
+* ただし, <font color="red">課題部分はJupyter上にコードと, 実行記録を残す</font>こと
+* プロセスを殺すこともなぜかできない場合, Jupyterカーネルのリセットやサーバの再起動が最後の手段. [Jupyter環境の使い方](https://taura.github.io/programming-languages/html/jupyter.html) ページの「おかしなことになったら」の節を参照
+
+#* 練習
+
+1. JupyterターミナルまたはSSHでログインしておき,
+1. 以下を実行し,
+1. 1234秒以内にそのプロセスを ps コマンドで発見し,
+1. killして終了させよ
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+sleep 1234
+<!--- end code --->
+
+<!--- md --->
+# 排他制御 (mutual exclusion, mutex)
+
+* 排他制御は文字通り, ある一連の処理を「排他的に」実行するためのAPI
+```
+lock(m);
+  何か
+unlock(m);
+```
+を複数のスレッドが実行しても, 「何か」の部分が時間的に重なることがないことを保証する
+
+## C
+
+* C言語 Pthreadの排他制御関連のAPIは以下
+  * [pthread_mutex_init](https://linux.die.net/man/3/pthread_mutex_init)
+  * [pthread_mutex_lock](https://linux.die.net/man/3/pthread_mutex_lock)
+  * [pthread_mutex_unlock](https://linux.die.net/man/3/pthread_mutex_unlock)
+  * [pthread_mutex_trylock](https://linux.die.net/man/3/pthread_mutex_trylock)
+<!--- end md --->
+
+<!--- md --->
+#*P 排他制御の練習 (C)
+
+* 以下に排他制御(mutex)を導入し, 結果が常に正しく(`g`の値が$n$に)なるようにせよ
+* 注: 実はOpenMPにはOpenMPの排他制御APIがあるのだが気にせずPthreadのものを使えば良い
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile race_increment_n.c
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os05_mutex/include/race_increment.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+gcc -Wall -fopenmp -o race_increment_n race_increment_n.c
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile race_increment_n_ans.c
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os05_mutex/include/race_increment.c --->
+<!--- end code --->
+
+<!--- code kernel=bash label=ans --->
+gcc -Wall -fopenmp -o race_increment_n_ans race_increment_n_ans.c
+<!--- end code --->
+
+<!--- md --->
+* nやスレッド数を変えて実行せよ(`g = 1000000` が表示されたら成功)
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+OMP_NUM_THREADS=3  ./race_increment_n 1000000
+OMP_NUM_THREADS=20 ./race_increment_n 1000000
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+OMP_NUM_THREADS=3  ./race_increment_n_ans 1000000
+OMP_NUM_THREADS=20 ./race_increment_n_ans 1000000
+<!--- end code --->
+
+<!--- md --->
+
+## Python
+
+* Python [threading モジュール](https://docs.python.org/ja/3.10/library/threading.html)排他制御関連のAPIは以下
+  * `m = threading.Lock()` ... mutexを作る
+  * `m.acquire()` ... lock
+  * `m.release()` ... unlock
+
+<!--- end md --->
+
+<!--- md --->
+#*P 排他制御の練習 (Python)
+
+* 以下に排他制御を導入し, 結果が常に正しく(`g`の値が$n$に)なるようにせよ
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile race_increment_n.py
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os05_mutex/include/race_increment.py --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+python3 race_increment_n.py
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile race_increment_n_ans.py
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os05_mutex/include/race_increment.py --->
+<!--- end code --->
+
+<!--- code kernel=bash label=ans --->
+python3 race_increment_n_ans.py
+<!--- end code --->
+
+<!--- md --->
+* nやスレッド数を変えて実行せよ(`g = 1000000` が表示されたら成功)
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+python3 race_increment_n.py 1000000 3
+python3 race_increment_n.py 1000000 20
+<!--- end code --->
+
+<!--- code w kernel=bash label=ans --->
+python3 race_increment_n_ans.py 1000000 3
+python3 race_increment_n_ans.py 1000000 20
+<!--- end code --->
+
+<!--- md --->
+#*P 排他制御の実践
+
+* 以下は素数を数えるプログラムをOpenMPで書いたもの
+* これに排他制御(mutex)を導入し, 結果が正しくなるようにせよ
+* なお, 正しい結果を知りたければ1スレッド (OMP_NUM_THREADS=1) で実行した結果を信じればよいだろう
+* 注: OpenMPにはOpenMPの排他制御APIがあるのだが気にせずPthreadのものを使えば良い
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile count_prime_omp.c
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os05_mutex/include/count_prime.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+gcc -Wall -fopenmp -o count_prime_omp count_prime_omp.c
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+if OMP_NUM_THREADS=4  ./count_prime_omp       0 1000000 | grep 78498 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=4  ./count_prime_omp 1000000 2000000 | grep 70435 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=4  ./count_prime_omp 2000000 3000000 | grep 67883 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=20 ./count_prime_omp 2000000 3000000 | grep 67883 ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+ 
+<!--- code kernel=python label=ans --->
+%%writefile count_prime_ans.c
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os05_mutex/include/count_prime.c --->
+<!--- end code --->
+
+<!--- code kernel=bash label=ans --->
+gcc -Wall -fopenmp -o count_prime_ans count_prime_ans.c
+<!--- end code --->
+
+<!--- code kernel=bash label=ans --->
+if OMP_NUM_THREADS=4  ./count_prime_ans       0 1000000 | grep 78498 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=4  ./count_prime_ans 1000000 2000000 | grep 70435 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=4  ./count_prime_ans 2000000 3000000 | grep 67883 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=20 ./count_prime_ans 2000000 3000000 | grep 67883 ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+ 
+<!--- md --->
+# 同期を隠蔽した(スレッドセーフな)データ構造
+
+* ある変数をスレッドで更新・参照するたびに排他制御を導入するとプログラムは汚く, 見通しが悪くなる
+* そこで通常, 「データとそれを守る排他制御」をセットにしたデータ構造と, それを操作する関数を作る. スレッドがそれを呼び出すだけで安全に動作するようにする
+* その練習として, 値を足していくカウンタを作り, 素数を数えるプログラムに適用する
+* 以下をカウンタのインターフェスとする
+```
+typedef struct { ... } counter_t;
+/* 0 にする */
+void counter_init(counter_t * c);
+/* +1 する (返り値: 深い意味はないが, 元の値を返すとする) */
+long counter_inc(counter_t * c);
+/* 今の値を返す */
+long counter_get(counter_t * c);
+```
+<!--- end md --->
+
+<!--- md --->
+#*P スレッドセーフなカウンタ
+
+* 上記インターフェースを持つデータ構造と関数を作り, 素数を数えるプログラムに適用せよ
+* 以下のコード中の所定のデータ構造や関数の中身を書き足して正しく動くようにせよ
+<!--- end md --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile count_prime_counter.c
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os05_mutex/include/count_prime.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+gcc -Wall -fopenmp -o count_prime_counter count_prime_counter.c
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile count_prime_counter_ans.c
+<!--- exec-include ./mk_version.py -D VER=5 nb/source/os05_mutex/include/count_prime.c --->
+<!--- end code --->
+
+<!--- code kernel=bash label=ans --->
+gcc -Wall -fopenmp -o count_prime_counter_ans count_prime_counter_ans.c
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+if OMP_NUM_THREADS=4  ./count_prime_counter       0 1000000 | grep 78498 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=4  ./count_prime_counter 1000000 2000000 | grep 70435 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=4  ./count_prime_counter 2000000 3000000 | grep 67883 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=20 ./count_prime_counter 2000000 3000000 | grep 67883 ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+
+<!--- code kernel=bash label=ans --->
+if OMP_NUM_THREADS=4  ./count_prime_counter_ans       0 1000000 | grep 78498 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=4  ./count_prime_counter_ans 1000000 2000000 | grep 70435 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=4  ./count_prime_counter_ans 2000000 3000000 | grep 67883 ; then echo OK ; else echo NG ; fi
+if OMP_NUM_THREADS=20 ./count_prime_counter_ans 2000000 3000000 | grep 67883 ; then echo OK ; else echo NG ; fi
+<!--- end code --->
+
