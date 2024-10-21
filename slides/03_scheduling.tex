@@ -171,7 +171,7 @@ while (1) \{                                           \\
   \only<2>{実行中のスレッドが中断 $\rightarrow$ ランキューから外れる}%
   \only<3>{ランキューから次のスレッドが選ばれて実行される}%
   \only<4>{中断中のスレッドが再開 $\rightarrow$ ランキューに挿入される}%
-  \only<5>{タイマ割り込み $\rightarrow$ 実行中のスレッドが十分な時間を消費していたら, preemption}%
+  \only<5>{タイマ割り込み $\rightarrow$ 実行中のスレッドが十分な時間 \ao{(time quantum)} を消費していたら, preemption}%
   \only<6>{ランキューから次のスレッドが選ばれて実行される}%
 
   \begin{center}
@@ -213,9 +213,15 @@ while (1) \{                                           \\
 \begin{frame}
   \frametitle{Round Robinの問題点}
   \begin{itemize}
-  \item 公平性: 「中断していた$\iff$CPUを使っていなかった」スレッドも,
-    「preemptyされた$\iff$ずっとCPUを使っていた」スレッドも同じ扱い
-  \item 対話的なプログラムの応答性: 実行可のスレッドが多い(load averageが高い)と,
+  \item {\bf 公平性:}
+    \begin{itemize}
+    \item 「中断していた$\iff$CPUを使っていなかった」スレッドも,
+    \item 「preemptされた$\iff$ずっとCPUを使っていた」スレッド
+    \end{itemize}
+    も同じ扱い
+    
+  \item {\bf 対話的なプログラムの応答性:}
+    実行可のスレッドが多い(load averageが高い)と,
     それに比例して,
     「応答時間$=$中断状態から再開してから実行されるまでの時間」が長くなる
   \end{itemize}
@@ -227,7 +233,8 @@ while (1) \{                                           \\
   \begin{itemize}
   \item Linux 2.6.23以降のデフォルトスケジューラ
     \begin{itemize}
-    \item 各スレッドが「消費した合計CPU時間($\rightarrow$ vruntime)」を管理 
+    \item 各スレッドが「消費した合計CPU時間のようなもの
+      ($\rightarrow$ \ao{vruntime})」を管理 
     \item スレッド切り替え(実行中スレッドが中断した,
       中断中スレッドが復帰した,
       タイマ割り込みがおきた, など)時に,
@@ -258,8 +265,9 @@ while (1) \{                                           \\
       $\Rightarrow$ 10秒間中断してから再開した時, その10秒間ずっと走っていた
       スレッドは10秒間待たされる?
     \end{itemize}
-  \item 「公平にCPUを割当る」と言っても, 「長時間に渡った合計が均等」が目標ではない
-    (長時間中断していてもその分を無制限に「貯金」されては困る)
+  \item つまり「公平にCPUを割当る」と言っても,
+    「長時間に渡った合計が均等」が目標ではない
+    (長時間中断していた分を無制限に「貯金」とされては困る)
   \end{itemize}
 \end{frame}
 

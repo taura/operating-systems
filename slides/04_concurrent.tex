@@ -33,9 +33,9 @@
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{共有メモリ}
+  \frametitle{共有メモリ(復習)}
   \begin{itemize}
-  \item (復習) 同一プロセス内のスレッドはメモリを共有している
+  \item 同一プロセス内のスレッドはメモリを共有している
   \item 例えば以下のプログラムは何を表示する?
 
 \begin{lstlisting}
@@ -53,8 +53,7 @@ int main() {
   pthread_t child_thread_id;
   pthread_create(&child_thread_id, 0, f, 0);
   /* 終了待ち */
-  void * ret = 0;
-  pthread_join(child_thread_id, &ret);
+  pthread_join(child_thread_id, 0);
   printf("g = %d\n", @\mura{\tt g}@); /* ここで表示されるのは? */
   return 0;
 }
@@ -76,10 +75,8 @@ int main() {
   for (int i = 0; i < 2; i++)
     pthread_create(&child_thread_id[i], 0, f, 0);
   /* 終了待ち */
-  for (int i = 0; i < 2; i++) {
-    void * ret = 0;
-    pthread_join(child_thread_id[i], &ret);
-  }
+  for (int i = 0; i < 2; i++)
+    pthread_join(child_thread_id[i], 0);
   printf("g = %d\n", @\mura{\tt g}@);
   return 0;
 }
@@ -101,16 +98,19 @@ A2: &  {\tt g = 300;}               &                                \\
   \end{center}
 
 \begin{itemize}
-\item 他にも様々なケースが考えられる(e.g., A1; B1; A2; B2)
+\item 他にも様々なケースが考えられる
+  \begin{itemize}
+  \item e.g., A1; B1; A2; B2
+  \end{itemize}
 \item うまく行くのは以下の2ケースのみ
   \begin{itemize}
   \item A1; A2; B1; B2;
   \item B1; B2; A1; A2;
   \end{itemize}
 
-\item 言葉で言えば, うまく行く
-  $\iff$ 片方の\ao{{\tt g += 100}の間にもう一方のスレッドによって
-  {\tt g}が書き換えられていない}
+\item 「うまく行く」
+  $\iff$ 「片方の\ao{{\tt g += 100}の間にもう一方のスレッドによって
+    {\tt g}が書き換えられていない}」
 \end{itemize}
 \end{frame}
 
@@ -214,21 +214,22 @@ unlucky:
 \begin{frame}
   \frametitle{用語: 競合状態}
   \begin{itemize}
-  \item [] 定義: 以下のような状態を「競合状態」という
+  \item [] 定義: 以下のような状態を\mura{「競合状態」}という
     \begin{enumerate}
     \item 複数のスレッドが
-      \underline{(a) 同じ場所(変数, 配列, 構造体の要素 etc.)}を, 
-      \underline{(b) 並行して}
+      \underline{同じ場所(変数, 配列, 構造体の要素 etc.)}を, 
+      \underline{並行して}
       アクセスしている
     \item うち少なくとも1つは書き込みである
     \end{enumerate}
   \item 競合状態があるプログラムは, 
     \begin{itemize}
-    \item ほとんどの場合, 非決定的: 実行のタイミングによって結果が異なり,
-      うち一部しか「望ましい」結果ではない
-    \item $\Rightarrow$ うまく動かないことがあり得る
+    \item ほとんどの場合, \mura{非決定的:} 実行のタイミングによって結果が異なる
+    \item $\Rightarrow$ 
+      (ほとんどの場合, そのうち一部しか「望ましい」結果ではないため)
+      正しくないプログラム
     \end{itemize}
-  \item 用語: \ao{際どい領域 (critical section)}
+  \item 用語: \mura{際どい領域, クリティカルセクション (critical section):}
     コード上で, 競合状態が発生している領域
   \end{itemize}
 \end{frame}
@@ -280,6 +281,7 @@ unlucky:
   \item \ao{条件変数} (目的:
     順序の保証含め, 「何かが起きるまで待ってから実行」
     をするための\ao{汎用機構})
+  \item \ldots (他にも色々)
   \end{itemize}
 \end{frame}
 
@@ -292,9 +294,9 @@ unlucky:
   \item 排他制御 $\approx$ 一人しか入れない部屋(個室トイレ)
   \item 排他制御に対する操作
     \begin{itemize}
-    \item \ao{lock} $\approx$ トイレが空いていれば入って鍵をかける;
+    \item \ao{lock} $\approx$ トイレが空いていれば入ってカギをかける;
       空いていなければ空くまでで待つ
-    \item \ao{unlock} $\approx$ 鍵を開けてトイレを空ける
+    \item \ao{unlock} $\approx$ カギを開けてトイレを空ける
     \end{itemize}
   \item 典型的な使い方(不可分に行いたい操作をlock/unlockではさむ)
     \begin{columns}
@@ -388,12 +390,12 @@ int main() {
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{同期を隠蔽したデータ構造}
+  \frametitle{同期を隠ぺいしたデータ構造}
   \begin{itemize}
   \item データをスレッドで更新する必要性が生ずるたびに,
     mutexを別途定義するのは煩わしい・間違いの元
   \item データ $+$ それを保護するmutex (または今後述べる同期のためのデータ)
-    をひとつのデータ構造に隠蔽するのが通常
+    をひとつのデータ構造に隠ぺいするのが通常
     (\ao{スレッドセーフ}なデータ構造・関数)
   \item 例
 \begin{lstlisting}
@@ -418,7 +420,7 @@ int counter_inc(counter_t * c, int dx) {
   \frametitle{バリア同期}
   \begin{itemize}
   \item バリア $\approx$ 出走馬のゲート(発馬機)
-  \item 全員が揃うまで待ち, そろったら一斉に開ける
+  \item 全員がそろうまで待ち, そろったら一斉に開ける
     \begin{center}
 \includegraphics[width=0.4\textwidth]{out/pdf/img/Hong_Kong_Derby.pdf}
 
@@ -557,7 +559,7 @@ int scounter_dec(scounter_t * s);
 \begin{frame}[fragile]
   \frametitle{飽和なし版}
   \begin{itemize}
-  \item データ構造 (mutexを隠蔽)
+  \item データ構造 (mutexを隠ぺい)
 \begin{lstlisting}
 typedef struct {
   @\mura{\tt pthread\_mutex\_t m;}@
