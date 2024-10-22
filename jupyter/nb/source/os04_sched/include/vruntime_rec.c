@@ -23,14 +23,14 @@ double cur_time() {
   return tp->tv_sec + tp->tv_nsec * 1.0e-9;
 }
 
-#ifpy VER == 2
+/*** if VER == 2 */
 void sleep_sec(double slp_t) {
   struct timespec tp[1];
   tp->tv_sec = (long)slp_t;
   tp->tv_nsec = (slp_t - (long)slp_t) * 1.0e9;
   nanosleep(tp, 0);
 }
-#endifpy
+/*** endif */
 
 double cur_vruntime() {
   char buf[100];
@@ -63,20 +63,20 @@ double cur_vruntime() {
 
 /* T秒間走り続け, vruntimeの変化を記録する */
 int run(double T,
-#ifpy VER == 2
+/*** if VER == 2 */
         double run_t, double slp_t,
-#endifpy
+/*** endif */
         long n) {
   pid_t pid = getpid();
   double limit = cur_time() + T;
   rec_t * R = (rec_t *)calloc(n, sizeof(rec_t));
   long i = 0;
-#ifpy VER == 1
+/*** if VER == 1 */
   R[i].begin = R[i].end = cur_time();
-#elifpy VER == 2
+/*** elif VER == 2 */
   sleep_sec(slp_t);
   double start = R[i].begin = R[i].end = cur_time();
-#endifpy
+/*** endif */
   R[i].vruntime = cur_vruntime();
   R[i].proc = sched_getcpu();
   while (R[i].end < limit && i < n) {
@@ -95,12 +95,12 @@ int run(double T,
       R[i].begin = R[i].end = cur_time();
       R[i].vruntime = cur_vruntime();
     }
-#ifpy VER == 2
+/*** if VER == 2 */
     if (t > start + run_t) {
       sleep_sec(slp_t);
       start = cur_time();
     }
-#endifpy
+/*** endif */
   }
   assert(i < n);
   int j;
@@ -116,18 +116,18 @@ int run(double T,
 int main(int argc, char ** argv) {
   long i = 1;
   double T     = (argc > i ? atof(argv[i]) : 10.0);    i++; /* 合計時間 */
-#ifpy VER == 2
+/*** if VER == 2 */
   double run_t = (argc > i ? atof(argv[i]) : T);       i++; /* 1回走り続ける時間 */
   double slp_t = (argc > i ? atof(argv[i]) : 0);       i++; /* 1回sleepする時間 */
-#endifpy
+/*** endif */
   long n       = (argc > i ? atoi(argv[i]) : 1000000); i++;
-#ifpy VER == 1
+/*** if VER == 1 */
   run(T, n);
-#elifpy VER == 2
+/*** elif VER == 2 */
   run(T, run_t, slp_t, n);
-#elsepy
+/*** else */
   (void)T;
   (void)n;
-#endifpy
+/*** endif */
   return 0;
 }

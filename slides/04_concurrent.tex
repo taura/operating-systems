@@ -592,11 +592,12 @@ int scounter_inc(scounter_t * s) {
   @\ao{\tt if (x == s->capacity) \{}@
     @\ao{\tt ... 待機 ...}@
   @\ao{\}}@
+  s->x = s->x + 1;
   pthread_mutex_unlock(&s->m);
   return x;  }
 \end{lstlisting}
 \item 上記の「待機」をするのが {\tt pthread\_cond\_wait}
-\item しかし上記では起こされた以降の動作が不足している
+\item ただし一般には目覚めたら{\tt s->x < s->capacity}という保証はない
 \item $\rightarrow$ \ao{目覚めたらまたやり直す}コード(ループ)に変形
   \end{itemize}
 \end{frame}
@@ -1072,7 +1073,7 @@ int scounter_dec(scounter_t * s) {
   \frametitle{飽和カウンタの別解? (2)}
   \begin{itemize}
   \item inc: 競合状態は{\tt s->x}だけなので,
-    不可分更新命令を使えば謎めいたmutex unlock/lockも不要
+    不可分更新命令を使えばなぞめいたmutex unlock/lockも不要
     \begin{itemize}
     \item 
       {\small \aka{2023/11/17 訂正:} 以下の
@@ -1105,7 +1106,7 @@ int scounter_dec'(scounter_t * s) {
   \frametitle{飽和カウンタの別解? (2)}
   \begin{itemize}
   \item inc: 競合状態は{\tt s->x}だけなので,
-    不可分更新命令を使えば謎めいたmutex unlock/lockも不要
+    不可分更新命令を使えばなぞめいたmutex unlock/lockも不要
 \begin{lstlisting}
 int scounter_inc'(scounter_t * s) {
   while (1) {
