@@ -1074,20 +1074,12 @@ int scounter_dec(scounter_t * s) {
   \begin{itemize}
   \item inc: 競合状態は{\tt s->x}だけなので,
     不可分更新命令を使えばなぞめいたmutex unlock/lockも不要
-    \begin{itemize}
-    \item 
-      {\small \aka{2023/11/17 訂正:} 以下の
-        {\tt compare\_and\_swap(\aka{\&s->capacity}, x, x + 1)}
-        は
-        {\tt compare\_and\_swap(\ao{\&s->x}, x, x + 1)}
-        の間違い}
-    \end{itemize}
 \begin{lstlisting}
 int scounter_inc'(scounter_t * s) {
   while (1) {
     int x = s->x;
     if (x < s->capacity) {
-      if (compare_and_swap(&s->capacity, x, x + 1)) {
+      if (compare_and_swap(&s->x, x, x + 1)) {
         return x;
 }}}}
 \end{lstlisting}
@@ -1366,13 +1358,13 @@ int unlock(mutex_t * m) {
 \begin{frame}[fragile]
   \frametitle{futex}
   \begin{itemize}
-  \item \ao{「if (u == v) ブロックする」を不可分}に実行
+  \item \ao{「if (*p == v) ブロックする」を不可分}に実行
     \begin{lstlisting}
-futex(&u, FUTEX_WAIT, v, 0, 0, 0);
+futex(p, FUTEX_WAIT, v, 0, 0, 0);
 \end{lstlisting}
-  \item {\tt u}上でブロックしているスレッドを$n$個まで起こす
+  \item {\tt p}上でブロックしているスレッドを$n$個まで起こす
 \begin{lstlisting}
-futex(&u, FUTEX_WAKE, @$n$@, 0, 0, 0);}
+futex(p, FUTEX_WAKE, @$n$@, 0, 0, 0);}
 \end{lstlisting}
 \item 注: futexというシステムコールはあるが,
   C言語から呼べる関数(glibc wrapper)は定義されていない. 以下を自分で定義
