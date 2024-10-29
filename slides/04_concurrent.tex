@@ -1748,7 +1748,7 @@ while (...) {
     \item 不可分更新をするのに排他制御を使わない
       \begin{enumerate}
       \item 不可分更新命令 (一つのアドレスに対する更新)
-      \item \ao{トランザクショナルメモリ}
+      \item \ao{トランザクショナルメモリ} (時間があれば)
       \end{enumerate}
     \end{enumerate}
   \end{itemize}
@@ -1762,7 +1762,7 @@ while (...) {
   \item ビジーウェイト
   \item デッドロック
   \item 1アドレスに対する不可分更新 (compare and swap)
-  \item 2アドレス以上は?
+  \item 2アドレス以上はmutexまたはトランザクショナルメモリ
   \end{itemize}
 \end{frame}
 

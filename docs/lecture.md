@@ -8,6 +8,11 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2024/10/29)</font> 10/30 予定
+  1. [並行処理と同期](slides/04_concurrent.pdf) デッドロック
+  1. 演習 `os07_atomic`
+  1. [デッドロックをなにかに例える話](https://app.learnwiz.one/events/deadlock-analogy)
+
 * <font color=blue>(投稿日: 2024/10/23)</font> 10/23 予定
   1. [並行処理と同期](slides/04_concurrent.pdf) バリア同期, 条件変数
   1. 演習 `os05_mutex`, `os06_cond_var`
