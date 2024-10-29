@@ -11,7 +11,10 @@ nb_srcs += $(wildcard nb/source/os0?_*/*.sos)
 
 aux_srcs :=
 
-aux_srcs += $(wildcard nb/source/os07_atomic/lock_vis.py)
+aux_srcs += $(wildcard nb/source/os08_addr/addrs_vis.py)
+aux_srcs += $(wildcard nb/source/os09_vm/page_fault_vis.py)
+aux_srcs += $(wildcard nb/source/os09_vm/mincore_vis.py)
+#aux_srcs += $(wildcard nb/source/os07_atomic/lock_vis.py)
 #aux_srcs += $(wildcard nb/source/os2023_exam/include/vers/2/buy2.h)
 #aux_srcs += $(wildcard nb/source/os2023_exam/include/vers/2/check_buy2.c)
 #aux_srcs += $(wildcard nb/source/os2022_exam/test?.txt)

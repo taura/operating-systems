@@ -1,5 +1,5 @@
 <!--- md --->
-#* オペレーティングシステム 演習 10
+#* オペレーティングシステム 演習 09
 
 #* メモリ管理, ページング
 <!--- end md --->
@@ -91,7 +91,7 @@ vmstat 1
 
 <!--- code w kernel=python --->
 %%writefile page_fault_rec.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os10_vm/page_fault_rec.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os09_vm/include/page_fault_rec.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -120,18 +120,13 @@ gcc -Wall -O3 -o page_fault_rec page_fault_rec.c
 
 <!--- md --->
 * 以下はこの結果を可視化する
-<!--- end md --->
 
-<!--- code w kernel=python --->
-<!--- include nb/source/include/os10_vm/page_fault_vis.py --->
-<!--- end code --->
-
-<!--- md --->
 * アクセス量 vs 時間の表示
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "t")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "t")
 <!--- end code --->
 
 <!--- md --->
@@ -144,7 +139,8 @@ progress_plt("time_rusage.dat", "accessed", "t")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "minflt")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "minflt")
 <!--- end code --->
 
 <!--- md --->
@@ -154,7 +150,8 @@ progress_plt("time_rusage.dat", "accessed", "minflt")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "majflt")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "majflt")
 <!--- end code --->
 
 <!--- md --->
@@ -187,7 +184,8 @@ progress_plt("time_rusage.dat", "accessed", "majflt")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "t")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "t")
 <!--- end code --->
 
 <!--- md --->
@@ -195,7 +193,8 @@ progress_plt("time_rusage.dat", "accessed", "t")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "minflt")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "minflt")
 <!--- end code --->
 
 <!--- md --->
@@ -203,7 +202,8 @@ progress_plt("time_rusage.dat", "accessed", "minflt")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "majflt")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "majflt")
 <!--- end code --->
 
 <!--- md --->
@@ -215,7 +215,7 @@ progress_plt("time_rusage.dat", "accessed", "majflt")
 
 <!--- code w kernel=python --->
 %%writefile mincore_rec.c
-<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os10_vm/page_fault_rec.c --->
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os09_vm/include/page_fault_rec.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -239,10 +239,6 @@ gcc -Wall -O3 -o mincore_rec mincore_rec.c
 * その可視化プログラムは以下
 <!--- end md --->
 
-<!--- code w kernel=python --->
-<!--- include nb/source/include/os10_vm/mincore_vis.py --->
-<!--- end code --->
-
 <!--- md --->
 * 以下を実行すると動画ファイル(mincore.mp4)が生成, 表示される
   * 動画と終了状態の静止画が両方表示されてしまうが気にしない
@@ -258,7 +254,8 @@ gcc -Wall -O3 -o mincore_rec mincore_rec.c
 
 <!--- code w kernel=python --->
 from IPython.display import Video
-animate_mincore("mincore.dat", "mincore.mp4", 0.05)
+import mincore_vis
+mincore_vis.animate_mincore("mincore.dat", "mincore.mp4", 0.05)
 Video("mincore.mp4")
 <!--- end code --->
 
@@ -270,7 +267,7 @@ Video("mincore.mp4")
 
 <!--- code w kernel=python --->
 %%writefile mincore_random_rec.c
-<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os10_vm/page_fault_rec.c --->
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os09_vm/include/page_fault_rec.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -297,7 +294,8 @@ gcc -Wall -O3 -o mincore_random_rec mincore_random_rec.c
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "t")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "t")
 <!--- end code --->
 
 <!--- md --->
@@ -305,7 +303,8 @@ progress_plt("time_rusage.dat", "accessed", "t")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "minflt")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "minflt")
 <!--- end code --->
 
 <!--- md --->
@@ -313,7 +312,8 @@ progress_plt("time_rusage.dat", "accessed", "minflt")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "majflt")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "majflt")
 <!--- end code --->
 
 <!--- md --->
@@ -322,7 +322,8 @@ progress_plt("time_rusage.dat", "accessed", "majflt")
 
 <!--- code w kernel=python --->
 from IPython.display import Video
-animate_mincore("mincore.dat", "mincore.mp4", 0.05)
+import mincore_vis
+mincore_vis.animate_mincore("mincore.dat", "mincore.mp4", 0.05)
 Video("mincore.mp4")
 <!--- end code --->
 
@@ -353,7 +354,7 @@ Video("mincore.mp4")
 
 <!--- code w kernel=python --->
 %%writefile madvise_rec.c
-<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os10_vm/page_fault_rec.c --->
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os09_vm/include/page_fault_rec.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -380,7 +381,8 @@ gcc -Wall -O3 -o madvise_rec madvise_rec.c
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "t")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "t")
 <!--- end code --->
 
 <!--- md --->
@@ -388,7 +390,8 @@ progress_plt("time_rusage.dat", "accessed", "t")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "minflt")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "minflt")
 <!--- end code --->
 
 <!--- md --->
@@ -396,11 +399,13 @@ progress_plt("time_rusage.dat", "accessed", "minflt")
 <!--- end md --->
 
 <!--- code w kernel=python --->
-progress_plt("time_rusage.dat", "accessed", "majflt")
+import page_fault_vis
+page_fault_vis.progress_plt("time_rusage.dat", "accessed", "majflt")
 <!--- end code --->
 
 <!--- code w kernel=python --->
 from IPython.display import Video
-animate_mincore("mincore.dat", "mincore.mp4", 0.05)
+import mincore_vis
+mincore_vis.animate_mincore("mincore.dat", "mincore.mp4", 0.05)
 Video("mincore.mp4")
 <!--- end code --->

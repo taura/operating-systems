@@ -1,6 +1,6 @@
 <!--- md ---> 
 
-#* オペレーティングシステム 演習 09
+#* オペレーティングシステム 演習 08
 
 #* メモリとアドレス
 
@@ -38,7 +38,7 @@
 
 <!--- code w kernel=python --->
 %%writefile global.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os09_addr/global.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os08_addr/include/global.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -76,7 +76,7 @@ gcc -Wall -Wno-format -o global global.c
 
 <!--- code w kernel=python --->
 %%writefile global.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os09_addr/global.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os08_addr/include/global.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -120,7 +120,7 @@ wait
 
 <!--- code w kernel=python --->
 %%writefile global_quiz.c
-<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os09_addr/global.c --->
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os08_addr/include/global.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -146,7 +146,7 @@ timeout 20 ./global_quiz
 
 <!--- code w kernel=python --->
 %%writefile local.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os09_addr/local.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os08_addr/include/local.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -167,7 +167,7 @@ gcc -Wall -Wno-format -o local local.c
 
 <!--- code w kernel=python --->
 %%writefile local_fun.c
-<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os09_addr/local.c --->
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os08_addr/include/local.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -185,7 +185,7 @@ gcc -Wall -Wno-format -o local_fun local_fun.c
 
 <!--- code w kernel=python --->
 %%writefile local_fact.c
-<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os09_addr/local.c --->
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os08_addr/include/local.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -200,12 +200,7 @@ gcc -Wall -Wno-format -o local_fact local_fact.c
 * fact(10)がfact(9)を呼び, それがfact(8)を呼び, それがfact(7)を呼び, ... としているがそれぞれに別の領域が割り当てられているはずで, その様子は表示されているアドレス(隣り合うアドレスの差)を観察すると「なんとなく」わかるだろう
 * 対比としてあえて大域変数gを導入してそのアドレスも表示している
 
-* 以下は可視化のためのコード
 <!--- end md ---> 
-
-<!--- code w kernel=python --->
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os09_addr/addrs_vis.py --->
-<!--- end code --->
 
 <!--- md ---> 
 * 実行
@@ -220,7 +215,8 @@ gcc -Wall -Wno-format -o local_fact local_fact.c
 <!--- end md ---> 
 
 <!--- code w kernel=python --->
-addrs_plt("fact.dat")
+import addrs_vis
+addrs_vis.addrs_plt("fact.dat")
 <!--- end code --->
 
 <!--- md ---> 
@@ -233,7 +229,7 @@ addrs_plt("fact.dat")
 
 <!--- code w kernel=python --->
 %%writefile local_fib.c
-<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os09_addr/local.c --->
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os08_addr/include/local.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -245,7 +241,8 @@ gcc -Wall -Wno-format -o local_fib local_fib.c
 <!--- end code --->
 
 <!--- code w kernel=python --->
-addrs_plt("fib.dat")
+import addrs_vis
+addrs_vis.addrs_plt("fib.dat")
 <!--- end code --->
 
 <!--- md ---> 
@@ -262,7 +259,7 @@ addrs_plt("fib.dat")
 
 <!--- code w kernel=python --->
 %%writefile pointer.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os09_addr/pointer.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os08_addr/include/pointer.c --->
 <!--- end code --->
 
 <!--- md --->
@@ -291,7 +288,7 @@ cat -n pointer.s
 
 <!--- code w kernel=python --->
 %%writefile pointer_array.c
-<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os09_addr/pointer.c --->
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os08_addr/include/pointer.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -314,7 +311,7 @@ cat -n pointer_array.s
 
 <!--- code w kernel=python --->
 %%writefile pointer_arrow.c
-<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os09_addr/pointer.c --->
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os08_addr/include/pointer.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -332,7 +329,7 @@ cat -n pointer_arrow.s
 
 <!--- code w kernel=python --->
 %%writefile pointer_is_integer.c
-<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os09_addr/pointer.c --->
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os08_addr/include/pointer.c --->
 <!--- end code --->
 
 
@@ -365,7 +362,7 @@ cat -n pointer_is_integer.s
 
 <!--- code w kernel=python --->
 %%writefile local_lifetime.c
-<!--- exec-include ./mk_version.py -D VER=5 nb/source/include/os09_addr/local.c --->
+<!--- exec-include ./mk_version.py -D VER=5 nb/source/os08_addr/include/local.c --->
 <!--- end code --->
 
 
@@ -398,7 +395,7 @@ gcc -Wall -o local_lifetime local_lifetime.c
 
 <!--- code w kernel=python --->
 %%writefile malloc.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os09_addr/malloc.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os08_addr/include/malloc.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -419,7 +416,8 @@ gcc -Wall -Wno-format -o malloc malloc.c
 <!--- end code --->
 
 <!--- code w kernel=python --->
-addrs_plt("malloc_50.dat")
+import addrs_vis
+addrs_vis.addrs_plt("malloc_50.dat")
 <!--- end code --->
 
 <!--- md ---> 
@@ -430,7 +428,7 @@ addrs_plt("malloc_50.dat")
 
 <!--- code w kernel=python --->
 %%writefile malloc_free.c
-<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os09_addr/malloc.c --->
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os08_addr/include/malloc.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -442,7 +440,8 @@ gcc -Wall -Wno-format -o malloc_free malloc_free.c
 <!--- end code --->
 
 <!--- code w kernel=python --->
-addrs_plt("malloc_10_5.dat")
+import addrs_vis
+addrs_vis.addrs_plt("malloc_10_5.dat")
 <!--- end code --->
 
 <!--- md ---> 
@@ -457,7 +456,8 @@ addrs_plt("malloc_10_5.dat")
 <!--- end code --->
 
 <!--- code w kernel=python --->
-addrs_plt("malloc_100.dat")
+import addrs_vis
+addrs_vis.addrs_plt("malloc_100.dat")
 <!--- end code --->
 
 <!--- md ---> 
@@ -469,7 +469,8 @@ addrs_plt("malloc_100.dat")
 <!--- end code --->
 
 <!--- code w kernel=python --->
-addrs_plt("malloc_2000.dat")
+import addrs_vis
+addrs_vis.addrs_plt("malloc_2000.dat")
 <!--- end code --->
 
 <!--- md ---> 
@@ -482,7 +483,7 @@ addrs_plt("malloc_2000.dat")
 
 <!--- code w kernel=python --->
 %%writefile sbrk.c
-<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os09_addr/malloc.c --->
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os08_addr/include/malloc.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -494,6 +495,7 @@ gcc -Wall -Wno-format -o sbrk sbrk.c
 <!--- end code --->
 
 <!--- code w kernel=python --->
-addrs_plt("sbrk_2000.dat")
+import addrs_vis
+addrs_vis.addrs_plt("sbrk_2000.dat")
 <!--- end code --->
 
