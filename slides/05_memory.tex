@@ -218,6 +218,7 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
     (から成る領域)
     \begin{itemize}
     \item その$A$ bitを\ao{\bf (ページ内)オフセット}と呼ぶ
+      (つまり $2^A$で割ったあまり)
     \item それ以外の部分 : \ao{\bf 論理ページ番号}と呼ぶ
     \item ページは連続する$2^{A}$バイト
     \end{itemize}
@@ -228,6 +229,24 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
     \includegraphics[width=\textwidth]{out/pdf/svg/addr_page_3.pdf}
   \end{center}
 \end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{例}
+  \begin{itemize}
+  \item 論理アドレス 1234567 (= $\ao{1\; 0010\; 1101}\; 0110\; 1000\; 0111_2$)
+    
+  \item 論理ページ番号 : $1\; 0010\; 1101_2 = 1234567 // 4096 = 301$ 
+  \item ページ内オフセット :  $0110 1000 0111_2 = 1234567 \mod 4096 = 1671$
+    
+  \item 論理ページ番号 301 $\rightarrow$ 物理ページ番号 500 ($= 1 1111 0100_2$に変換されたとすると
+    
+  \item 論理アドレス 1234567 $\rightarrow 500 \times 4096 + 1671$
+    
+  \item 2進数では, $1 1111 0100 0110 1000 0111_2$
+  \end{itemize}
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
@@ -511,8 +530,8 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
   \frametitle{ページ(スワップ)アウト・イン}
   \begin{itemize}
   \item 実際にアクセスが起きたページに物理メモリを割当(要求時ページング)
-  \item $\Rightarrow$ 当然, 物理メモリが足りなく(逼迫する)ことがあり得る
-  \item OSは物理メモリが逼迫すると,
+  \item $\Rightarrow$ 当然, 物理メモリが足りなく(ひっ迫する)ことがあり得る
+  \item OSは物理メモリがひっ迫すると,
     一部の内容を2次記憶に退避して, 解放する(\ao{\bf ページアウト, スワップアウト})
   \item 退避されたページの, ページテーブルエントリは「物理ページ不在」とし,
     次にアクセスする際にページフォルトが起きるようにしておく
