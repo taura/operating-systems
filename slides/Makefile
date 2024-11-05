@@ -18,7 +18,7 @@ tex := $(wildcard 03_*.tex 05_*.tex)
 #svg_svg := $(wildcard svg/*.svg)
 #svg_svg := $(wildcard svg/malloc_mmap.svg)
 svg_svg :=
-svg_svg += svg/what_is_os.svg
+#svg_svg += svg/addr_page.svg
 # layered svg files
 #lsvg_svg := $(wildcard lsvg/*.svg)
 #lsvg_svg := $(wildcard svg/*.svg)

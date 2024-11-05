@@ -233,20 +233,23 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
   \frametitle{例}
-  \begin{itemize}
-  \item ページサイズ 4KB ($= 2^{12}$) を仮定
-  \item 論理アドレス 1234567 (= $\ao{1\; 0010\; 1101}\; 0110\; 1000\; 0111_2$)
+  {\scriptsize
     \begin{itemize}
-  \item 論理ページ番号 : $\ao{1\; 0010\; 1101_2} = \ao{301} (= 1234567 // 4096)$ 
-  \item ページ内オフセット : $0110\; 1000\; 0111_2 = 1671 (= 1234567 \mod 4096)$
-    \end{itemize}
-    
-  \item 論理ページ番号 \ao{301} $\rightarrow$ 物理ページ番号 \aka{500} ($= \aka{1\; 1111\; 0100_2}$)に変換されたとすると
-    \begin{itemize}
-    \item 論理アドレス 1234567 $\rightarrow \aka{500} \times 4096 + 1671$
-    \item 2進数では, $\aka{1\; 1111\; 0100\;} 0110\; 1000\; 0111_2$
-    \end{itemize}
-  \end{itemize}
+      
+    \item ページサイズ $2^{12} = 4096$ バイト (4KB) を仮定
+
+      \begin{tabular}{lll}
+論理アドレス$L$ & $1100\;1100\;1100\;1100\;\ao{0101\;0101\;0101_2}$ & $214746453$ \\
+論理ページ番号 & $1100\;1100\;1100\;1100_2$ & $52428 = \left\lfloor L/4096\right\rfloor$ \\
+ページ内オフセット & $\ao{0101\;0101\;0101_2}$ & $ \ao{1365} = L \mod 4096$ \\
+      \end{tabular}
+  \item 物理ページ番号が$= \mido{1111\;0000\;1111\;0000_2}$ ($= \mido{61680}$) だったとすると,
+  \item $L$に対応する物理アドレス $= \mido{1111\;0000\;1111\;0000\;}\ao{0101\;0101\;0101}_2$ ($= 252642645 = \mido{61680} \times 4096 + \ao{1365}$)
+  \end{itemize}}
+  
+  \begin{center}
+    \includegraphics[width=\textwidth]{out/pdf/svg/addr_page_5.pdf}
+  \end{center}
 \end{frame}
 
 
@@ -299,7 +302,7 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
     \end{column}
     \begin{column}{0.5\textwidth}
       \begin{center}
-        \includegraphics[width=\textwidth]{out/pdf/svg/addr_page_5.pdf}
+        \includegraphics[width=\textwidth]{out/pdf/svg/addr_page_6.pdf}
       \end{center}
     \end{column}
   \end{columns}
@@ -320,11 +323,11 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
 %  {\tt root[$l[39:47]$].next[$l[30:38]$].next[$l[21:29]$].next[$l[12:20]$]}
     
     \begin{center}
-      \only<1>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_6.pdf}}%
-      \only<2>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_7.pdf}}%
-      \only<3>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_8.pdf}}%
-      \only<4>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_9.pdf}}%
-      \only<5->{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_10.pdf}}%
+      \only<1>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_7.pdf}}%
+      \only<2>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_8.pdf}}%
+      \only<3>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_9.pdf}}%
+      \only<4>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_10.pdf}}%
+      \only<5->{\includegraphics[width=0.7\textwidth]{out/pdf/svg/addr_page_11.pdf}}%
     \end{center}
   \end{itemize}
 \end{frame}
@@ -403,7 +406,7 @@ printf("%ld %ld %ld %ld\n", &x, a, &y, p);
       \end{itemize}
     \end{itemize}
   \item \ao{57 bit 論理アドレス (5段のページテーブル)}
-    Intelの最新(Ice Lake)のアーキテクチャで導入
+    Intelの最近(Ice Lake以降)のアーキテクチャで導入
     \begin{itemize}
     \item 48 bit $\Rightarrow$ 256 TB 論理アドレス空間
     \item 57 bit $\Rightarrow$ 128 PB 論理アドレス空間
