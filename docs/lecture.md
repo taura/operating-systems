@@ -8,6 +8,11 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2024/10/29)</font> 10/30 予定
+  1. [デッドロックをなにかに例える話](https://app.learnwiz.one/events/deadlock-analogy)に「いいね」をつけて下さい
+  1. [メモリ管理](slides/05_memory.pdf) アドレス変換の仕組み (MMU, ページテーブル, TLB), メモリ管理API, ページング, ページ置換アルゴリズム
+  1. 演習 `os09_vm`
+
 * <font color=blue>(投稿日: 2024/11/02)</font>
   1. [os02\_process](ans/os02_process/os02_process.sos.ans.html)の解答例を公開しました
   1. [os03\_thread](ans/os03_thread/os03_thread.sos.ans.html)の解答例を公開しました
@@ -17,6 +22,8 @@
   1. [並行処理と同期](slides/04_concurrent.pdf) デッドロック
   1. 演習 `os07_atomic`
   1. [デッドロックをなにかに例える話](https://app.learnwiz.one/events/deadlock-analogy)
+  1. [メモリ管理](slides/05_memory.pdf) 論理アドレス, 物理アドレス, アドレス変換
+  1. 演習 `os08_addr`
 
 * <font color=blue>(投稿日: 2024/10/23)</font> 10/23 予定
   1. [並行処理と同期](slides/04_concurrent.pdf) バリア同期, 条件変数
