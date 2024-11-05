@@ -1,6 +1,6 @@
 <!--- md --->
 
-#* オペレーティングシステム 演習 12
+#* オペレーティングシステム 演習 11
 
 #* 先読み
 <!--- end md --->
@@ -22,7 +22,7 @@
 
 <!--- code w kernel=python --->
 %%writefile read_file_seq_or_random.c
-<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os12_prefetch/read_file.c --->
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os11_prefetch/include/read_file.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -34,12 +34,12 @@ gcc -Wall -O3 -o read_file_seq_or_random read_file_seq_or_random.c
 
 * <font color="blue">64MBを4KBずつ逐次</font>読み出し(第5引数=0)
 
-* <font color="red">注:</font> 以下でデータ(`../os11_cache/data.bin`)やプログラム(`../os11_cache/drop_cache`)がないというエラーになったら, 前回のJupyter notebook (os11_cache) の適切なセルを実行すること
+* <font color="red">注:</font> 以下でデータ(`../os10_cache/data.bin`)やプログラム(`../os10_cache/drop_cache`)がないというエラーになったら, 前回のJupyter notebook (os10_cache) の適切なセルを実行すること
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-data=../os11_cache/data.bin
-../os11_cache/drop_cache ${data}
+data=../os10_cache/data.bin
+../os10_cache/drop_cache ${data}
 ./read_file_seq_or_random ${data} 64m 3 4k 0 > s.dat
 <!--- end code --->
 
@@ -48,8 +48,8 @@ data=../os11_cache/data.bin
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-data=../os11_cache/data.bin
-../os11_cache/drop_cache ${data}
+data=../os10_cache/data.bin
+../os10_cache/drop_cache ${data}
 ./read_file_seq_or_random ${data} 64m 3 4k 123456 > s.dat
 <!--- end code --->
 
@@ -64,8 +64,8 @@ data=../os11_cache/data.bin
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-data=../os11_cache/data.bin
-../os11_cache/drop_cache ${data}
+data=../os10_cache/data.bin
+../os10_cache/drop_cache ${data}
 ./read_file_seq_or_random ${data} 16m 1 4k 123456 > r.dat
 <!--- end code --->
 
@@ -75,11 +75,8 @@ data=../os11_cache/data.bin
 <!--- end md --->
 
 <!--- code w kernel=python --->
-<!--- include nb/source/include/os12_prefetch/read_file_vis.py --->
-<!--- end code --->
-
-<!--- code w kernel=python --->
-graph(["r.dat"])
+import read_file_vis
+read_file_vis.graph(["r.dat"])
 <!--- end code --->
 
 <!--- md --->
@@ -88,7 +85,8 @@ graph(["r.dat"])
 <!--- end md --->
 
 <!--- code w kernel=python --->
-graph(["r.dat"], start=0, end=500)
+import read_file_vis
+read_file_vis.graph(["r.dat"], start=0, end=500)
 <!--- end code --->
 
 <!--- md --->
@@ -96,8 +94,8 @@ graph(["r.dat"], start=0, end=500)
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-data=../os11_cache/data.bin
-../os11_cache/drop_cache ${data}
+data=../os10_cache/data.bin
+../os10_cache/drop_cache ${data}
 ./read_file_seq_or_random ${data} 16m 1 4k 0 > s.dat
 <!--- end code --->
 
@@ -107,8 +105,9 @@ data=../os11_cache/data.bin
 <!--- end md --->
 
 <!--- code w kernel=python --->
-graph(["s.dat"])
-# graph(["s.dat"], start=0, end=10000)
+import read_file_vis
+read_file_vis.graph(["s.dat"])
+# read_file_vis.graph(["s.dat"], start=0, end=100)
 <!--- end code --->
 
 <!--- md --->
@@ -122,10 +121,10 @@ graph(["s.dat"])
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-data=../os11_cache/data.bin
-../os11_cache/drop_cache ${data}
+data=../os10_cache/data.bin
+../os10_cache/drop_cache ${data}
 ./read_file_seq_or_random ${data} 128m 1 128k 0 > s.dat
-../os11_cache/drop_cache ${data}
+../os10_cache/drop_cache ${data}
 ./read_file_seq_or_random ${data} 128m 1 128k 123456 > r.dat
 <!--- end code --->
 
@@ -168,7 +167,7 @@ data=../os11_cache/data.bin
 
 <!--- code w kernel=python --->
 %%writefile read_file_ahead.c
-<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os12_prefetch/read_file.c --->
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os11_prefetch/include/read_file.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -185,8 +184,8 @@ gcc -Wall -O3 -o read_file_ahead read_file_ahead.c
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-data=../os11_cache/data.bin
-../os11_cache/drop_cache ${data}
+data=../os10_cache/data.bin
+../os10_cache/drop_cache ${data}
 p=1
 ./read_file_ahead ${data} 16m 1 4k 123456 ${p} > r.dat
 <!--- end code --->
@@ -196,7 +195,8 @@ p=1
 <!--- end md --->
 
 <!--- code w kernel=python --->
-graph(["r.dat"])
+import read_file_vis
+read_file_vis.graph(["r.dat"])
 <!--- end code --->
 
 <!--- md --->
@@ -208,7 +208,7 @@ graph(["r.dat"])
 
 <!--- code w kernel=python --->
 %%writefile read_file_thread.c
-<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os12_prefetch/read_file.c --->
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os11_prefetch/include/read_file.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -220,8 +220,8 @@ gcc -Wall -O3 -fopenmp -o read_file_thread read_file_thread.c
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-data=../os11_cache/data.bin
-../os11_cache/drop_cache ${data}
+data=../os10_cache/data.bin
+../os10_cache/drop_cache ${data}
 th=1
 OMP_NUM_THREADS=${th} ./read_file_thread ${data} 16m 1 4k 123456 > r.dat
 <!--- end code --->
@@ -231,6 +231,7 @@ OMP_NUM_THREADS=${th} ./read_file_thread ${data} 16m 1 4k 123456 > r.dat
 <!--- end md --->
 
 <!--- code w kernel=python --->
-graph(["r.dat"])
+import read_file_vis
+read_file_vis.graph(["r.dat"])
 <!--- end code --->
 

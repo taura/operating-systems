@@ -1,6 +1,6 @@
 <!--- md --->
 
-#* オペレーティングシステム 演習 11
+#* オペレーティングシステム 演習 10
 
 #* キャッシュ
 <!--- end md --->
@@ -42,7 +42,7 @@ vmstat
 <!--- end md --->
 
 <!--- code w kernel=python --->
-<!--- include nb/source/include/os11_cache/mk_random_file.py --->
+<!--- include nb/source/os10_cache/include/mk_random_file.py --->
 <!--- end code --->
 
 <!--- code w kernel=python --->
@@ -62,7 +62,8 @@ ls -l
 
 <!--- code w kernel=bash --->
 # 参考: 実行する必要なし
-dd if=/dev/urandom of=data.bin bs=$((1000 * 1000)) count=500
+
+## dd if=/dev/urandom of=data.bin bs=$((1000 * 1000)) count=500
 <!--- end code --->
 
 <!--- md --->
@@ -90,7 +91,7 @@ sudo sysctl -w vm.drop_caches=3
 
 <!--- code w kernel=python --->
 %%writefile drop_cache.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os11_cache/drop_cache.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os10_cache/include/drop_cache.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -163,7 +164,7 @@ time cat data.bin > /dev/null
 
 <!--- code w kernel=python --->
 %%writefile check_incore.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os11_cache/check_incore.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os10_cache/include/check_incore.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -204,19 +205,11 @@ time cat data.bin > /dev/null
 
 <!--- code w kernel=python --->
 %%writefile read_file.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os11_cache/read_file.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os10_cache/include/read_file.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
 gcc -Wall -O3 -o read_file read_file.c
-<!--- end code --->
-
-<!--- md --->
-* 以下は記録を可視化するプログラム
-<!--- end md --->
-
-<!--- code w kernel=python --->
-<!--- include nb/source/include/os11_cache/read_file_vis.py --->
 <!--- end code --->
 
 <!--- md --->
@@ -235,7 +228,8 @@ export data=data.bin
 <!--- end md --->
 
 <!--- code w kernel=python --->
-graph(["s.dat"])
+import read_file_vis
+read_file_vis.graph(["s.dat"])
 <!--- end code --->
 
 <!--- md --->
@@ -246,6 +240,7 @@ graph(["s.dat"])
 
 * 今後生きてく上で, くれぐれも, <font color="blue">キャッシュから読んだときの性能 (&gt; 数GB/sec) がディスク装置の性能である</font>と誤解しないようにしましょう
 * 売られているHDD装置の性能: 1本でおおよそ100MB/sec
-* 売られているSSD装置の性能: 1本でおおよそ200-300MB/sec (PCI接続) 〜 1-2GB程度 (PCI接続)
+* 売られているSSD装置の性能: 1本でおおよそ200-300MB/sec (SATA接続) 〜 1-2GB程度 (PCI接続)
+* 主記憶の性能: メモリの搭載の仕方にもよるが数十GB 〜 数百GB
 <!--- end md --->
 
