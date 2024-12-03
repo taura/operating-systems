@@ -198,6 +198,47 @@
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
+  \frametitle{read, writeの変種 --- pread, pwrite}
+  \begin{itemize}
+  \item {\tt ssize\_t {\it r} = pread({\it fd}, {\it buf}, {\it sz}, \ao{\it offset});}
+    \begin{itemize}
+    \item \ao{\it offset}から最大{\it sz}バイト, 
+      {\it buf}から始まる領域に読み込む
+    \item 実際に読み込まれたバイト数を返す
+    \item ファイルオフセットは\ao{変わらない}
+    \end{itemize}
+  \item {\tt ssize\_t {\it w} = pwrite({\it fd}, {\it buf}, {\it sz}, \ao{\it offset});}
+    \begin{itemize}
+    \item {\it buf}から始まる領域から, 最大{\it sz}バイトを,
+      \ao{\it offset}に書き込む
+    \item 場合によりファイルが伸長する
+    \item 実際に書き込まれたバイト数を返す
+    \item ファイルオフセットは\ao{変わらない}
+    \end{itemize}
+  \item 存在理由
+    \begin{itemize}
+    \item 逐次的でない読み書きをするときは lseek + read/write よりも簡潔
+    \item (重要) 複数のスレッドが同じ {\it fd} から読み書きするとき
+      (lssek/read/writeで,
+      ファイルオフセットが変化するというインタフェースが扱いづらい)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{read, writeの変種 --- readv, writev}
+  \begin{itemize}
+  \item 複数のread, writeを一撃で実行できる
+    (複数の {\it buf, sz} ({\tt iovec} 構造体) を与えることができる)
+  \item 詳細はman pageを参照
+  \item preadv, pwritev もある
+  \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
   \frametitle{fallocate, ftruncate}
   \begin{itemize}
   \item \ao{\tt int $e$ = posix\_fallocate({\it fd}, {\it offset}, {\it len});}
