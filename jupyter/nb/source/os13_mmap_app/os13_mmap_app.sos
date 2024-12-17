@@ -1,7 +1,7 @@
 <!--- md --->
-# オペレーティングシステム 演習 14
+# オペレーティングシステム 演習 13
 
-#* mmapの課題
+#* mmapの実践的な応用
 <!--- end md --->
 
 <!--- md w --->
@@ -20,7 +20,7 @@
 
 <!--- code w kernel=python --->
 %%writefile bsearch.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os14_mmap_app/bsearch.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os13_mmap_app/include/bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -39,11 +39,11 @@ gcc -o bsearch -O3 -Wall bsearch.c
 <!--- end code --->
 
 <!--- md label=prob,ans --->
-* 以下で, 多数の32 bit整数が隙間なく, 256M個, 昇順に整列されたファイルを作る (512MB)
+* 以下で, 多数の32 bit整数が隙間なく, 256M個, 昇順に整列されたファイルを作る (1GiB)
 <!--- end md --->
 
 <!--- code w kernel=python label=prob,ans --->
-<!--- include nb/source/include/os14_mmap_app/mk_sorted_file.py --->
+<!--- include nb/source/os13_mmap_app/include/mk_sorted_file.py --->
 <!--- end code --->
 
 <!--- md label=prob,ans --->
@@ -51,7 +51,7 @@ gcc -o bsearch -O3 -Wall bsearch.c
 <!--- end md --->
 
 <!--- code w kernel=python label=prob,ans --->
-n = 256 * 1024 * 1024
+n = 250 * 1000 * 1000
 mk_sorted_file("sorted.bin", n)
 <!--- end code --->
 
@@ -76,13 +76,13 @@ ls -l sorted.bin
 ```
 19365 not found
 ```
-のように, ないと答えるプログラムを, mmapをbsearchを有効に用いて書け
+のように, ないと答えるプログラムを, mmapとbsearchを有効に用いて書け
 * マニュアルページなどを参照しながら必要な ヘッダファイルを #include して, 一から書いてみよ
 <!--- end md --->
 
 <!--- code w kernel=python points=1 --->
 %%writefile mmap_bsearch.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os13_mmap_app/include/mmap_bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -107,7 +107,7 @@ if /usr/bin/time ./mmap_bsearch ${data} 241713802 | grep "241713802 not found" ;
 
 <!--- code kernel=python label=ans --->
 %%writefile mmap_bsearch_ans.c
-<!--- exec-include ./mk_version.py -D VER=2 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- exec-include ./mk_version.py -D VER=2 nb/source/os13_mmap_app/include/mmap_bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->
@@ -136,7 +136,7 @@ if /usr/bin/time ./mmap_bsearch_ans ${data} 241713802 | grep "241713802 not foun
 
 <!--- code w kernel=python points=1 --->
 %%writefile read_bsearch.c
-<!--- exec-include ./mk_version.py -D VER=3 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- exec-include ./mk_version.py -D VER=3 nb/source/os13_mmap_app/include/mmap_bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -157,7 +157,7 @@ if /usr/bin/time ./read_bsearch ${data} 241713802 | grep "241713802 not found" ;
 
 <!--- code kernel=python label=ans --->
 %%writefile read_bsearch_ans.c
-<!--- exec-include ./mk_version.py -D VER=4 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- exec-include ./mk_version.py -D VER=4 nb/source/os13_mmap_app/include/mmap_bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->
@@ -184,7 +184,7 @@ if /usr/bin/time ./read_bsearch_ans ${data} 241713802 | grep "241713802 not foun
 
 <!--- code w kernel=python points=1 --->
 %%writefile lin_search.c
-<!--- exec-include ./mk_version.py -D VER=5 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- exec-include ./mk_version.py -D VER=5 nb/source/os13_mmap_app/include/mmap_bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -205,7 +205,7 @@ if /usr/bin/time ./lin_search ${data} 241713802 | grep "241713802 not found" ; t
 
 <!--- code kernel=python label=ans --->
 %%writefile lin_search_ans.c
-<!--- exec-include ./mk_version.py -D VER=6 nb/source/include/os14_mmap_app/mmap_bsearch.c --->
+<!--- exec-include ./mk_version.py -D VER=6 nb/source/os13_mmap_app/include/mmap_bsearch.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash label=ans --->
