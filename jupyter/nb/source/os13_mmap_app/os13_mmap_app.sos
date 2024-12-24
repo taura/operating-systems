@@ -51,7 +51,7 @@ gcc -o bsearch -O3 -Wall bsearch.c
 <!--- end md --->
 
 <!--- code w kernel=python label=prob,ans --->
-n = 250 * 1000 * 1000
+n = 256 * 1024 * 1024
 mk_sorted_file("sorted.bin", n)
 <!--- end code --->
 

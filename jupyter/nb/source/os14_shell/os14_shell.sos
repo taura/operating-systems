@@ -1,0 +1,991 @@
+<!--- md --->
+#* オペレーティングシステム 演習 14
+
+#* リダイレクトやパイプの活用
+
+<!--- end md --->
+
+<!--- md w --->
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+<!--- end md --->
+
+<!--- md --->
+# 本演習のテーマ
+
+* パイプ(|)を使って単純なコマンドを組み合わせるだけで多くのことができる
+* その前提として, コマンドライン CUI (Character User Interface) にある程度慣れなくてはいけないので, あまり慣れていない人のための練習もついでに
+* <font color="green">問</font>となっているところ以外は, 自分にとってすでにおなじみのことであれば適宜飛ばしてもよい
+<!--- end md --->
+
+<!--- md --->
+# コマンドライン端末を使いこなす日常の練習
+
+* 以下の練習は, taulec (授業で使っているサーバ) にSSHでログインして行うこと
+* 自分のPCで行っても良い(実用性を体験するという意味では普段使う環境で試す方がよいかもしれない). ただしそのまま同じものが動かないかもしれない
+  * Linuxの場合: シェルがbash (デフォルト)の人はおそらく全てそのまま動く. 自分のシェルが何かわからない人は, おそらくbash
+  * Macの場合: コマンドのオプションなど詳細が違うかもしれない + デフォルトのシェルがzshというものになっていて, 後半で多少文法の違いなどがあるかもしれない
+  * Windowsの場合: デフォルトのシェル(「コマンドプロンプト」や「PowerShell」ではかなり違うので推奨しない. 手元のWindowsでやりたければ, bash for Windowsというものを使うと良い
+  * いずれの場合も以前に作った仮想マシン上にインストールしたLinuxを使うのも良い
+
+## 端末ソフトの立ち上げ
+
+自分のPCでやるにせよ, taulecサーバでやるにせよ, まずは自分の環境で端末 (terminal)ソフトを立ち上げる
+
+* Ubuntu : 画面端(多分左下または右下) 9点メニュー -&gt; Terminal で検索
+* MacOS : ファインダ (Finder) -&gt; アプリケーション (Applications) -&gt; 端末 (Terminal)
+* Windows : bash for Windowsもしくは(taulecサーバでやるのであれば) Windowsメニュー PowerShell または コマンドプロンプト
+
+* ここで立ち上がったソフトを以降は**「端末」**と呼ぶ. 端末の本来の意味は, ネットワークの末端に繋がれた機器, ということなのだろうが, 普通そこからコンピュータへの指示(コマンド)を打ち込んでいたことから, コマンドを打ち込むためのソフトも端末と呼ぶのが習わしになっている.
+
+## taulecサーバへの接続
+
+* 上記のいずかの方法で端末を立ち上げたら
+
+```
+ssh uXXXXX@taulec.zapto.org
+```
+
+で taulec サーバ (Linux環境) にログインする
+
+* uXXXXX の部分や自分のユーザ名(Jupyterにログインしているときと同じもの)で置き換える
+* SSHでログインするための設定は以前に説明した
+
+* また, サーバ環境でGUIがない環境もあるのでそのような場所でも生きていけるようになるためにも
+
+## 別の方法 : Jupyter で端末
+
+* SSHを使わずにJupyterの端末を立ち上げる方法もあるが, 一部のキーがブラウザーに奪われるなど不自由があるので推奨しない
+* SSHができない場合の最終手段として, 一応やり方
+  * Jupyterのメニュー File -&gt; New Terminal
+
+# コマンドライン (シェル)の基本
+
+* 前章のいずれかの方法で, taulec にログインした状態の端末が立ち上がっているとする
+* そこではコマンドを受け付けて実行するというソフトウェア(シェル)と対話をしている
+* シェルでどんな作業をするにしても, どんなファイルがあるかを確認しながらその中身を見るのが基本である
+
+## `ls` (LiSt files) : ファイル名を表示
+
+* `ls` (無引数) : カレントディレクトリにあるファイル名, ディレクトリ名を表示
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+* `ls` $P$ : $P$がディレクトリ名ならその直下にあるファイル名, ディレクトリ名を表示, ファイルならそのファイル名を表示. いずれも存在しなければエラーを表示.
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls samples
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls os14_shell.sos.ipynb
+<!--- end code --->
+<!--- md --->
+* オプション `ls -F` : ファイル, ディレクトリ, 実行可能ファイルなどの区別をさり気なく表示
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls -F
+<!--- end code --->
+<!--- md --->
+* これは普段, あまりにも便利なので`ls`と打つだけでこれと同じ意味にしたくなる
+* 以下でそれが可能
+<!--- end md --->
+<!--- code w kernel=bash --->
+alias ls='ls -F'
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+* オプション `ls -l` : ファイルサイズなど詳しい情報を表示
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls -l
+<!--- end code --->
+<!--- md --->
+* これもよく使うのでこんなことをしている人もしばしば見かける
+<!--- end md --->
+<!--- code w kernel=bash --->
+alias ll='ls -l'
+<!--- end code --->
+<!--- code w kernel=bash --->
+ll
+<!--- end code --->
+<!--- md --->
+* オプション `ls -R` : 指定したディレクトリおよびそのサブディレクトリの下すべてを再帰的に表示
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls -R
+<!--- end code --->
+<!--- md --->
+* オプション `ls -d` : ディレクトリであってもその直下のファイル名・ディレクトリ名を表示せずにそのディレクトリだけ表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls -d samples
+<!--- end code --->
+
+<!--- md --->
+
+## `cd` (Change current working Directory) : カレントディレクトリを変更
+
+* カレントディレクトリとは, プロセスごとに保持している「現在位置・作業場所」のようなもので, ファイル名(パス名)を指定した際にここを起点にファイルが指定される
+  * 例えば, `a/b/c` というパス名は, 実際にはカレントディレクトリの中の`a`というディレクトリの中の`b`というディレクトリの中の`c`というファイル(またはディレクトリ)を意味している
+* シェルでコマンドを実行するときは, 作業対象のファイルがあるディレクトリ(作業場所)に移動(`cd`)してから`ls`を用いてどんなファイルがあるかを表示する(そしてその後の操作をする), ということがしばしば行われる
+* 「カレントディテクトリを$D$にする(`cd` $D$)」ことをしばしば「$D$に行く」などと表現する
+* 「カレントディテクトリを$D$である(`cd` $D$)」ことをしばしば「$D$に居る」などと表現する
+* この言葉を使えばカレントディレクトリは「今居るディレクトリ」のこと
+* `cd` (無引数) : 自分の「ホームディレクトリ」に行く
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+* 「ホームディテクトリ」とは, 各ユーザに一つ定まっているディレクトリで, そのユーザが作るほとんどのファイルはホームディレクトリ内のどこかにある
+* `cd` $D$ : ディレクトリ$D$に行く
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd           # ホームディレクトリ...
+cd notebooks # ...の下のnotebooks
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- code w kernel=bash --->
+cd os14_shell
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+* パス名の中に`..`が現れたらそれは「親ディレクトリ」のこと
+* `cd`に限らないが`cd`ではとりわけよく使う
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ..
+pwd
+<!--- end code --->
+<!--- md --->
+
+* 冒険 (自分のホームディレクトリの外にも行ける)
+* ファイルシステムのすべてを含む頂上, 「ルートディレクトリ」へ行く
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd /
+<!--- end code --->
+<!--- md --->
+* ルートディレクトリ直下のファイル・ディレクトリ
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+* `/usr` フォルダの中
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd usr
+ls
+<!--- end code --->
+<!--- md --->
+* `/usr/bin` フォルダの中
+* 普段実行している多くのコマンド(pythonなど)が実はここにある
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd bin
+ls
+<!--- end code --->
+<!--- md --->
+* 多くのファイルの後ろに`*`がついているように見えるのは`ls -F`オプションのせい(実行可能ファイルに`*`を付けて表示する). ファイル名の一部ではないので注意
+* `/home` ディレクトリにはすべてのユーザのホームディレクトリがある
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd /home
+ls
+<!--- end code --->
+<!--- md --->
+## `pwd` (Print current Working Directory) : カレントディレクトリを表示
+
+* 自分が今, どこにいるかがわからなくなったときに使う
+<!--- end md --->
+<!--- code w kernel=bash --->
+pwd
+<!--- end code --->
+<!--- md --->
+* 迷子になったらホームディレクトリへ戻る
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- code w kernel=bash --->
+cd notebooks/os14_shell
+<!--- end code --->
+<!--- md --->
+* シェル, コマンドラインを使いこなすということは, GUIを使わないという以上に, 普段は見えない(アプリケーションのインタフェースによって隠されている)ものも見られるという意味がある
+* いろいろなレイヤ, アプリケーションの化粧されたインタフェースを剥ぎ取って, 奥にある動作原理がわかるという意味もある
+* アプリケーションが何をしていて, それをどうユーザに見せようとも, 所詮はどこかにファイルがあってそれを読み書きして状態を保存したり, 設定を書き換えたり, ユーザに表示したりしているに過ぎない
+* 例えばアプリが使う設定ファイルやデータをすべて消去すれば設定もデータもリセットされ, 動作のおかしくなったアプリケーションを初期状態に戻せる(それ以外の方法がない)ということもよくある
+<!--- end md --->
+
+<!--- md --->
+# ファイルの中身を見るコマンドたち
+
+## `cat`
+
+* `cat` $F$ : ファイル$F$の中身を表示(正確には, 標準出力へ送る)
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell/samples
+<!--- end code --->
+<!--- md --->
+* `~` は自分のホームディレクトリを意味する
+* したがって上記は以下と同じこと
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd
+cd notebooks
+cd os14_shell
+cd samples
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- code w kernel=bash --->
+cat summers.txt
+<!--- end code --->
+<!--- md --->
+* `cat` $F_1 F_2 \cdots$ : ファイル$F_1, F_2, \cdots$の中身を標準出力へ送る(結果的にファイルを連結する効果を持つ)
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat summers.txt summers.xml
+<!--- end code --->
+<!--- md --->
+* ファイルの中身を表示するならエディタなどを使ったほうが普通は便利で, catが役に立つ場面をすぐに想像するのが難しいかもしれない. `cat`ならではの威力を発揮するのは2番目の使い方
+* 以下の記法で, samples ディレクトリの中にあるファイルをすべて(連結して)表示できる
+* 最後に表示されるゴミのようなデータは summers.xml.gz, summers.xml.bz2 からのもので, 間違いではない
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat *
+<!--- end code --->
+<!--- md --->
+* これは以下と同じ効果を持つ
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat duplicate.txt summers.csv summers.tsv summers.txt summers.xml summers.xml.bz2 summers.xml.gz
+<!--- end code --->
+<!--- md --->
+* これはシェルの機能であり `cat` の機能ではない
+* 逆に言うと`cat`以外のコマンドであっても同様に使える
+* 一般に, `*`を含んだパス名は, それを任意の0文字以上の(/は含まない)文字列で置き換えて, 実在するパス名に変換される
+* そのようなパス名が複数あれば全てに変換してくれる
+* `*`と似ているが違うものとして `?` も使える. こちらはぴったり1文字に置き換えて実在するパス名に変換する. 上記で .bz2 や .gz を表示しないためには, 
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat summers.???
+<!--- end code --->
+<!--- md --->
+* オプション `cat -n` : 行番号を表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat -n summers.xml
+<!--- end code --->
+<!--- md --->
+## `less`
+
+* 端末一ページに収まりきらないようなファイルを, スクロールさせながら対話的に表示するツール
+* <font color="red">lessはJupyter notebook内では実行できないので端末へ行ってやってみること</font>
+* `less` $F$ : ファイル$F$の中身を端末に表示
+  * 起動直後は最初の端末一ページ分を表示
+  * `SPACE`キーで一ページ分進む
+  * `q` キーで終了
+  * `/` キーで文字列検索
+  * その他のキーは `?` を参照
+* `less` (無引数) : 標準入力を読み込んで対話的に表示(操作は上と同じ)
+* コマンドの出力が長くなりすぎて読めない場合にしばしば使われる
+```
+ps auxww | less
+apt search python | less
+```
+など
+<!--- end md --->
+<!--- md --->
+## `lv`
+
+* `less`とほぼ同じ機能
+* <font color="red">lvもJupyter notebook内では実行できないので端末へ行ってやってみること</font>
+* `lv`がインストールされている環境で`less`を使う理由はない
+* lessにないありがたい機能は, 圧縮したファイル(.gz, .bz2)などを自動で解凍しながら表示してくれる機能
+```
+cd ~/notebooks/os14_shell/samples
+lv summers.xml.gz
+```
+など
+* `less`も`lv`もファイルをスクロールしながら見るコマンドで, それはエディタでもできることであるが, SPACE一回で端末一ページスクロールしてくれるのはファイルをさっと見たいときには便利
+* また, 一部のGUI環境でないと使えないエディタや, 起動に時間がかかる重いエディタよりはこちらのほうがよい場面も多い
+* 普段からエディタとして`vi`や`vim`などの一瞬で立ち上がるエディタを使っている人にとっては不要かもしれない
+<!--- end md --->
+<!--- md --->
+# シェルでの作業を快適にする機能いくつか
+
+* <font color="red">以下はJupyter notebookでやっても意味がないので必ず端末で行うこと</font>
+
+## 「タブキー」によるファイル名やコマンド名補完
+
+* 長いファイル名やコマンド名を途中まで打ったらタブキーを押す
+* すると曖昧さが生じる地点まで残りを自動入力してくれる
+* 複数候補がある場合, 一度目のタブで曖昧さが生じる地点まで表示, 直後にもう一度タブを押すと候補を表示してくれる
+
+## 「上下矢印キー」によるコマンド履歴の取り出し, コマンドラインの編集
+
+* 上矢印キーで直前に打ったコマンドをコマンドラインに表示してくれる
+* 上矢印キーを押し続ければ更に過去に遡れ, 下矢印キーで一つ新しい方に移れるので, 最近実行したコマンドを再実行したければこうやって探すのが速い
+* 表示した状態でコマンドを編集することもできる
+  * 左右矢印でカーソル移動
+  * Emacsのキー (C-a : 行頭, C-e : 行末, C-d 一文字消す)
+
+## 「Ctrl-r キー」によるコマンド履歴の検索
+
+* Ctrl-r を押したあとで文字列を打ち込むと, その文字列で始まる最近のコマンドを表示してくれる
+* 所望のコマンドが表示されたらEnterで実行したり, 左右矢印で編集モードに移れる
+* コマンド名を覚えているがオプションや長いファイル名を覚えていない(または打ちたくない)ときに使える
+<!--- end md --->
+<!--- md --->
+# File Explorer/Finderの機能に相当するコマンドたち
+
+* WindowsのexplorerやMacOSのFinderのような, ファイルやフォルダをGUIで表示して, 名前を変えたりフォルダ間を移動したり, フォルダを作って整理したり, ということをコマンドで行う
+* GUIでやるよりこっちが速い, となるには多少の練習が必要だが, tabによる補完, ワイルドカード(`*`)や for 文, xargs などを使いこなすことで, 大量のファイルに対する同じ作業を高速で行うことができるようになる
+
+## `mkdir` (MaKe DIRectory) : ディレクトリを作成
+
+* `mkdir` $D$ : $D$という名前でフォルダを作成
+<!--- end md --->
+<!--- code w kernel=bash --->
+mkdir foo
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+## `rmdir` (ReMove DIRectory) : ディレクトリを消去
+<!--- end md --->
+<!--- code w kernel=bash --->
+rmdir foo
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+* なお, rmdirは, 対象ディレクトリが空でないと失敗する
+## `mv` (MoVe) : 名前の変更もしくはディレクトリ間での移動
+
+* `mv` $P_1$ $P_2$ で, $P_1$の名前を$P_2$に変更する
+* ただし$P_2$が既存のディレクトリの場合, $P_1$を$P_2$の中に移動するという意味になる
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell/samples
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- code w kernel=bash --->
+mv summers.xml bakarudy.xml
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+* `mv` $P_1 P_2 \cdots P_n$ 引数が3つ以上の場合, 最後の引数は既存のディレクトリ名でなくてはならず, $P_1, P_2, \cdots, P_{n-1}$ を $P_n$ に移動する
+* ワイルドカード(`*`)と組み合わせて使うことが多い
+* 例えば以下はあるフォルダ内の, .txt で終わるファイルをすべて別のフォルダに移動する
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls *.txt
+<!--- end code --->
+<!--- code w kernel=bash --->
+mkdir texts
+<!--- end code --->
+<!--- code w kernel=bash --->
+mv *.txt texts
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+<!--- md --->
+* 元に戻す
+<!--- end md --->
+<!--- code w kernel=bash --->
+mv texts/* .
+<!--- end code --->
+<!--- code w kernel=bash --->
+rmdir texts
+<!--- end code --->
+<!--- md --->
+## `cp` (CoPy) ファイルまたはディレクトリのコピー
+
+* `cp` $F$ $P$ で, 通常の(ディレクトリではない)ファイル$F$ を$P$という名前でコピー
+* $P$が既存のディレクトリの場合, $P$の中に$F$という名前でコピー($P$`/`$F$という名前のファイルができる)
+<!--- end md --->
+<!--- code w kernel=bash --->
+cp bakarudy.xml summers.xml
+<!--- end code --->
+<!--- code w kernel=bash --->
+cat summers.xml
+<!--- end code --->
+<!--- md --->
+* オプション `cp -r` : ディレクトリの再帰的(recursive)なコピー
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell
+<!--- end code --->
+<!--- code w kernel=bash --->
+cp -r samples samples_bak
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls -R
+<!--- end code --->
+
+<!--- md --->
+## `rm` (ReMove) ファイルまたはディレクトリの消去
+
+* `rm` $F_1 F_2 \cdots$ : 通常のファイルを消去
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd samples
+rm bakarudy.xml
+ls
+<!--- end code --->
+<!--- md --->
+* オプション `rm -r` : ディレクトリの再帰的(recursive)な消去
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ..
+rm -r samples_bak
+ls
+<!--- end code --->
+<!--- md --->
+* いつの間にかできてしまった大量のゴミファイルを消去するのに`rm`をワイルドカード(`*`)と組み合わせて使うこともよくあるが, <font color="red">慎重に使わないと悲劇が起きる</font>
+* 必ず, ワイルドカードが何に展開されるかを目視してから使うこと
+* 一旦このようにして表示してから, 
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls samples/*.gz
+<!--- end code --->
+<!--- md --->
+* 上矢印キーなどを使って, ls を rmに置き換えて実行
+<!--- end md --->
+<!--- code w kernel=bash --->
+rm samples/*.gz
+ls samples
+<!--- end code --->
+<!--- md --->
+## `ln -s` (LiNk) シンボリックリンク
+
+* いわゆるショートカットの作成
+* `ln -s` $P_1$ $P_2$ で, $P_2$という名前で, 以降$P_1$を参照する($P_2$が$P_1$のショートカットになる)
+* $P_1$と$P_2$のどっちがどっちかわからなくなったら, `cp`コマンドと似た動作だと覚えれば良い(`cp` $X$ $Y$では, $X$が既存のファイルで$Y$が新たにできるファイルになる. `ln -s`もそれと同じ)
+* $P_1$がカレントディレクトリから遠いディレクトリにあり, 長いパス名を毎回打ち込みたくないときなどに特に有効
+<!--- end md --->
+<!--- code w kernel=bash --->
+ln -s /home/share/data/jawiki-20221220-pages-articles-multistream.xml.bz2 jawiki.xml.bz2
+<!--- end code --->
+<!--- md --->
+* 注: `ln -s`の機能は純粋なファイル名置換で, `ln -s`コマンドそのものは指定されたファイルが存在するか否かによらず成功してしまうのでタイプミスに注意が必要
+* 上記のような長いコマンドをシェルで自分で打ち込むときはタブキーを使うこと(タイプミスからくる謎な挙動を防止する上でも)
+* マッチするファイルが一つであると確信できるときはワイルドカードを使うのも良い
+<!--- end md --->
+<!--- code w kernel=bash --->
+ln -s /home/share/data/ja*.xml.bz2 jawiki.xml.bz2
+<!--- end code --->
+<!--- md --->
+* `~ユーザ名`で, そのユーザのホームディレクトリ(Linuxでは通常, /home/ユーザ名, MacOSでは/Users/ユーザ名) という意味になるので以下でも可
+<!--- end md --->
+<!--- code w kernel=bash --->
+ln -s ~share/data/ja*.xml.bz2 jawiki.xml.bz2
+<!--- end code --->
+<!--- md --->
+## `echo` コマンドで与えられた文字列を表示する
+
+* echo x でxが表示されるだけという, 普通何の役に立つのか謎なコマンド
+<!--- end md --->
+<!--- code w kernel=bash --->
+echo hello
+<!--- end code --->
+<!--- md --->
+* ここでは, リダイレクトと組み合わせるとecho だけで短い内容のファイルなら作れるとだけ言っておく
+<!--- end md --->
+<!--- code w kernel=bash --->
+echo hello > hello.txt
+<!--- end code --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+
+<!--- md --->
+# パイプを用いたコマンドの組み合わせ
+
+* ここからいよいよ本題
+* ファイルの中身やコマンドの出力をまた次のコマンドに送って...ということをして, 単純な機能の組み合わせで意外なほど役に立つというのが, 醍醐味
+* やりたいことそのものズバリをやってくれるコマンドがなくても「こんなコマンドがあれば◯◯と組み合わせてこれができる...」と考えて実際そんなコマンドがある, ということを知ることも多く, 一を知れば(他のコマンドと組み合わせて)十役に立つというのも醍醐味
+* 世の中のコマンドを全部を覚えようなどとする必要はないし無理だが, せっかくなので少し使えるツールを増やしたい, という向きは例えば[GNU Coreutils](https://www.gnu.org/software/coreutils/manual/coreutils.html) の目次を見ると良いかもしれない
+* 以下で紹介するコマンドも多くがGNU Coreutilsというパッケージの中のコマンドだが決して, パイプで組み合わせられる部品はそれに限らない
+
+## grep 
+
+* ある文字列, より一般的には正規表現で表されるパターン, を含む行(またはマッチした部分)だけを表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell/samples
+grep Mimura summers.tsv
+<!--- end code --->
+<!--- md --->
+* 複数ファイルの検索も可能
+<!--- end md --->
+<!--- code w kernel=bash --->
+grep Mimura summers.???
+<!--- end code --->
+<!--- md --->
+* あるディレクトリの下をまるごと検索することも可能(`-r` オプション. ただし, バイナリファイルを対象外にしたいことがほとんど(`-I`オプションでそれが可能)なので, `-rI` と組で覚えるのがよい
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell
+grep -rI Mimura samples
+<!--- end code --->
+<!--- md --->
+## 他のコマンド | grep
+
+* あるコマンドで情報をすべて抜き出し, それをパイプ(`|`)で`grep`に送り, ほしいものだけを見る, というパターンがよくある
+* あるプロセス(例: jupyterhub)が立ち上がっていそうか確認する
+<!--- end md --->
+<!--- code w kernel=bash --->
+ps auxww | grep jupyterhub
+<!--- end code --->
+<!--- md --->
+* 自分が立ち上げているプロセスを表示
+  * `whoami` は自分のユーザ名を表示するコマンド
+  * `$(whoami)` はその出力結果におきかわる. あるコマンドの出力結果をコマンドラインの一部として使うためのシェルの記法
+<!--- end md --->
+<!--- code w kernel=bash --->
+ps auxww | grep $(whoami)
+<!--- end code --->
+<!--- md --->
+* 過去にシェルで実行したコマンドのうち, ls を含むものを表示
+<!--- end md --->
+<!--- code w kernel=bash --->
+history | grep ls
+<!--- end code --->
+<!--- md --->
+* `/proc/cpuinfo` の中から`processor`を含む行を表示
+<!--- end md --->
+<!--- code w kernel=bash --->
+grep processor /proc/cpuinfo
+<!--- end code --->
+<!--- md --->
+* Python関係のパッケージで暗号(crypto)関係のものを探す
+* `grep -C 1`は見つかった行を含む前後1行(文脈)を表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+apt search python | grep -C 1 crypto
+<!--- end code --->
+
+<!--- md --->
+## sort : ファイルを整列する
+
+* 単純に実行するとすべての行を辞書順に並べるというだけのものだが, いろいろなオプションで動作を変更できる
+* 整列はデータを集計するための基本でもあり, データ処理の重要なツール
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell/samples
+sort summers.txt
+<!--- end code --->
+<!--- md --->
+* `sort -k` $n$ : $n$列目で整列する
+<!--- end md --->
+<!--- code w kernel=bash --->
+sort -k 5 summers.txt
+<!--- end code --->
+<!--- md --->
+* `sort -n` : 数値として整列する
+* 辞書式の整列だと, 987 &gt; 1000 となってしまう
+<!--- end md --->
+<!--- code w kernel=bash --->
+sort -k 5 -n summers.txt
+<!--- end code --->
+<!--- md --->
+* `sort -t` $c$ : 列の区切りとして文字$c$を使う
+* たとえばカンマ区切りのCSVファイルを指定した列の数値で整列する
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat summers.csv
+<!--- end code --->
+<!--- code w kernel=bash --->
+sort -t , -k 5 -n summers.csv
+<!--- end code --->
+<!--- md --->
+* `sort -r` : 逆順(大きなものが先)に整列する
+<!--- end md --->
+<!--- code w kernel=bash --->
+sort -k 6 -n -r summers.txt
+<!--- end code --->
+<!--- md --->
+## uniq : 同じ行が並んだら1行だけ表示する
+
+* 非常に他愛のない動作をするが, sortと組み合わせることでしばしば威力を発揮する
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell/samples
+cat duplicates.txt
+<!--- end code --->
+<!--- code w kernel=bash --->
+uniq duplicates.txt
+<!--- end code --->
+<!--- md --->
+* 各行が何回現れたかも表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+uniq -c duplicates.txt
+<!--- end code --->
+<!--- md --->
+* sortしてからuniqするのは, 現れた値の種類を重複なく列挙する(-cをつければ回数を数える)常套手段
+<!--- end md --->
+<!--- code w kernel=bash --->
+sort duplicates.txt | uniq -c
+<!--- end code --->
+
+<!--- md --->
+## zcat, gzip, bzip2
+
+* 圧縮したファイルを解凍する, もしくは解凍した結果を表示する
+* 現在多くのデータがテキスト形式の一種(xml, json, csv, yamlなど)を圧縮して提供されているため, これの扱い方を知っておくことは重要
+* 世の中でよく使われる圧縮ファイルの形式は
+  * `gzip` (標準的拡張子: .gz)
+  * `bzip2` (標準的拡張子: .bz2)
+  * `zip` (標準的拡張子: .zip)
+* ファイルを`gzip`形式で圧縮(元のファイルはそのまま)  
+<!--- end md --->
+<!--- code w kernel=bash --->
+gzip -c summers.xml > summers.xml.gz
+<!--- end code --->
+<!--- md --->
+* `gzip` 形式のファイルを解凍して表示(元のファイルはそのまま)
+<!--- end md --->
+<!--- code w kernel=bash --->
+gzip -dc summers.xml.gz
+<!--- end code --->
+<!--- md --->
+* これと同じことをするのが`zcat`
+<!--- end md --->
+<!--- code w kernel=bash --->
+zcat summers.xml.gz
+<!--- end code --->
+<!--- md --->
+* bzip2 形式のファイルを解凍して表示(元のファイルはそのまま)
+<!--- end md --->
+<!--- code w kernel=bash --->
+bzip2 -dc summers.xml.bz2
+<!--- end code --->
+<!--- md --->
+## head, tail (最初の何行か, 終わりの何行かだけを表示する)
+
+* 主な使い道
+  * まともに表示しても意味がない大きなデータの形式を確認する(ただし目視が目的ならlv, lessでも可)
+  * ファイルの最初の数行だけに特別な意味がある場面などで必要な情報を取り出す(後のawk参照)
+* `head -`$n$ $F$ : ファイル$F$の最初の$n$行だけ表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell/samples
+head -5 summers.xml
+<!--- end code --->
+<!--- md --->
+* 行数を省略すると10行の意味になる
+<!--- end md --->
+<!--- code w kernel=bash --->
+head summers.xml
+<!--- end code --->
+<!--- md --->
+* ファイルの最後の5行だけ表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+tail -5 summers.xml
+<!--- end code --->
+<!--- md --->
+* 2つを組み合わせると途中を表示することも可能
+* 11行目から15行目までを表示する(わかりやすさのために行番号も表示)
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat -n summers.xml | head -15 | tail -5
+<!--- end code --->
+<!--- md --->
+* 例: 自分のホームディレクトリ下にあるファイル, ディレクトリを大きい順に, 30個表示する
+* 注: ディレクトリの大きさはその下のファイルやディレクトリをすべて含むため, 上位にはホームディレクトリそのものやその直下のディレクトリが目立つ
+<!--- end md --->
+<!--- code w kernel=bash --->
+du -a ~/ | sort -k 1 -n -r | head -30
+<!--- end code --->
+<!--- md --->
+## wc : 行数, 単語数, バイト数を表示する
+
+* 例: `/proc/cpuinfo` の中から`processor`を含む行を抜き出しその行数などを表示(結果としてプロセッサの数を表示)
+<!--- end md --->
+<!--- code w kernel=bash --->
+grep processor /proc/cpuinfo | wc
+<!--- end code --->
+<!--- md --->
+# awk
+
+* かなり汎用的なフィルタ記述言語で, これまでのコマンドではできないこと(だけ)をこれにやらせる
+
+## 列を取り出す
+
+* もっとも手軽な使用法は特定の列だけを取り出したり表示したりすること
+* 例: 2列目(各行の2番目の単語)だけを表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk '{print $2}' summers.txt
+<!--- end code --->
+<!--- md --->
+* 上記コマンドが起動されると, `print $2`という文を, 入力ファイル`summers.txt`の**各行**に対して実行する
+* `$1, $2, ...` はそれぞれ各行の1つ目, 2つ目, ... の単語(空白文字を含まない文字列)を表す
+* `$0`は行全体を表す
+* よって上記は各行の2番めの単語を表示する $=$ 2列目を表示する, という意味になる
+* 例: 5列目が50以上の行の1, 2列目のみ表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk '$5 >= 50 {print $1, $2}' summers.txt
+<!--- end code --->
+<!--- md --->
+## awkプログラムの一般形
+
+* 一般にawkの最初の引数(' ... ')は,
+```
+条件1 { 条件1が成立した行に行われる処理 } 条件2 { 条件2が成立した行に行われる処理 } ...
+```
+という形をしており, 各行に対して上記を順に実行する
+* 「条件」を省略したらすべての行に成立する条件とみなされ, 処理(`{ ... }`)を省略したら, その行(`$0`)を表示するとみなされる
+* 特別な「条件」として, `BEGIN`, `END` があり
+  * `BEGIN`は1行目を開始する前に一度だけ成立する条件
+  * `END`は最終行を実行した後に一度だけ成立する条件
+したがって`BEGIN`は変数の初期化など, `END`は最終結果の表示などに使える
+
+* awkについて必要な詳細は自分で調べよ
+* awk チュートリアルなどとすればたくさん短い記事が見つかるが短すぎるものが多い印象
+* ちゃんと見たければ[マニュアル](https://www.gnu.org/software/gawk/manual/gawk.html)を参照
+
+## 変数
+
+* 変数, if文, for文, printf関数などもあり, 文法はCと似ている
+* 特に, シェルやperlと異なり変数を`$`で始める必要はない
+* 例: 行数を数える(xを初期化していないが0に初期化される)
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/os14_shell/samples
+awk '{ x++ } END { print x }' summers.xml
+<!--- end code --->
+<!--- md --->
+* 例: 第5列の平均と最大値を表示する(ついでにprintfの使用例)
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk '{ s += $5; m = ($5 > m ? $5 : m) } END { printf("sum: %s, max: %s\n", s/NR, m) }' summers.txt
+<!--- end code --->
+<!--- md --->
+## ファイルへのawkプログラムの格納
+
+* awkに渡す第一引数(プログラムを表す文字列)がある程度長くなる場合はファイルに格納したほうが良い
+* プログラムは複数行にまたがってもよく, 例えば上記は以下のように書ける
+<!--- end md --->
+<!--- code w kernel=python --->
+%%writefile samples/avg_max.awk
+{ s += $5; m = ($5 > m ? $5 : m) }
+END {
+  printf("sum: %s, max: %s\n", s/NR, m)
+}
+<!--- end code --->
+<!--- md --->
+* ファイルに格納されたプログラムをawkに渡すのは`-f`オプション
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk -f avg_max.awk summers.txt
+<!--- end code --->
+<!--- md --->
+## 組み込み変数NR と NF
+
+* 組み込み変数にNR (現在の行番号), NF (現在の行の列数)がある
+* 例: 行数, 単語数, 文字数を表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk '{ l++; w += NF; b += length($0) } END { print l, w, b }' summers.txt
+<!--- end code --->
+<!--- md --->
+* 例: uniq相当のこと
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk '$0 != last { print } { last = $0 }' duplicates.txt
+<!--- end code --->
+<!--- md --->
+* 例: uniq -c相当のこと
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk 'NR > 1 && $0 != last { print c, last; c = 0 } { last = $0; c++ } END { if (NR > 1) { print c, last } }' duplicates.txt
+<!--- end code --->
+<!--- md --->
+## 列の切れ目の変更
+
+* 列の切れ目はデフォルトでは, 空白文字(空白, タブ)の並びだが, `FS=` というオプションで変更できる
+* 例: カンマ区切りのCSVファイルの1, 5列目だけを, 再びカンマ区切りで表示する
+* 式を並べるだけでそれを連結するという意味になる
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk '{print $1 "," $5}' FS=, summers.csv
+<!--- end code --->
+
+<!--- md --->
+## 正規表現
+
+* `match(式, /正規表現/)` または `式 ~  /正規表現/` で, 「式」が「正規表現」にマッチしているかどうかの判定になる
+* matchが真となった場合, RSTARTがマッチした部分の先頭位置, RLENGTHがその長さを表す(どういうわけか, `式 ~  /正規表現/`の方はそうならない)
+* '<name>〜</name>' のような行に対して, 〜の部分を表示する
+<!--- end md --->
+<!--- code w kernel=bash --->
+awk 'match($0, /<sir_name_ja>.*<\/sir_name_ja>/) {l=length("<sir_name_ja>"); print substr($0, RSTART+l, RLENGTH-2*l-1)}' summers.xml
+<!--- end code --->
+<!--- md --->
+# grep, sort, uniq, awk を組み合わせた集計処理
+
+* 大きなデータから,
+  * 関係するデータだけを取り出す(`grep`)
+  * 整列(`sort`)
+  * 重複除去(`uniq`), カウント(`uniq -c`)
+というパターンが多く現れる
+* もう少し本格的な集計(合計, 平均, 最大値など)は`awk`を用いる
+* 圧縮されたファイルなら `zcat`/`gzip`, `bzip2` での解凍と組み合わせる
+* コマンドを試行錯誤している間は `head` で一部だけを処理する
+
+* 例: 現在何らかのコマンドを実行しているユーザを列挙する
+<!--- end md --->
+<!--- code w kernel=bash --->
+ps auxww | awk '{print $1}' | sort | uniq
+<!--- end code --->
+<!--- md --->
+* 正確に言うとps auxwwの1行目はヘッダなので余計なものが一行表示されてしまうが結果を目視するのが目的なら大概の場合, 気にしなくてよい
+* ちゃんとしたければ`ps hauxww`とする
+<!--- end md --->
+
+<!--- md --->
+# パイプを使った練習問題
+
+* 以下の練習は, 端末で実行してから答えをこのJupyter notebookに貼り付けて実行せよ
+* それには2つの意味がある
+  * 試行錯誤を, 端末でもそれができるようにする(タブ, Ctrl-rなどを使ってコマンド入力を速くする練習)
+  * 間違えて大量の出力を伴うコマンドを実行してしまった場合にJupyter notebookが溺死しないため
+<!--- end md --->
+
+<!--- md label=prob,ans --->
+#*P Wikipedia ダンプの解析
+<!--- end md --->
+<!--- md --->
+* Wikipedia ダンプは wikipedia の全データをダンプしたファイル
+* 言語ごとに別れて, 1つの, bzip2 で圧縮されたXMLファイル(.xml.bz2)として提供されている
+* ここでは大きさとして手頃な[日本語XMLダンプ](https://dumps.wikimedia.org/jawiki/20241220/) を使う
+* 全員がダウンロードするは無駄なので taulec 環境に `/home/share/data/jawiki-20241220-pages-articles-multistream.xml.bz2` としておいてある
+* 解凍済みのものも `/home/share/data/jawiki-20241220-pages-articles-multistream.xml` としておいてある
+* 自分のPCにダウンロードしたい人はこれを scp でコピーする
+```
+scp uXXXXX@taulec:/home/share/data/jawiki-20241220-pages-articles-multistream.xml.bz2 .
+```
+か, オリジナルを入手したければ,
+```
+wget https://dumps.wikimedia.org/jawiki/20241220/jawiki-20241220-pages-articles-multistream.xml.bz2
+```
+<!--- end md --->
+<!--- md label=prob,ans --->
+* <font color="green">問:</font> 毎回長いファイル名を打ち込まなくて良いよう, `os14_shell` ディレクトリに `jawiki.xml`, `jawiki.xml.bz2` という名前で2つのシンボリックリンクを作れ
+<!--- end md --->
+<!--- code w kernel=bash points=1 --->
+
+<!--- end code --->
+<!--- code kernel=bash label=ans --->
+ln -s /home/share/data/jawiki-20221220-pages-articles-multistream.xml jawiki.xml
+ln -s /home/share/data/jawiki-20221220-pages-articles-multistream.xml.bz2 jawiki.xml.bz2
+<!--- end code --->
+<!--- md --->
+* bzip2 形式で圧縮されたもの(.xml.bz2)は4GBくらい, 解凍したもの(.xml)は15GBくらい
+* ls のオプション`-h` はファイルの大きさを human readable (桁数の大きい数字を100K, 100M, 10Gのよう)に表示するオプション
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls -lh /home/share/data/jawiki-*
+<!--- end code --->
+<!--- md --->
+* 解凍したファイルを作らずに処理をしたければ,  `bzip2 -dc jawiki.xml.bz2 | ...` のようにする
+* しかし, bzip2での解凍にはかなり時間がかかる(7-8分)
+* pbzip2 (並列版)で解凍すればかなり短縮できる
+  * 並列度(スレッド数)を指定するには`-p8`のようにするが, 多すぎる(`-p26`以上にする)とsegmentation faultがおきる(原因不明). 深追いせずに `-p25`までで使えば良さそう `pbzip2 -p25 -dc jawiki.xml.bz2 | ...`
+* `-p25` でも20秒くらいかかるので, 作業効率のため解凍したものを使うことを推奨する
+* 端末で lv を使って最初の方数ページをめくって見て, データの形式を確かめてみよ
+* XMLは, 木構造をテキストで表すデータ形式で, 一例は以下
+```
+<person>
+ <name>Masakazu Mimura</name>
+ <age>55</age>
+ <height>165</height>
+</person>
+```
+* このテキストが意図するところ(Masakazu Mimuraという, 55歳, 身長165cmの人)は多くの人に明らかだと思われる
+* `<person>`, `</person>`, `<name>`, `</name>`などを_タグ_と呼ぶ
+* `<person>`, `<name>` などを開始タグ, `</person>`, `</name>` などを終了タグと呼ぶ
+* XMLでは, '<name>Masakazu Mimura</name>' のような, 開始タグから同じ名前の終了タグまでが一つの意味のあるデータの塊を表している
+* '<person>...</person>'のように, 内側にさらに別の開始タグ, 終了タグを含むこともできるため, 結果的にXMLは木構造を表すことができる
+
+* 目視結果からwikipediaの各ページ(`<page>`)に, title, contributor (username), timestamp などのタグがあることがわかるだろう
+* それぞれ各ページ(記事)のタイトル, 作者, 作られた(または修正された)時刻を表していると思われる
+* なお同じ記事を元の作者とは違う人が記事を更新することがあるので, contributor, timestampは必ずしも記事のオリジナルの作者や, その記事が最初に書かれた時点, という意味ではないが, ここではそれ以上のデータがないのでそうみなすことにする
+<!--- end md --->
+<!--- md label=prob,ans --->
+* <font color="green">問:</font> wikipediaのXMLデータから, 各記事のタイトル, 作者, 時刻を取り出して一行にタブ区切りで表示し, それを別のファイル (pages.csv) に保存せよ
+<!--- end md --->
+<!--- md --->
+* ヒント: awkを使う. awkに渡す文字列はかなり長くなる. 必要ならばawkプログラムをファイルに書くとよい
+* ファイルが大きいので実行時間もかなり長くなる. いきなりファイルすべてを処理しようとせず, `head`を使ってファイルの一部分だけを処理して, うまく行きそうなことを確認してからすべてを処理せよ
+<!--- end md --->
+<!--- code w kernel=bash points=1 --->
+
+<!--- end code --->
+<!--- code kernel=bash label=ans --->
+cat jawiki.xml | awk 'match($0, /<title>.*<\/title>/) {t=substr($0, RSTART+7, RLENGTH-15)} match($0, /<timestamp>.*<\/timestamp>/) {ts=substr($0, RSTART+11, RLENGTH-23)} match($0, /<username>.*<\/username>/) {u=substr($0, RSTART+10, RLENGTH-21); print t, "\t", ts, "\t", u}' > pages.csv
+<!--- end code --->
+<!--- md --->
+* 以降は `pages.csv` にコマンドを適用する
+<!--- end md --->
+<!--- md label=prob,ans --->
+* <font color="green">問:</font> タイムスタンプが最古の記事はいつか? 最古な20件を表示せよ (なお, bashやzshのコマンドラインでタブを打つと補完の意味になってしまう. タブをコマンドに入力する方法はググって調べよ)
+<!--- end md --->
+<!--- code w kernel=bash points=1 --->
+
+<!--- end code --->
+<!--- code kernel=bash label=ans --->
+sort -t $'\t' -k 2 pages.csv | head -20
+<!--- end code --->
+<!--- md label=prob,ans --->
+* <font color="green">問:</font> 最古の記事が書かれてから現在に至るまでの, 月別の記事件数を表示せよ
+<!--- end md --->
+<!--- code w kernel=bash points=1 --->
+
+<!--- end code --->
+<!--- code kernel=bash label=ans --->
+awk '{print $2}' FS="\t" pages.csv | awk '{printf("%s/%s\n", $1, $2)}' FS="-" | sort | uniq -c | awk '{print $2,$1}'
+<!--- end code --->
+<!--- md label=prob,ans --->
+* <font color="green">問:</font> 最も多く記事の作者になっている人とその件数を, 上位20人表示せよ
+<!--- end md --->
+<!--- code w kernel=bash points=1 --->
+
+<!--- end code --->
+<!--- code kernel=bash label=ans --->
+awk '{print $3}' FS="\t" pages.csv | sort | uniq -c | sort -n -r -k 1 | head -20
+<!--- end code --->

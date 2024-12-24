@@ -1,0 +1,26 @@
+<persons>
+  <person>
+    <sir_name_ja>三村</sir_name_ja>
+    <given_name_ja>マサカズ</given_name_ja>
+    <sir_name_en>Mimura</sir_name_en>
+    <given_name_en>Masakazu</given_name_en>
+    <age>55</age>
+    <height>165</height>
+  </person>
+  <person>
+    <sir_name_ja>大竹</sir_name_ja>
+    <given_name_ja>和樹</given_name_ja>
+    <sir_name_en>Ohtake</sir_name_en>
+    <given_name_en>Kazuki</given_name_en>
+    <age>55</age>
+    <height>170</height>
+  </person>
+  <person>
+    <sir_name_ja>中村</sir_name_ja>
+    <given_name_ja>仁美</given_name_ja>
+    <sir_name_en>Nakamura</sir_name_en>
+    <given_name_en>Hitomi</given_name_en>
+    <age>43</age>
+    <height>165</height>
+  </person>
+</persons>
