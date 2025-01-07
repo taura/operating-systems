@@ -8,6 +8,12 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/01/07)</font> 01/18
+  1. [シグナル](slides/08_signal.pdf)
+  1. [ユーザレベル仮想記憶 API とその応用](slides/09_vm_app.pdf)
+  1. 演習 `os15_signal`
+  1. [試験および予行演習](html/exam2024.html)について
+
 * <font color=blue>(投稿日: 2024/12/24)</font> 12/25
   1. 演習 `os13_mmap_app`
   1. [ファイルディスクリプタと擬似ファイル](slides/07_everything_is_file.pdf) 
