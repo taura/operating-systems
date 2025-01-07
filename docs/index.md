@@ -8,7 +8,7 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
-* <font color=blue>(投稿日: 2025/01/07)</font> 01/18
+* <font color=blue>(投稿日: 2025/01/07)</font> 01/08
   1. [シグナル](slides/08_signal.pdf)
   1. [ユーザレベル仮想記憶 API とその応用](slides/09_vm_app.pdf)
   1. 演習 `os15_signal`
