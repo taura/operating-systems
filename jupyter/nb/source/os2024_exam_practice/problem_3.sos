@@ -1,0 +1,59 @@
+<!--- md --->
+#* 問題3
+<!--- end md --->
+
+<!--- md --->
+* この .ipynb ファイルと同じフォルダにある `count_char.c.gpg` はCプログラムを暗号化したものである
+* `問題文のPDFと同じパスワードに置き換えよ`の部分を, 問題文を複合するのに使ったパスワードと同じものに置き換えて, 以下のセルを実行すると復号できる
+<!--- end md --->
+
+<!--- code kernel=bash points=1 --->
+password="問題文のPDFと同じパスワードに置き換えよ"
+gpg --quiet --batch --passphrase ${password} --decrypt count_char.c.gpg
+<!--- end code --->
+
+<!--- md --->
+* 以下が解答用セルである
+* 上記のコマンド出力をコピーして, それを修正してプログラムを完成させよ
+<!--- end md --->
+
+<!--- code kernel=python --->
+%%writefile count_char.c
+
+<!--- end code --->
+
+<!--- md --->
+* コンパイル (実行せよ)
+<!--- end md --->
+
+<!--- code kernel=bash points=1 --->
+gcc -Wall -Wextra -o count_char count_char.c
+<!--- end code --->
+
+<!--- md --->
+* テスト (実行せよ)
+<!--- end md --->
+
+<!--- code kernel=bash points=1 --->
+if timeout 5 ./count_char misc/wikipedia-operating-system.html a | grep 22513 ; then
+   echo OK
+else
+   echo NG
+fi   
+<!--- end code --->
+<!--- code kernel=bash points=1 --->
+if timeout 5 ./count_char misc/wikipedia-operating-system.html b | grep 3690 ; then
+   echo OK
+else
+   echo NG
+fi   
+<!--- end code --->
+<!--- code kernel=bash points=1 --->
+if timeout 5 ./count_char misc/wikipedia-operating-system.html x | grep 2146 ; then
+   echo OK
+else
+   echo NG
+fi   
+<!--- end code --->
+
+
