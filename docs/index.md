@@ -8,6 +8,9 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/01/15)</font> 01/15
+  1. [試験の予行演習](html/exam2024.html)
+
 * <font color=blue>(投稿日: 2025/01/07)</font> 01/08
   1. [シグナル](slides/08_signal.pdf)
   1. [ユーザレベル仮想記憶 API とその応用](slides/09_vm_app.pdf)
