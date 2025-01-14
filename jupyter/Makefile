@@ -4,13 +4,13 @@
 #mk_nb_flags := --dbg 2
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/os14_*/*.sos)
-#nb_srcs += $(wildcard nb/source/os12_*/*.py)
+nb_srcs += $(wildcard nb/source/os2024_exam_practice/*.sos)
 #nb_srcs += $(wildcard nb/source/os14_*/*.sos)
 # nb/source/os12/*.py
 
 aux_srcs :=
 
+aux_srcs += $(wildcard nb/source/os2024_exam_practice/misc/wikipedia-operating-system.html)
 aux_srcs += $(wildcard nb/source/os08_addr/addrs_vis.py)
 aux_srcs += $(wildcard nb/source/os09_vm/page_fault_vis.py)
 aux_srcs += $(wildcard nb/source/os09_vm/mincore_vis.py)
@@ -26,7 +26,23 @@ aux_srcs += $(wildcard nb/source/os14_shell/samples/*.*)
 #aux_srcs += $(wildcard nb/source/*/img/*.svg)
 #aux_srcs += $(wildcard nb/source/*/misc/*.html)
 
+aux_gpg_srcs :=
+aux_gpg_srcs += nb/source/os2024_exam_practice/include/count_char.c
+
 users_csv := users.csv
 
 feedback_class := os
 include ../../jupyter_tools/authoring/jupyter_tools.mk
+
+notebooks/source/os2024_exam_practice/count_char.c.gpg : notebooks/source/%.c.gpg : nb/source/%.c
+	mkdir -p $(dir $@)
+	./mk_version.py -D VER=1 $< | gpg --batch --passphrase-file ../exams/2024/problems/os2024_exam_practice_pw.txt --symmetric --cipher-algo AES256 -o $@
+
+notebooks/source/ans_os2024_exam_practice/count_char.c.gpg : notebooks/source/ans_%.c.gpg : nb/source/%.c
+	mkdir -p $(dir $@)
+	./mk_version.py -D VER=1 $< | gpg --batch --passphrase-file ../exams/2024/problems/os2024_exam_practice_pw.txt --symmetric --cipher-algo AES256 -o $@
+
+compile : notebooks/source/os2024_exam_practice/count_char.c.gpg
+compile : notebooks/source/ans_os2024_exam_practice/count_char.c.gpg
+
+

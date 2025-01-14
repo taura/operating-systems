@@ -14,10 +14,10 @@ gpg --quiet --batch --passphrase ${password} --decrypt count_char.c.gpg
 
 <!--- md --->
 * 以下が解答用セルである
-* 上記のコマンド出力をコピーして, それを修正してプログラムを完成させよ
+* 上記のコマンド出力を `%%writefile count_char.c` の行の下にコピーし, それを修正してプログラムを完成させよ
 <!--- end md --->
 
-<!--- code kernel=python --->
+<!--- code w kernel=python --->
 %%writefile count_char.c
 
 <!--- end code --->
