@@ -11,12 +11,34 @@
 <!--- md --->
 ##* (2)
 <!--- end md --->
+<!--- code kernel=python --->
+%%writefile scan.c
+#include <err.h>
+#include <stdio.h>
+int main() {
+  int x = 0;
+  int r = scanf("%d", &x);
+  if (r != 1) err(1, "scanf");
+  printf("%d\n", x + 1);
+  return 0;
+}
+<!--- end code --->
+
+<!--- code kernel=bash points=1 --->
+gcc -Wall -Wextra -o scan scan.c
+<!--- end code --->
+
 <!--- md w points=1 --->
 
 <!--- end md --->
 <!--- md --->
 ##* (3)
 <!--- end md --->
+
+<!--- code kernel=bash points=1 --->
+timeout 180 ./scan
+<!--- end code --->
+
 <!--- md w points=1 --->
 
 <!--- end md --->
