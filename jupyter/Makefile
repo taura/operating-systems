@@ -10,7 +10,7 @@ nb_srcs += $(wildcard nb/source/os2024_exam/*.sos)
 
 aux_srcs :=
 
-# aux_srcs += $(wildcard nb/source/os2024_exam/..)
+aux_srcs += $(wildcard nb/source/os2024_exam/svg/*.svg)
 # aux_srcs += $(wildcard nb/source/os2024_exam_practice/misc/wikipedia-operating-system.html)
 # aux_srcs += $(wildcard nb/source/os08_addr/addrs_vis.py)
 # aux_srcs += $(wildcard nb/source/os09_vm/page_fault_vis.py)
