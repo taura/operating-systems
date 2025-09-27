@@ -8,78 +8,8 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
-* <font color=blue>(投稿日: 2025/02/08)</font>
-  1. [試験の解答](html/exam2024/)を公開します
 
-* <font color=blue>(投稿日: 2025/01/29)</font> 01/19
-  1. [試験](html/exam2024.html)
-  
-* <font color=blue>(投稿日: 2025/01/15)</font> 01/15
-  1. [試験の予行演習](html/exam2024.html)
-
-* <font color=blue>(投稿日: 2025/01/07)</font> 01/08
-  1. [シグナル](slides/08_signal.pdf)
-  1. [ユーザレベル仮想記憶 API とその応用](slides/09_vm_app.pdf)
-  1. 演習 `os15_signal`
-  1. [試験および予行演習](html/exam2024.html)について
-
-* <font color=blue>(投稿日: 2024/12/24)</font> 12/25
-  1. 演習 `os13_mmap_app`
-  1. [ファイルディスクリプタと擬似ファイル](slides/07_everything_is_file.pdf) 
-  1. 演習 `os14_shell`
-  
-* <font color=blue>(投稿日: 2024/12/17)</font> 12/18
-  1. [ファイルシステム](slides/06_file_system.pdf) 先読み
-  1. 演習 `os11_prefetch`
-  1. [ファイルシステム](slides/06_file_system.pdf) mmap
-  1. 演習 `os12_mmap`
-
-* <font color=blue>(投稿日: 2024/12/10)</font> 12/11
-  1. [ファイルシステム](slides/06_file_system.pdf) ファイルシステム, キャッシュ
-  1. 演習 `os10_cache`
-
-* <font color=blue>(投稿日: 2024/12/04)</font> 12/04
-  1. [メモリ管理](slides/05_memory.pdf) ページ置換アルゴリズム
-  
-* <font color=blue>(投稿日: 2024/10/29)</font> 10/30 予定
-  1. [デッドロックをなにかに例える話](https://app.learnwiz.one/events/deadlock-analogy)に「いいね」をつけて下さい
-  1. [メモリ管理](slides/05_memory.pdf) アドレス変換の仕組み (MMU, ページテーブル, TLB), メモリ管理API, ページング, ページ置換アルゴリズム
-  1. 演習 `os09_vm`
-
-* <font color=blue>(投稿日: 2024/11/02)</font>
-  1. [os02\_process](ans/os02_process/os02_process.sos.ans.html)の解答例を公開しました
-  1. [os03\_thread](ans/os03_thread/os03_thread.sos.ans.html)の解答例を公開しました
-  1. [os05_mutex](ans/os05_mutex/os05_mutex.sos.ans.html)の解答例を公開しました
-
-* <font color=blue>(投稿日: 2024/10/29)</font> 10/30 予定
-  1. [並行処理と同期](slides/04_concurrent.pdf) デッドロック
-  1. 演習 `os07_atomic`
-  1. [デッドロックをなにかに例える話](https://app.learnwiz.one/events/deadlock-analogy)
-  1. [メモリ管理](slides/05_memory.pdf) 論理アドレス, 物理アドレス, アドレス変換
-  1. 演習 `os08_addr`
-
-* <font color=blue>(投稿日: 2024/10/23)</font> 10/23 予定
-  1. [並行処理と同期](slides/04_concurrent.pdf) バリア同期, 条件変数
-  1. 演習 `os05_mutex`, `os06_cond_var`
-  1. [並行処理と同期](slides/04_concurrent.pdf) 不可分更新命令, ビジーウェイト, 同期の実装, デッドロック
-  1. [デッドロックをなにかに例える話](https://app.learnwiz.one/events/deadlock-analogy) (今日説明を終えられた場合)
-  
-* <font color=blue>(投稿日: 2024/10/15)</font> 10/16 予定
-  1. [OSをなにかに例える話](https://app.learnwiz.one/events/operating-system-2024-01), [溢れた分](https://app.learnwiz.one/events/operating-system-2024-01-2nd) 遅ればせながら「いいね」がついたものを表示しています
-  1. [スケジューリング](slides/03_scheduling.pdf)
-  1. 演習 `os04_sched`
-  1. [並行処理と同期](slides/04_concurrent.pdf) 排他制御
-  1. 演習 `os05_mutex`
-
-* <font color=blue>(投稿日: 2024/10/08)</font> 10/09 予定
-  1. [前回の宿題](https://app.learnwiz.one/events/operating-system-2024-01) (人数制限を超えましたと言って入れなかった人は[こちら](https://app.learnwiz.one/events/operating-system-2024-01-2nd), ただし今はどちらも入れるようになっていると思います)に「いいね」を付けて下さい
-  1. [プロセス](slides/01_process.pdf)
-  1. 演習 `os02_process`
-  1. [スレッド](slides/02_threads.pdf)
-  1. 演習 `os03_thread`
-  1. [スケジューリング](slides/03_scheduling.pdf)
-
-* <font color=blue>(投稿日: 2024/10/01)</font> 10/02 予定
+* <font color=blue>(投稿日: 2025/09/27)</font> 初回 10/08 予定
   1. [イントロ](slides/00_intro.pdf)
   1. [Jupyter環境お試し](https://taura.github.io/programming-languages/html/jupyter.html)
     * Jupyter環境ユーザ名・パスワード入手 (UTOLの課題)
@@ -88,9 +18,9 @@
   1. [プロセス](slides/01_process.pdf)
     * `os02_process`
   1. 振り返り課題 (毎週; 授業の翌日まで)
-  1. [本日の宿題](https://app.learnwiz.one/events/operating-system-2024-01) OSをなにかに例えて下さい (締め切り: 明日まで). UTokyo Accountでサインインして下さい.
-    * <font color=red>一部の人が入れないと連絡を受けました。上記に入れなかった人は</font>[こちら](https://app.learnwiz.one/events/operating-system-2024-01-2nd) からお願いします(一つのイベントの最大参加者数100人であることをを認識しておりませんでした)
-* <font color=blue>(投稿日: 2024/9/28)</font> 2024年版HP開設
+  1. [本日の宿題](https://app.community.learnwiz.one/events/operating-systems-2025-10-08) OSをなにかに例えて下さい (締め切り: 明日まで). UTokyo Accountでサインインして下さい.
+
+* <font color=blue>(投稿日: 2025/09/27)</font> 2025年度版ホームページオープン
 
 
 # スライド
