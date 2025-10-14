@@ -1,4 +1,3 @@
-#com 2
 #define _GNU_SOURCE
 #include <assert.h>
 #include <sched.h>

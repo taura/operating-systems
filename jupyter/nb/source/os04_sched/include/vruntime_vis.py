@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def read_dat(dat):
-    pat = re.compile("(?P<pid>\d+) (?P<cpu>\d+) (?P<begin>\d+\.\d+) (?P<end>\d+\.\d+) (?P<dt>\d+\.\d+) (?P<vruntime>\d+)")
+    pat = re.compile(r"(?P<pid>\d+) (?P<cpu>\d+) (?P<begin>\d+\.\d+) (?P<end>\d+\.\d+) (?P<dt>\d+\.\d+) (?P<vruntime>\d+)")
     log = {}
     with open(dat) as fp:
         for line in fp:

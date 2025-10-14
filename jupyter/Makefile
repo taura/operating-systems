@@ -4,7 +4,7 @@
 #mk_nb_flags := --dbg 2
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/os2024_exam/*.sos)
+nb_srcs += $(wildcard nb/source/os04_*/*.sos)
 #nb_srcs += $(wildcard nb/source/os14_*/*.sos)
 # nb/source/os12/*.py
 
