@@ -13,7 +13,7 @@ bibtex := biber
 run_bibtex_and_latex_twice:=n
 
 # tex files
-tex := $(wildcard 06_*.tex)
+tex := $(wildcard 03_*.tex)
 # svg files
 #svg_svg := $(wildcard svg/*.svg)
 #svg_svg := $(wildcard svg/malloc_mmap.svg)
@@ -121,7 +121,8 @@ chk : $(chk_fig)
 # $(pdf) : pdf/%.pdf : %.dvi
 $(pdf) : ../docs/slides/%.pdf : %.dvi
 	mkdir -p $(dir $@)
-	TTFONTS=/usr/share/fonts/truetype// dvipdfmx -f misc/font.map -o $@ $<
+#	TTFONTS=/usr/share/fonts/truetype// dvipdfmx -f misc/font.map -o $@ $<
+	TTFONTS=/usr/share/fonts/OTF// dvipdfmx -f misc/font.map -o $@ $<
 
 out/figs_cache : $(deps)
 	mkdir -p $(dir $@)

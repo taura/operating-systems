@@ -102,8 +102,9 @@ $ gdb
 \begin{frame}
   \frametitle{タスクキュー, ランキュー}
   \begin{itemize}
-  \item 実行中・実行可状態のスレッドを維持する
+  \item 実行中・実行可状態のスレッドを維持するデータ構造
     \begin{itemize}
+    \item 通常, 仮想コアごとに一つ
     \item 「キュー」とは言うがFIFOとは限らない
     \end{itemize}
   \item OSはスレッドを切り替える際,
@@ -285,4 +286,19 @@ while (1) \{                                           \\
   \end{enumerate}
 \end{frame}
 
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{複数コアがある場合}
+  \begin{itemize}
+  \item ランキューは仮想コアごとにある
+  \item それぞれの仮想コアがこれまで述べた方式でスレッドをスケジューリング
+  \item それに加え, 
+    ランキューの長さ (各仮想コアで実行\{可・中\}なスレッド数)
+    が均等になるよう, 時折スレッドが移動する
+    \begin{itemize}
+    \item ある仮想コアのランキューが空になったとき
+    \item preempt時やシステムコールが呼ばれたとき
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 \end{document}

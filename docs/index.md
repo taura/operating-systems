@@ -10,9 +10,11 @@
 
 * <font color=blue>(投稿日: 2025/10/14)</font> 10/15 予定
   1. [スレッド](slides/02_threads.pdf)
-    * `os03_thread`
-  2. [スケジューリング](slides/03_scheduling.pdf)
-    * `os04_sched.sos`
+  * [OSを例えるお題](https://app.community.learnwiz.one/events/operating-systems-2025-10-08) で「他者の投稿」を何ページか見て「いいね❤」をつける
+  * `os02_process`
+  * `os03_thread`
+  1. [スケジューリング](slides/03_scheduling.pdf)
+  * `os04_sched.sos`
 
 * <font color=blue>(投稿日: 2025/09/27)</font> 初回 10/08 予定
   1. [イントロ](slides/00_intro.pdf)
