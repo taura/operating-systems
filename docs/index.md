@@ -8,6 +8,13 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/10/21)</font> 10/22 予定
+  1. [スケジューリング (Linux Completely Fair Scheduler)](slides/03_scheduling.pdf)
+  * `os04_sched.sos`
+  1. [並行処理と同期](slides/04_concurrent.pdf)
+  * `os05_mutex.sos`
+  * `os06_cond_var.sos`
+
 * <font color=blue>(投稿日: 2025/10/14)</font> 10/15 予定
   1. [スレッド](slides/02_threads.pdf)
   * [OSを例えるお題](https://app.community.learnwiz.one/events/operating-systems-2025-10-08) で「他者の投稿」を何ページか見て「いいね❤」をつける
