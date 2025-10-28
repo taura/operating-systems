@@ -35,7 +35,8 @@ def vruntime_vis(files, start_t=0, end_t=float("inf")):
     log = read_dats(files)
     n_procs = len(log)
     n_cpus = max(max(cpu for _, _, _, cpu in recs) for recs in log.values()) + 1
-    cmap = plt.cm.get_cmap('RdYlGn', n_procs)
+    # cmap = plt.cm.get_cmap('RdYlGn', n_procs)
+    cmap = plt.colormaps['RdYlGn'].resampled(n_procs)    
     T0 = min(min(begin for begin, _, _, _ in recs) for recs in log.values())
     V0 = min(min(vrunt for _, _, vrunt, _ in recs) for recs in log.values())
     segs = []

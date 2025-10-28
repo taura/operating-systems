@@ -8,6 +8,14 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/10/28)</font> 10/29 予定
+  1. [並行処理と同期 (条件変数)](slides/04_concurrent.pdf)
+  * `os06_cond_var.sos`
+  2. [並行処理と同期 (不可分更新〜)](slides/04_concurrent.pdf)
+  * `os07_atomic`
+  3. [メモリ管理](slides/05_memory.pdf)
+  * `os08_addr`
+  
 * <font color=blue>(投稿日: 2025/10/21)</font> 10/22 予定
   1. [スケジューリング (Linux Completely Fair Scheduler)](slides/03_scheduling.pdf)
   * `os04_sched.sos`

@@ -524,18 +524,18 @@ barrier_wait(b);
     \begin{itemize}
     \item<3-> 目覚めてリターンする際はまた$m$をlockしている
     \end{itemize}
+  \item<4-> この一見複雑な動作の意味は後にわかる
+  \end{itemize}
 \begin{center}
 \only<1>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/cond_wait_1.pdf}}%
 \only<2>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/cond_wait_2.pdf}}%
 \only<3->{\includegraphics[width=0.9\textwidth]{out/pdf/svg/cond_wait_3.pdf}}%
 \end{center}
-  \item<4-> この一見複雑な動作の意味は後にわかる
-  \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{例: 飽和するカウンタ}
+  \frametitle{条件変数の使用例: 飽和するカウンタ}
   \begin{itemize}
   \item 例として以下のようなAPIを実現することを考える
 \begin{lstlisting}
