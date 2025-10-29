@@ -8,6 +8,34 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/10/29)</font> 今日の授業の最後に, 江利口くんより「スライド[並行処理と同期](slides/04_concurrent.pdf) p42 にあるリンク先のページは "Legacy ..." となっている (今はどうなっている?)」という質問がありました. スライドを更新し忘れ + (過去に一度見たはずの内容を) 忘れていたもので, 補足, 訂正させていただきます. 要約としては同じものが名前と引数を(ややこしく)変えて提供されているというものです. 
+
+* [古いAPIページ  ](https://gcc.gnu.org/onlinedocs/gcc/_005f_005fsync-Builtins.html)
+* [新しいAPIページ](https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html)
+
+変更点の全体的要約
+
+1. 関数名としては `__sync_xxx` -> `__atomic_xxx` と代わっている(ただし xxx の部分も代わっている場合があり, 名前から対応を想像する)
+1. 引数が増えており, とくに多くの関数が `memorder` (メモリオーダー) という引数を取ることになっている. 
+
+後者の意味を説明しだすと並列処理, コンピュータアーキテクチャに関する長〜い話になってしまうのです割愛しますが, 
+  * 手っ取り早く使うためには, よくわからなければ `memorder` 引数に `__ATOMIC_SEQ_CST` を与えておけば無難.
+  * 一体何なのかをざっくりと, 一言で言うとこれらの操作前後の他のメモリアクセスがどう振る舞ってほしいかを制御します. 興味がある人はまずは [新しいAPIページ](https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html) の説明を読み, よくわからなければ[Wikipedia](https://en.wikipedia.org/wiki/Consistency_model) を読んだり, 「共有メモリ 一貫性モデル」でググったり, ChatGPTさんに解説をお願いしたり, 田浦に聞いたりしてください. 
+
+  * `compare&swap` については引数も結構代わっており 
+
+`__sync_bool_compare_and_swap(p, r, s)`
+
+と同じ動作をさせたければ
+
+`__atomic_compare_and_exchange_n(p, &r, s, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)`
+
+または
+
+`__atomic_compare_and_exchange(p, &r, &s, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)`
+
+でよさげ(どういうわけか, rを値そのものではなく値へのアドレスで与えることになっているという謎仕様. _n ありなしと2つのバージョンがありその違いは s を値で渡すか値へのアドレスで渡すかの違いだけという, これまた謎仕様. 後ろの3つの引数は説明は省略するものの本質的な拡張の意味があるが, 2, 3個目の引数の渡し方がこう代わったことは謎.
+
 * <font color=blue>(投稿日: 2025/10/28)</font> 10/29 予定
   1. [並行処理と同期 (条件変数)](slides/04_concurrent.pdf)
   * `os06_cond_var.sos`
