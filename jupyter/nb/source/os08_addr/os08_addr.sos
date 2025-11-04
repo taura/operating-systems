@@ -280,11 +280,19 @@ cat -n pointer.s
 <!--- end code --->
 
 <!--- md ---> 
+* `ldr	w0, [x0]`は`x0`レジスタに入っているアドレスから4バイト読み込み`w0`レジスタに入れる (`w0`が4バイトのレジスタなので4バイト読み込む)
+* `ldr	x0, [x0]`は`x0`レジスタに入っているアドレスから4バイト読み込み`x0`レジスタに入れる (`x0`が8バイトのレジスタなので8バイト読み込む)
+
+* 以下は`a[i]`の場合
+<!--- end md --->
+
+<!--- comment --->
+
 * `movl	(%rdi), %eax`は`%rdi`レジスタに入っているアドレスから4バイト (lはlong wordの意味. Intel機械語で4バイトの意味)読み込み`%eax`に入れる
 * `movq	(%rdi), %rax`は`%rdi`レジスタに入っているアドレスから8バイト (qはquad wordの意味. Intel機械語で8バイトの意味)読み込み`%rax`に入れる
 
-* 以下は`a[i]`の場合
-<!--- end md ---> 
+<!--- end comment --->
+
 
 <!--- code w kernel=python --->
 %%writefile pointer_array.c
@@ -299,14 +307,26 @@ gcc -S -O3 -Wall pointer_array.c
 cat -n pointer_array.s
 <!--- end code --->
 
-<!--- md ---> 
+<!--- comment --->
+
 * `movl	(%rdi,%rsi,4), %eax`は(`%rdi`に入っているアドレス + `%rsi` * 4)番地から4バイト読み込み, `%eax`に入れる命令
 * `movq	(%rdi,%rsi,8), %rax`は(`%rdi`に入っているアドレス + `%rsi` * 8)番地から8バイト読み込み, `%rax`に入れる命令
+
+<!--- end comment --->
+
+
+<!--- md --->
+
+
+* `ldr	w0, [x0, x1, lsl 2]` はアドレス `x0 + x1 * 4` から4バイト読み込み`w0`に入れる (`lsl 2`は 左に2 bitシフト (4倍) する)
+* `ldr	x0, [x0, x1, lsl 3]` はアドレス `x0 + x1 * 8` から8バイト読み込み`x0`に入れる (`lsl 3`は 左に3 bitシフト (8倍) する)
+
 
 * ポインタがよくわからないという人は, 「ポインタ」の実体は常に単なる整数(アドレス)で, `*p`, `p[i]`, `p->...`などはどれも, 適切にアドレスを計算してそこにアクセスするだけのこと, と思うのが良いのではないかと思う
 
 * 以下は高級そうなことをしているように見えるかも知れないが, `p->next`は`p`に入っているアドレスそのもの, `p->x`は(多分)その8バイト先を読むだけのことである
-* どれがfor文(ループ)に対応し, どれが`p->x`に対応し, どれが`p->next`に対応しているかを読み取ってみよ
+* どれがfor文(ループ)に対応し, `p->x`, `p->next` がどう読み込まれているかを読み取ってみよ
+* ヒント: `ldp` は load pair 命令と言って, 2つの後を一度に読み込める命令
 <!--- end md ---> 
 
 <!--- code w kernel=python --->
@@ -324,8 +344,13 @@ cat -n pointer_arrow.s
 
 <!--- md ---> 
 * 最後に, こんなコードに意味はないが, ポインタと整数が同じものであるということをことさら強調するために書いておく
+* `mov x0, 918` は `x0` に 918をセットする, `ldrb w0,[x0]` はアドレス`x0` (つまり918)から 1バイト (`ldrp` は load register byte 命令) 読む, つまりこれで紛れもなく 918番地にある1バイトを読んでいることになる
+<!--- end md --->
+
+<!--- md ---> 
 * `movsbl 918, %eax`は紛れもなく, 918番地にある1バイトを読んで`%eax`レジスタに入れる命令
-<!--- end md ---> 
+<!--- end md --->
+
 
 <!--- code w kernel=python --->
 %%writefile pointer_is_integer.c
@@ -461,20 +486,20 @@ addrs_vis.addrs_plt("malloc_100.dat")
 <!--- end code --->
 
 <!--- md ---> 
-* 以下は 100MB x 2000 = 約200GBのメモリを割り当てる
+* 以下は 100MB x 5000 = 約500GBのメモリを割り当てる
 <!--- end md ---> 
 
 <!--- code w kernel=bash --->
-./malloc 2000 > malloc_2000.dat
+./malloc 5000 > malloc_5000.dat
 <!--- end code --->
 
 <!--- code w kernel=python --->
 import addrs_vis
-addrs_vis.addrs_plt("malloc_2000.dat")
+addrs_vis.addrs_plt("malloc_5000.dat")
 <!--- end code --->
 
 <!--- md ---> 
-* Jupyter環境のサーバのメモリ搭載量は128GBだが, 200GB分のメモリ割り当てが成功している
+* Jupyter環境のサーバのメモリ搭載量は376GiBほどだが, 500GB分のメモリ割り当てが成功している
 * 成功しているのみならず非常に高速であることにも注意
 * これらは, OSがメモリを要求されたときに, 実際には物理メモリを割り当てていない(要求時ページング)から可能になること
 * この仕組みがOSのメモリ管理(仮想記憶)の真髄(次回)
@@ -491,11 +516,11 @@ gcc -Wall -Wno-format -o sbrk sbrk.c
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-./sbrk 2000 > sbrk_2000.dat
+./sbrk 5000 > sbrk_5000.dat
 <!--- end code --->
 
 <!--- code w kernel=python --->
 import addrs_vis
-addrs_vis.addrs_plt("sbrk_2000.dat")
+addrs_vis.addrs_plt("sbrk_5000.dat")
 <!--- end code --->
 

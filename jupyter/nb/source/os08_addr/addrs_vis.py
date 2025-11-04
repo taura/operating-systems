@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def read_dat(dat):
-    pat = re.compile("(?P<var>[A-Za-z0-9_]+)@(?P<fun>[A-Za-z0-9_]+)\([A-Za-z0-9_]*\) *: *(?P<addr>\d+)")
+    pat = re.compile(r"(?P<var>[A-Za-z0-9_]+)@(?P<fun>[A-Za-z0-9_]+)\([A-Za-z0-9_]*\) *: *(?P<addr>\d+)")
     log = {}
     with open(dat) as fp:
         idx = 0
