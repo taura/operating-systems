@@ -287,14 +287,6 @@ cat -n pointer.s
 * 以下は`a[i]`の場合
 <!--- end md --->
 
-<!--- comment --->
-
-* `movl	(%rdi), %eax`は`%rdi`レジスタに入っているアドレスから4バイト (lはlong wordの意味. Intel機械語で4バイトの意味)読み込み`%eax`に入れる
-* `movq	(%rdi), %rax`は`%rdi`レジスタに入っているアドレスから8バイト (qはquad wordの意味. Intel機械語で8バイトの意味)読み込み`%rax`に入れる
-
-<!--- end comment --->
-
-
 <!--- code w kernel=python --->
 %%writefile pointer_array.c
 <!--- exec-include ./mk_version.py -D VER=2 nb/source/os08_addr/include/pointer.c --->
@@ -307,14 +299,6 @@ gcc -S -O3 -Wall pointer_array.c
 <!--- code w kernel=bash --->
 cat -n pointer_array.s
 <!--- end code --->
-
-<!--- comment --->
-
-* `movl	(%rdi,%rsi,4), %eax`は(`%rdi`に入っているアドレス + `%rsi` * 4)番地から4バイト読み込み, `%eax`に入れる命令
-* `movq	(%rdi,%rsi,8), %rax`は(`%rdi`に入っているアドレス + `%rsi` * 8)番地から8バイト読み込み, `%rax`に入れる命令
-
-<!--- end comment --->
-
 
 <!--- md --->
 
