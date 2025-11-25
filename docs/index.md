@@ -8,6 +8,13 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/11/25)</font> 11/26 予定
+  1. [メモリ管理, 仮想記憶](slides/05_memory.pdf)
+     * `os09_vm`
+  2. [ファイルシステム](slides/06_file_system.pdf)
+	 * `os10_cache`
+	 * `os11_prefetch`
+
 * <font color=blue>(投稿日: 2025/11/07)</font> <font color=red>11/12 (水) の回の講義の代わり</font>となるオンデマンド教材>
   * 動画教材はUTOLの「教材」の欄からリンクを取得して視聴してください (倍速推奨)
   * 動画視聴後に演習教材のJupyter notebook `os09_vm` をやってください
