@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 def mk_random_file(filename, size):
-    assert(size <= 1000 * 1024 * 1024), "don't make it > 1GB"
+    assert(size <= 4000 * 1024 * 1024), "don't make it > 4GB"
     rg = np.random.RandomState()
     rg.seed(1234)
     a = rg.randint(0, 256, size=size, dtype=np.uint8)

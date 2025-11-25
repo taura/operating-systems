@@ -177,8 +177,8 @@ gcc -Wall -O3 -o read_file_ahead read_file_ahead.c
 <!--- md --->
 * 最後の引数 (p) をいろいろと変えて実行してみよ
   * p = 1 は1つだけreadaheadする(readaheadしたデータを直後にreadするので先読みの効果は殆ど無い)
-  * p = 2 からは(装置により)効果が現れるはず. 措置が理想的に, 2つの読み出しを並行に(それぞれを単独の読み出しと同じ時間で)処理できるのなら性能が2倍になる
-  * 一般に, <font color="blue">措置が理想的にp個の読み出しをほぼ並行に(それぞれを, 単独の読み出しと同じ時間で)処理できるのなら性能がp倍になる</font>
+  * p = 2 からは(装置により)効果が現れるはず. 装置が理想的に, 2つの読み出しを並行に(それぞれを単独の読み出しと同じ時間で)処理できるのなら性能が2倍になる
+  * 一般に, <font color="blue">装置が理想的にp個の読み出しをほぼ並行に(それぞれを, 単独の読み出しと同じ時間で)処理できるのなら性能がp倍になる</font>
 
 * <font color="blue">pを変えて観測してみよ</font>
 <!--- end md --->
@@ -197,6 +197,7 @@ p=1
 <!--- code w kernel=python --->
 import read_file_vis
 read_file_vis.graph(["r.dat"])
+# read_file_vis.graph(["r.dat"], start=0, end=100)
 <!--- end code --->
 
 <!--- md --->
@@ -217,13 +218,16 @@ gcc -Wall -O3 -fopenmp -o read_file_thread read_file_thread.c
 
 <!--- md --->
 * 実行 (スレッド数thをいろいろ変えて実行してみよ)
+* 以下の taskset -c 7 (7 は適当な数) は CPU 7 (つまり1コア) しか使わない設定
+* つまりスレッド数を増やしたと言っても複数コアを使って並列処理をしているのではない
+* あくまで複数のIOリクエストを同時に発行している (CPUはいずれにせよほとんどの時間使われていない) ことの効果である
 <!--- end md --->
 
 <!--- code w kernel=bash --->
 data=../os10_cache/data.bin
 ../os10_cache/drop_cache ${data}
 th=1
-OMP_NUM_THREADS=${th} ./read_file_thread ${data} 16m 1 4k 123456 > r.dat
+OMP_NUM_THREADS=${th} taskset -c 7 ./read_file_thread ${data} 16m 1 4k 123456 > r.dat
 <!--- end code --->
 
 <!--- md --->
@@ -233,5 +237,6 @@ OMP_NUM_THREADS=${th} ./read_file_thread ${data} 16m 1 4k 123456 > r.dat
 <!--- code w kernel=python --->
 import read_file_vis
 read_file_vis.graph(["r.dat"])
+# read_file_vis.graph(["r.dat"], start=0, end=100)
 <!--- end code --->
 

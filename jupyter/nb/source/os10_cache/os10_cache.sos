@@ -46,7 +46,7 @@ vmstat
 <!--- end code --->
 
 <!--- code w kernel=python --->
-mk_random_file("data.bin", 500 * 1000 * 1000)
+mk_random_file("data.bin", 1000 * 1000 * 1000)
 <!--- end code --->
 
 <!--- code w kernel=bash --->
