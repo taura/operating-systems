@@ -115,7 +115,8 @@ data=../os10_cache/data.bin
 
 <!--- code w kernel=python --->
 import read_mmap_vis
-read_mmap_vis.graph(["mmap.dat"], "t",)
+read_mmap_vis.graph(["mmap.dat"], "t")
+# read_mmap_vis.graph(["mmap.dat"], "t", start=10000, end=20000)
 <!--- end code --->
 
 <!--- md --->
@@ -128,6 +129,7 @@ read_mmap_vis.graph(["mmap.dat"], "t",)
 <!--- code w kernel=python --->
 import read_mmap_vis
 read_mmap_vis.graph(["mmap.dat"], "minflt")
+# read_mmap_vis.graph(["mmap.dat"], "minflt", start=10000, end=20000)
 <!--- end code --->
 
 <!--- md --->
@@ -140,6 +142,7 @@ read_mmap_vis.graph(["mmap.dat"], "minflt")
 <!--- code w kernel=python --->
 import read_mmap_vis
 read_mmap_vis.graph(["mmap.dat"], "majflt")
+# read_mmap_vis.graph(["mmap.dat"], "majflt", start=10000, end=20000)
 <!--- end code --->
 
 <!--- md --->
@@ -149,6 +152,7 @@ read_mmap_vis.graph(["mmap.dat"], "majflt")
 <!--- code w kernel=python --->
 import read_mmap_vis
 read_mmap_vis.graph(["mmap.dat"], "inblock")
+# read_mmap_vis.graph(["mmap.dat"], "inblock", start=10000, end=20000)
 <!--- end code --->
 
 <!--- md --->
@@ -189,6 +193,7 @@ data=../os10_cache/data.bin
 <!--- code w kernel=python --->
 import read_mmap_vis
 read_mmap_vis.graph(["mmap.dat", "read.dat"], "t")
+# read_mmap_vis.graph(["mmap.dat", "read.dat"], "t", start=10000, end=20000)
 <!--- end code --->
 
 <!--- md --->
@@ -198,6 +203,7 @@ read_mmap_vis.graph(["mmap.dat", "read.dat"], "t")
 <!--- code w kernel=python --->
 import read_mmap_vis
 read_mmap_vis.graph(["mmap.dat", "read.dat"], "minflt")
+# read_mmap_vis.graph(["mmap.dat", "read.dat"], "minflt", start=10000, end=20000)
 <!--- end code --->
 
 <!--- md --->
@@ -207,6 +213,7 @@ read_mmap_vis.graph(["mmap.dat", "read.dat"], "minflt")
 <!--- code w kernel=python --->
 import read_mmap_vis
 read_mmap_vis.graph(["mmap.dat", "read.dat"], "majflt")
+# read_mmap_vis.graph(["mmap.dat", "read.dat"], "majflt", start=10000, end=20000)
 <!--- end code --->
 
 <!--- md --->
@@ -216,6 +223,7 @@ read_mmap_vis.graph(["mmap.dat", "read.dat"], "majflt")
 <!--- code w kernel=python --->
 import read_mmap_vis
 read_mmap_vis.graph(["mmap.dat", "read.dat"], "inblock")
+# read_mmap_vis.graph(["mmap.dat", "read.dat"], "inblock", start=10000, end=20000)
 <!--- end code --->
 
 <!--- md --->
