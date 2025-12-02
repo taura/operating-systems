@@ -249,7 +249,7 @@
     \item {\tt fallocate}はLinux固有 (man -s 2 ftruncate参照)
     \end{itemize}
     
-  \item<3-> \ao{\tt int $e$ = ftruncate({\it fd}, off\_t {\it len});}
+  \item<3-> \ao{\tt int $e$ = ftruncate({\it fd}, {\it len});}
     \begin{itemize}
     \item ファイルの大きさを{\it len}バイトに,
       短縮(伸長できるOSもある)する
@@ -394,7 +394,7 @@ if (fstat(fd, sb) == -1) err(1, "fstat");
 int fd = open(@{\it filename}@, @\ao{\tt O\_RDWR}@|O_TRUNC|O_CREAT, 0777);
 @\ao{\tt posix\_fallocate(fd, 0, {\it sz});}@ /* szバイトにする */
 char * a = mmap(0, sz, PROT_READ|PROT_WRITE, @\ao{\tt MAP\_SHARED}@, fd, 0);
-/* a[i]に書き込むと{\it filename}のiバイト目に書き込むことになる */
+/* a[i]に書き込むと@{\it filename}@のiバイト目に書き込むことになる */
 for (long i = 0; i < sz; i++) {
   a[i] = i % 128;
 }
