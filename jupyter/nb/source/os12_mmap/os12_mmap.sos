@@ -137,6 +137,7 @@ read_mmap_vis.graph(["mmap.dat"], "minflt")
   * 拡大表示して, 個々の点が見えるまで拡大してみよ
 
 * メジャーフォルト (getrusageで取得)
+* <font color=red>注: 本来は増えるはずだがなぜか増えない. 理由は不明. 以下 majflt を計測する実験でも同様</font>
 <!--- end md --->
 
 <!--- code w kernel=python --->
