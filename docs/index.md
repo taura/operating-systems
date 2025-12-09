@@ -8,14 +8,18 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/12/09)</font> 12/10 予定
+  1. [ファイルシステム (先読み)](slides/06_file_system.pdf)
+	 * `os11_prefetch`
+  1. [ファイルシステム (mmap)](slides/06_file_system.pdf)
+	 * `os12_mmap`
+  1. [ファイルディスクリプタと擬似ファイル](slides/07_everything_is_file.pdf)
+	 * `os12_mmap`
+
 * <font color=blue>(投稿日: 2025/12/03)</font> 12/03 予定
   1. [メモリ管理, 仮想記憶 (エイジング)](slides/05_memory.pdf)
   2. [ファイルシステム (〜キャッシュ)](slides/06_file_system.pdf)
 	 * `os10_cache`
-  2. [ファイルシステム (先読み)](slides/06_file_system.pdf)
-	 * `os11_prefetch`
-  2. [ファイルシステム (mmap)](slides/06_file_system.pdf)
-	 * `os12_mmap`
 
 * <font color=blue>(投稿日: 2025/11/25)</font> 11/26 予定
   1. [メモリ管理, 仮想記憶](slides/05_memory.pdf)

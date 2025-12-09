@@ -892,16 +892,17 @@ ps auxww | awk '{print $1}' | sort | uniq
 <!--- md --->
 * Wikipedia ダンプは wikipedia の全データをダンプしたファイル
 * 言語ごとに別れて, 1つの, bzip2 で圧縮されたXMLファイル(.xml.bz2)として提供されている
-* ここでは大きさとして手頃な[日本語XMLダンプ](https://dumps.wikimedia.org/jawiki/20241220/) を使う
-* 全員がダウンロードするは無駄なので taulec 環境に `/home/share/data/jawiki-20241220-pages-articles-multistream.xml.bz2` としておいてある
-* 解凍済みのものも `/home/share/data/jawiki-20241220-pages-articles-multistream.xml` としておいてある
+* ここでは大きさとして手頃な[日本語XMLダンプ](https://dumps.wikimedia.org/jawiki/20251120/) を使う
+* 全員がダウンロードするは無駄なので taulec 環境に `/home/share/data/jawiki-20251120-pages-articles-multistream.xml.bz2` としておいてある
+
+* 解凍済みのものも `/home/share/data/jawiki-20251120-pages-articles-multistream.xml` としておいてある
 * 自分のPCにダウンロードしたい人はこれを scp でコピーする
 ```
-scp uXXXXX@taulec:/home/share/data/jawiki-20241220-pages-articles-multistream.xml.bz2 .
+scp uXXXXX@taulec:/home/share/data/jawiki-20251120-pages-articles-multistream.xml .
 ```
 か, オリジナルを入手したければ,
 ```
-wget https://dumps.wikimedia.org/jawiki/20241220/jawiki-20241220-pages-articles-multistream.xml.bz2
+wget https://dumps.wikimedia.org/jawiki/20251120/jawiki-20251120-pages-articles-multistream.xml.bz2
 ```
 <!--- end md --->
 <!--- md label=prob,ans --->
@@ -911,8 +912,8 @@ wget https://dumps.wikimedia.org/jawiki/20241220/jawiki-20241220-pages-articles-
 
 <!--- end code --->
 <!--- code kernel=bash label=ans --->
-ln -s /home/share/data/jawiki-20241220-pages-articles-multistream.xml jawiki.xml
-ln -s /home/share/data/jawiki-20241220-pages-articles-multistream.xml.bz2 jawiki.xml.bz2
+ln -s /home/share/data/jawiki-20251120-pages-articles-multistream.xml jawiki.xml
+ln -s /home/share/data/jawiki-20251120-pages-articles-multistream.xml.bz2 jawiki.xml.bz2
 <!--- end code --->
 <!--- md --->
 * bzip2 形式で圧縮されたもの(.xml.bz2)は4GBくらい, 解凍したもの(.xml)は15GBくらい
