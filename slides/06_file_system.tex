@@ -758,7 +758,7 @@ handle_page_fault(void * a, access_type rw) {
   if (aへのアクセスrwは非合法) segmentation fault発生;
   p = 空いている物理ページ;
   if (@\ao{aはmmapでファイルと関連付けられた領域}@) {
-    aの中身を@\ao{関連付けらたファイル}@から読み込み, pをそれで埋める;
+    aの中身を@\ao{関連付けられたファイル}@から読み込み, pをそれで埋める;
   } else if (aへのアクセスは初めて) {
     pを0で埋める;
   } else {
@@ -838,6 +838,62 @@ char * a = mmap(0, @{\it sz}@, @{\it proto}@, @\ao{\it flags}@, @{\it fd}@, @{\i
     \only<2>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/file_cache_10.pdf}}%
     \only<3>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/file_cache_11.pdf}}%
 \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{OS内のページフォルト処理 (再掲)}
+\begin{lstlisting}
+handle_page_fault(void * a, access_type rw) {
+  そのプロセスのアドレス空間記述表を見る;
+  if (aへのアクセスrwは非合法) segmentation fault発生;
+  if (aはmmapでファイルと関連付けられた領域) {
+
+
+      p = 空いている物理ページ;
+      aの中身を関連付けらたファイルから読み込み, pをそれで埋める;
+
+      
+
+  } else {
+    p = 空いている物理ページ;
+    if (aへのアクセスは初めて) {
+      pを0で埋める;
+    } else {
+      aの中身をページング領域から読み込み, pをそれで埋める;
+    }
+  }  
+  仮想アドレスa @$\rightarrow$@ pを対応(ページテーブル書き換え);
+}
+\end{lstlisting}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{OS内のページフォルト処理 (+キャッシュ)}
+\begin{lstlisting}
+handle_page_fault(void * a, access_type rw) {
+  そのプロセスのアドレス空間記述表を見る;
+  if (aへのアクセスrwは非合法) segmentation fault発生;
+  if (aはmmapでファイルと関連付けられた領域) {
+    @\ao{\tt if (aがすでにキャッシュに有る) p = 対応するキャッシュのアドレス;}@
+    else {
+      p = 空いている物理ページ;
+      aの中身を関連付けらたファイルから読み込み, pをそれで埋める;
+    }
+    @\ao{if (aがwrite不可または{\tt MAP\_PRIVATE}指定された領域)}@
+      @\ao{aをwrite不可に設定;}@
+  } else {
+    p = 空いている物理ページ;
+    if (aへのアクセスは初めて) {
+      pを0で埋める;
+    } else {
+      aの中身をページング領域から読み込み, pをそれで埋める;
+    }
+  }  
+  仮想アドレスa @$\rightarrow$@ pを対応(ページテーブル書き換え);
+}
+\end{lstlisting}
 \end{frame}
 
 %%%%%%%%%%%%%%%%% 
