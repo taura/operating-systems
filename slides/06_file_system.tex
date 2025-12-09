@@ -639,7 +639,7 @@ char * a = mmap(0, @{\it sz}@, @{\it proto}@, @{\it flags}@, @{\it fd}@, @{\it o
 $\approx$
 \begin{lstlisting}
 char * a = malloc(sz);
-read(fd, a, sz);
+pread(fd, a, sz, offs);
 \end{lstlisting}
 \item 2. ({\tt MAP\_SHARED}の動作)はそれでは済まない
 \item 1. を含め, mmapはOSの仮想記憶管理の仕組みの拡張として以下のように
