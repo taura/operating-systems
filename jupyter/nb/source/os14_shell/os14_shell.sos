@@ -957,7 +957,7 @@ ls -lh /home/share/data/jawiki-*
 <!--- end md --->
 
 <!--- code w kernel=python points=1 --->
-%%writefile extract.awk
+%%writefile extract_pages.awk
 
 
 <!--- end code --->
@@ -970,11 +970,13 @@ ls -lh /home/share/data/jawiki-*
 <!--- code w kernel=bash points=1 --->
 # 最初の10000行だけ処理 (10000は適宜調整せよ)
 head -10000 jawiki.xml | awk -f extract_pages.awk > some_pages.csv
+head -10 some_pages.csv
 <!--- end code --->
 
 <!--- code w kernel=bash points=1 --->
 # 全て処理
 awk -f extract_pages.awk jawiki.xml > pages.csv
+head -10 pages.csv
 <!--- end code --->
 
 <!--- code kernel=bash label=ans --->
