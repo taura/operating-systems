@@ -1,6 +1,7 @@
 \documentclass[12pt,dvipdfmx]{beamer}
 \input{defs}
-\title{ファイルディスクリプタと擬似ファイル \\
+\title{ファイルディスクリプタ \\
+  と擬似ファイル \\
 副題: Unix的な考え方(全てがファイル)}
 \begin{document}
 \maketitle
@@ -100,6 +101,9 @@ $ ps auxww | grep firefox
     \item 否. 「ファイルディスクリプタ1番」に書いている
     \item それが何とつながっているかで出力先が変わる
     \end{itemize}
+  \item 複数のプログラムを容易に({\tt |}で)組み合わせ可能
+  \item $\Rightarrow$ 一つのプログラム (コマンド) は単純に,
+    それらを組み合わせて複雑な処理を簡単に
   \end{itemize}
   それらを可能にした大元の考え方は,
   プロセスの外部とのやり取りは全て
@@ -109,18 +113,18 @@ $ ps auxww | grep firefox
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{大元の思想}
+  \frametitle{大元の思想 {\small (多分こうだったんじゃないか劇場)}}
   \begin{itemize}
   \item<1-> プロセスのアドレス空間は分離されていて,
     勝手に読み書きできるのはそのプロセスのアドレス空間のみ
-  \item<2-> これではプロセスの外とのやり取りが出来ない
-  \item<3-> プロセスの外とのやり取りするためにファイルAPIがあった
+  \item<2-> プロセスの外とのやり取りは? 
+  \item<3-> そのひとつとしてファイルAPIがあった
     \begin{itemize}
     \item fd = open(...);
     \item read(fd, buf, sz);
     \item write(fd, buf, sz);
     \end{itemize}
-  \item<4-> プロセスの外との情報の出し入れはなんでもこれ
+  \item<4-> $\Rightarrow$ プロセスの外との情報の出し入れは全てこれ
     ---ファイルディスクリプタにread/writeを発行する---でやる
   \item<5-> ネットワーク, 他のプロセスとの通信, OSからの情報取得, etc.
   \end{itemize}
@@ -153,6 +157,11 @@ $ ps auxww | grep firefox
     \item 目的 : 他のプロセスとの通信 (同一計算機内)
     \item 作り方 : pipe システムコール
     \end{itemize}
+  \item タイマーfd
+    \begin{itemize}
+    \item 目的 : 時間が来たらreadableになる
+    \item 作り方 : timerfd\_open システムコール
+    \end{itemize}
   \item シグナルfd (説明しない)
     \begin{itemize}
     \item 目的 : シグナルをOSから受け取る
@@ -164,11 +173,19 @@ $ ps auxww | grep firefox
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
   \frametitle{擬似的なファイル}
+
   \begin{itemize}
-  \item 名前付きパイプ(FIFO)
-  \item {\tt /proc} ファイルシステム
-  \item tmpfs
-  \item サウンド, ビデオなどデバイスの入出力
+  \item 普通のファイルのように見える (ファイル名があり,
+    プログラムからは普通に{\tt open}) が, 
+  \item 挙動はいわゆる普通のファイルの挙動
+    (最後にwriteしたものがreadで読まれる) とは違う
+  \item  例
+    \begin{itemize}
+    \item 名前付きパイプ(FIFO)
+    \item {\tt /proc} ファイルシステム
+    \item tmpfs
+    \item サウンド, ビデオなどデバイスの入出力
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -219,67 +236,6 @@ if (pid == 0) {
 \item 入(出)力リダイレクトはfdの値を0 (1)に付け替える
   ($\rightarrow$ {\tt dup2}システムコール)
 \end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{C言語ストリームAPI}
-  \begin{itemize}
-  \item C言語ではUnixのopen, read, writeの代わりに,
-    以下のAPIを使うことが多い
-    \begin{itemize}
-    \item {\tt FILE * {\it fp} = fopen({\it filename}, {\it mode});}
-    \item {\tt fread({\it buf}, {\it size}, {\it n}, {\it fp});}
-    \item {\tt fwrite({\it buf}, {\it size}, {\it n}, {\it fp});}
-    \end{itemize}
-  \item {\tt FILE} --- \ao{ファイル構造体}
-  \item 標準入出力に対応する, {\tt FILE *}型の変数がある
-    \begin{itemize}
-    \item {\tt stdin} : $\leftrightarrow$ 0
-    \item {\tt stdout} : $\leftrightarrow$ 1
-    \item {\tt stderr} : $\leftrightarrow$ 2
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{高水準なファイル入出力}
-  \begin{itemize}
-  \item {\tt FILE *}に対しては, より高水準または簡便なAPIもある
-    \begin{itemize}
-    \item {\tt fgetc({\it fp});} --- 1文字入力
-    \item {\tt fgets({\it s}, {\it size}, {\it fp});} --- 1行入力
-    \item {\tt fprintf({\it fp}, {\it format}, ...);}
-      --- 値を文字列に変換して出力
-    \item {\tt fscanf({\it fp}, {\it format}, ...);}
-      --- 文字列を値に変換しながら入力
-    \end{itemize}
-  \item 以下は想像通り
-    \begin{itemize}
-    \item {\tt getchar()} $\equiv$ {\tt fgetc(stdin);}
-    \item {\tt gets({\it s});}
-      $\equiv$ {\tt fgets({\it s}, $\infty$, stdin);} \aka{(危険)}
-    \item {\tt printf({\it fp}, {\it format}, ...);}
-      $\equiv$ {\tt fprintf(stdout, {\it format}, ...);}
-    \item {\tt scanf({\it fp}, {\it format}, ...);}
-      $\equiv$ {\tt fscanf(stdin, {\it format}, ...);}
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
-  \frametitle{ファイルディスクリプタからファイル構造体}
-  \begin{itemize}
-  \item (openなどで得た)ファイルディスクリプタに対応した,
-    ファイル構造体を作ることが可能
-\begin{lstlisting}
-FILE * @{\it fp}@ = fdopen(@{\it fd}@, @{\it mode}@);
-\end{lstlisting}
-\item {\tt FILE *}を得るには{\tt fopen}を使わないといけないわけではない
-  \item 使いたいAPIに応じて使い分けることが可能
-  \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%% 
@@ -441,6 +397,67 @@ if (pid) { /* 親プロセス */
 \item 注: {\tt popen}ライブラリ関数がこれに相当
 \end{itemize}
 
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{C言語ストリームAPI}
+  \begin{itemize}
+  \item C言語ではUnixのopen, read, writeの代わりに,
+    以下のAPIを使うことが多い
+    \begin{itemize}
+    \item {\tt FILE * {\it fp} = fopen({\it filename}, {\it mode});}
+    \item {\tt fread({\it buf}, {\it size}, {\it n}, {\it fp});}
+    \item {\tt fwrite({\it buf}, {\it size}, {\it n}, {\it fp});}
+    \end{itemize}
+  \item {\tt FILE} --- \ao{ファイル構造体}
+  \item 標準入出力に対応する, {\tt FILE *}型の変数がある
+    \begin{itemize}
+    \item {\tt stdin} : $\leftrightarrow$ 0
+    \item {\tt stdout} : $\leftrightarrow$ 1
+    \item {\tt stderr} : $\leftrightarrow$ 2
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{高水準なファイル入出力}
+  \begin{itemize}
+  \item {\tt FILE *}に対しては, より高水準または簡便なAPIもある
+    \begin{itemize}
+    \item {\tt fgetc({\it fp});} --- 1文字入力
+    \item {\tt fgets({\it s}, {\it size}, {\it fp});} --- 1行入力
+    \item {\tt fprintf({\it fp}, {\it format}, ...);}
+      --- 値を文字列に変換して出力
+    \item {\tt fscanf({\it fp}, {\it format}, ...);}
+      --- 文字列を値に変換しながら入力
+    \end{itemize}
+  \item 以下は想像通り
+    \begin{itemize}
+    \item {\tt getchar()} $\equiv$ {\tt fgetc(stdin);}
+    \item {\tt gets({\it s});}
+      $\equiv$ {\tt fgets({\it s}, $\infty$, stdin);} \aka{(危険)}
+    \item {\tt printf({\it fp}, {\it format}, ...);}
+      $\equiv$ {\tt fprintf(stdout, {\it format}, ...);}
+    \item {\tt scanf({\it fp}, {\it format}, ...);}
+      $\equiv$ {\tt fscanf(stdin, {\it format}, ...);}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{ファイルディスクリプタからファイル構造体}
+  \begin{itemize}
+  \item (openなどで得た)ファイルディスクリプタに対応した,
+    ファイル構造体を作ることが可能
+\begin{lstlisting}
+FILE * @{\it fp}@ = fdopen(@{\it fd}@, @{\it mode}@);
+\end{lstlisting}
+\item {\tt FILE *}を得るには{\tt fopen}を使わないといけないわけではない
+  \item 使いたいAPIに応じて使い分けることが可能
+  \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%% 
