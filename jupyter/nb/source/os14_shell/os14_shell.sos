@@ -948,15 +948,35 @@ ls -lh /home/share/data/jawiki-*
 * なお同じ記事を元の作者とは違う人が記事を更新することがあるので, contributor, timestampは必ずしも記事のオリジナルの作者や, その記事が最初に書かれた時点, という意味ではないが, ここではそれ以上のデータがないのでそうみなすことにする
 <!--- end md --->
 <!--- md label=prob,ans --->
-* <font color="green">問:</font> wikipediaのXMLデータから, 各記事のタイトル, 作者, 時刻を取り出して一行にタブ区切りで表示し, それを別のファイル (pages.csv) に保存せよ
+* <font color="green">問:</font> wikipediaのXMLデータから, 各記事のタイトル, 作者, 時刻を取り出して一行にこの順にタブ区切りで表示し, それを別のファイル (pages.csv) に保存せよ
+* 注: 区切り文字としてなにを使うかには注意が必要で, 値の中に現れそうな文字は避けなくてはならず, 例えばカンマはいかにもタイトルに現れそうなので避けるのが正解
 <!--- end md --->
 <!--- md --->
-* ヒント: awkを使う. awkに渡す文字列はかなり長くなる. 必要ならばawkプログラムをファイルに書くとよい
-* ファイルが大きいので実行時間もかなり長くなる. いきなりファイルすべてを処理しようとせず, `head`を使ってファイルの一部分だけを処理して, うまく行きそうなことを確認してからすべてを処理せよ
+* ヒント: awkを使う
+* awkに渡す文字列はかなり長くなるので以下に awk プログラムを書きファイルに保存せよ
 <!--- end md --->
-<!--- code w kernel=bash points=1 --->
+
+<!--- code w kernel=python points=1 --->
+%%writefile extract.awk
+
 
 <!--- end code --->
+
+<!--- md --->
+* そのうえで以下で実行
+* ファイルが大きいので実行時間もかなり長くなる. いきなりファイルすべてを処理しようとせず, `head`を使ってファイルの一部分だけを処理して, うまく行きそうなことを確認してからすべてを処理せよ
+<!--- end md --->
+
+<!--- code w kernel=bash points=1 --->
+# 最初の10000行だけ処理 (10000は適宜調整せよ)
+head -10000 jawiki.xml | awk -f extract_pages.awk > some_pages.csv
+<!--- end code --->
+
+<!--- code w kernel=bash points=1 --->
+# 全て処理
+awk -f extract_pages.awk jawiki.xml > pages.csv
+<!--- end code --->
+
 <!--- code kernel=bash label=ans --->
 cat jawiki.xml | awk 'match($0, /<title>.*<\/title>/) {t=substr($0, RSTART+7, RLENGTH-15)} match($0, /<timestamp>.*<\/timestamp>/) {ts=substr($0, RSTART+11, RLENGTH-23)} match($0, /<username>.*<\/username>/) {u=substr($0, RSTART+10, RLENGTH-21); print t, "\t", ts, "\t", u}' > pages.csv
 <!--- end code --->
