@@ -10,6 +10,7 @@
 
 * <font color=blue>(投稿日: 2025/12/23)</font> 12/24 予定
   1. [シグナル](slides/08_signal.pdf)
+	 * `os15_signal`
   1. [ユーザレベル仮想記憶 API とその応用](slides/09_vm_app.pdf)
 
 * <font color=blue>(投稿日: 2025/12/16)</font> 12/17 予定
