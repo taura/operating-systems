@@ -20,7 +20,7 @@
 
 <!--- code w kernel=python --->
 %%writefile sigint.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os16_signal/sigint.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os15_signal/include/sigint.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -46,7 +46,7 @@ gcc -Wall -o sigint sigint.c
 
 <!--- code w kernel=python --->
 %%writefile sigsegv.c
-<!--- exec-include ./mk_version.py -D VER=1 nb/source/include/os16_signal/sigsegv.c --->
+<!--- exec-include ./mk_version.py -D VER=1 nb/source/os15_signal/include/sigsegv.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
