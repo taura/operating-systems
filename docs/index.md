@@ -8,6 +8,10 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/12/23)</font> 12/24 予定
+  1. [シグナル](slides/08_signal.pdf)
+  1. [ユーザレベル仮想記憶 API とその応用](slides/09_vm_app.pdf)
+
 * <font color=blue>(投稿日: 2025/12/16)</font> 12/17 予定
   1. [ファイルシステム (mmap)](slides/06_file_system.pdf)
 	 * `os13_mmap_app`
