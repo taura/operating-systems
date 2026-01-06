@@ -8,6 +8,16 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/01/06)</font> 試験本番, 予行演習予告
+  * 01/14 (授業の最終回) に試験の形式に慣れるための試験の予行演習を行います
+	* <font color=red>極力教室で参加</font>してください
+  * 01/28 試験本番 
+	* <font color=red>必ず教室</font>で受けてください
+  * 詳細はこの後アナウンスしますので本ページをチェックしてください
+  
+* <font color=blue>(投稿日: 2025/01/06)</font> 01/07 予定
+  1. [OSセキュリティの基本](slides/10_security.pdf)
+
 * <font color=blue>(投稿日: 2025/12/23)</font> 12/24 予定
   1. [シグナル](slides/08_signal.pdf)
 	 * `os15_signal`
@@ -135,6 +145,7 @@
 1. [ファイルディスクリプタと擬似ファイル](slides/07_everything_is_file.pdf)
 1. [シグナル](slides/08_signal.pdf)
 1. [ユーザレベル仮想記憶 API とその応用](slides/09_vm_app.pdf)
+1. [OSレベルセキュリティの基本](slides/10_security.pdf)
 
 # オペレーティングシステム(OS)とは
 
