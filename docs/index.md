@@ -8,6 +8,9 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2025/01/14)</font> 
+  1. [過去の試験問題](past_exams/index.html) 
+
 * <font color=blue>(投稿日: 2025/01/14)</font> 01/14 予定
   1. [OSセキュリティの基本 (グループ)](slides/10_security.pdf) 
   

@@ -1,4 +1,8 @@
-mds   := index.md $(wildcard html/*.md) $(wildcard html/exam2024/*.md)
+mds :=
+mds += index.md
+mds += $(wildcard html/*.md)
+mds += $(wildcard past_exams/*.md)
+mds += $(wildcard html/exam2024/*.md)
 htmls := $(patsubst %.md,%.html,$(mds))
 
 all : $(htmls)
