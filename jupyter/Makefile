@@ -5,7 +5,7 @@
 
 nb_srcs :=
 #nb_srcs += $(wildcard nb/source/os16_*/*.sos)
-nb_srcs += $(wildcard nb/source/os2025_exam_practice/*.sos)
+nb_srcs += $(wildcard nb/source/os2025_exam/*.sos)
 #nb_srcs += $(wildcard nb/source/os14_*/*.sos)
 # nb/source/os12/*.py
 
