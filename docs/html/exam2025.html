@@ -114,7 +114,7 @@ AIに問題をそのままコピーしたりファイルをそのまま丸投げ
 このページでアナウンスする(再読込せよ).</li>
 </ol>
 <ul>
-<li>試験時間: 本番 <font color="red">08:30 – 10:15</font> (予定)</li>
+<li>試験時間: 本番 <font color="red">08:30 – 10:15</font></li>
 </ul>
 <ol start="6" type="1">
 <li>問題・解答用紙の訂正があればこちらに書く.
@@ -123,6 +123,23 @@ AIに問題をそのままコピーしたりファイルをそのまま丸投げ
 ちょっとした食い違いが見つかる可能性はある.
 ◯◯とあるが□□の間違いではないか,
 と思うことがあったら早めに知らせてください</li>
+<li>間違い</li>
+<li>p4 上から2/3くらい
+<ul>
+<li>(誤) M: さっき作った <font color=red>transactoin_app</font>
+の直下にあります</li>
+<li>(正) M: さっき作った <font color=blue>transaction_app</font>
+の直下にあります</li>
+</ul></li>
+<li>p6 印刷版のみ間違い (ファイルは修正済み) 上から2/3くらい
+<ul>
+<li>(誤) server$ sqlite3 transactions.db ‘select * from trans where
+<font color=red>2025-05-02</font> &lt;= date &lt;= 2025-06-10 and amount
+&gt;= 1000000’</li>
+<li>(正) server$ sqlite3 transactions.db ‘select * from trans where
+<font color=blue>2025-05-20</font> &lt;= date &lt;= 2025-06-10 and
+amount &gt;= 1000000’</li>
+</ul></li>
 </ul></li>
 <li>試験開始時刻になったら, 試験問題を読むためのパスワードを
 教室のプロジェクタ, 画面共有で表示. それが試験開始の合図となる</li>
