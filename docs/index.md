@@ -21,8 +21,12 @@
   1. [本日の宿題](https://app.community.learnwiz.one/events/operating-systems-2025-10-08) OSをなにかに例えて下さい (締め切り: 明日まで). UTokyo Accountでサインインして下さい.
 -->
 
-* <font color=blue>(投稿日: 2026/09/28)</font> 履修登録 (単位取得) するしないに関わらず, 初回の授業に参加予定の人は [UTOLコースページ](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE3d16L1_01) で「課題0: 演習環境のアカウント発行のための課題」を提出して  (g.eccアカウントを教えて) 下さい
-  * 注: 上記ページが見えない人はUTOLで「受講登録」して下さい ([マニュアル](https://utol.ecc.u-tokyo.ac.jp/common/support/manual) -> [UTOL学生向けマニュアル](https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1) p37)
+* <font color=blue>(投稿日: 2026/09/28)</font> 履修登録 (単位取得) するしないに関わらず, 初回の授業に参加予定の人は [UTOLコースページ](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE3d16L1_01) で **「課題0: 演習環境のアカウント発行のための課題」** を提出して  (g.eccアカウントを教えて) 下さい
+  * 注: 課題が見えない人はUTOLで「受講登録」して下さい ([マニュアル](https://utol.ecc.u-tokyo.ac.jp/common/support/manual) -> [UTOL学生向けマニュアル](https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1) p37)
+  * コースページが見られない場合はコース検索で、
+    * 開講時期: すべて
+	* フリーワード: FEN-EE3d16L1 
+で検索して下さい
 * <font color=blue>(投稿日: 2026/09/27)</font> 2026年度版ホームページオープン
 
 # スライド
