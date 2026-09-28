@@ -8,127 +8,8 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
-* <font color=blue>(投稿日: 2025/01/14)</font> 
-  1. [過去の試験問題](past_exams/index.html) 
-
-* <font color=blue>(投稿日: 2025/01/14)</font> 01/14 予定
-  1. [OSセキュリティの基本 (グループ)](slides/10_security.pdf) 
-  
-* <font color=blue>(投稿日: 2025/01/12)</font>
-	* [試験本番, 予行演習の進め方](html/exam2025.html)
-
-* <font color=blue>(投稿日: 2025/01/06)</font> 試験本番, 予行演習予告
-	* 01/14 (授業の最終回) に試験の形式に慣れるための試験の予行演習を行います
-		* <font color=red>極力教室で参加</font>してください
-	* 01/28 試験本番 
-		* <font color=red>必ず教室</font>で受けてください
-	* 詳細はこの後アナウンスしますので本ページをチェックしてください
-  
-* <font color=blue>(投稿日: 2025/01/06)</font> 01/07 予定
-  1. [OSセキュリティの基本](slides/10_security.pdf)
-
-* <font color=blue>(投稿日: 2025/12/23)</font> 12/24 予定
-  1. [シグナル](slides/08_signal.pdf)
-	 * `os15_signal`
-  1. [ユーザレベル仮想記憶 API とその応用](slides/09_vm_app.pdf)
-
-* <font color=blue>(投稿日: 2025/12/16)</font> 12/17 予定
-  1. [ファイルシステム (mmap)](slides/06_file_system.pdf)
-	 * `os13_mmap_app`
-  1. [ファイルディスクリプタと擬似ファイル](slides/07_everything_is_file.pdf)
-	 * `os14_shell`
-
-* <font color=blue>(投稿日: 2025/12/09)</font> 12/10 予定
-  1. [ファイルシステム (先読み)](slides/06_file_system.pdf)
-	 * `os11_prefetch`
-  1. [ファイルシステム (mmap)](slides/06_file_system.pdf)
-	 * `os12_mmap`
-
-* <font color=blue>(投稿日: 2025/12/03)</font> 12/03 予定
-  1. [メモリ管理, 仮想記憶 (エイジング)](slides/05_memory.pdf)
-  2. [ファイルシステム (〜キャッシュ)](slides/06_file_system.pdf)
-	 * `os10_cache`
-
-* <font color=blue>(投稿日: 2025/11/25)</font> 11/26 予定
-  1. [メモリ管理, 仮想記憶](slides/05_memory.pdf)
-     * `os09_vm`
-  2. [ファイルシステム](slides/06_file_system.pdf)
-	 * `os10_cache`
-	 * `os11_prefetch`
-
-* <font color=blue>(投稿日: 2025/11/07)</font> <font color=red>11/12 (水) の回の講義の代わり</font>となるオンデマンド教材>
-  * 動画教材はUTOLの「教材」の欄からリンクを取得して視聴してください (倍速推奨)
-  * 動画視聴後に演習教材のJupyter notebook `os09_vm` をやってください
-  * os09_vm は提出課題となります (締め切り: 11/29 (土) UTOLにてアナウンス)
-
-* <font color=blue>(投稿日: 2025/11/05)</font> <font color=red>お知らせ</font> 諸事情により,
-  * <font color=red>11/12 (水) の回をオンデマンド講義</font> (録画 + 演習 (Jupyter)) とさせていただきます m(_ _)m
-	* 当日の授業時間までに (できるだけその前の週末くらいに) 動画をアップしてアナウンスします
-	* 通常通り, (いつもの時刻までに) 振り返りの提出をしてください
-	* 演習 (Jupyter) は提出課題となるかもしれません (なる場合はUTOLで知らせます)
-	* いつもの講義時間もしくはその前後 (振り返り提出まで) に105分の時間を確保して動画視聴 + 演習に取り組んでください
-  * <font color=red>11/19 (水) の回を休講</font> -> <font color=red>11/26 (水) に補講</font>をします(同じ時間帯, 同じ場所)
-  * UTAS, UTOL上でアナウンス済みです
-
-* <font color=blue>(投稿日: 2025/11/04)</font> 11/05 予定
-  1. [並行処理と同期 (同期の実装, デッドロック)](slides/04_concurrent.pdf)
-  2. [メモリ管理, 仮想記憶](slides/05_memory.pdf)
-     * `os08_addr`
-  3. [メモリ管理, 仮想記憶](slides/05_memory.pdf)
-     * `os09_vm`
-
-* <font color=blue>(投稿日: 2025/10/29)</font> 今日の授業の最後に, 江利口くんより「スライド[並行処理と同期](slides/04_concurrent.pdf) p42 にあるリンク先のページは "Legacy ..." となっている (今はどうなっている?)」という質問がありました. スライドを更新し忘れ + (過去に一度見たはずの内容を) 忘れていたもので, 補足, 訂正させていただきます. 要約としては同じものが名前と引数を(ややこしく)変えて提供されているというものです. 
-
-* [古いAPIページ  ](https://gcc.gnu.org/onlinedocs/gcc/_005f_005fsync-Builtins.html)
-* [新しいAPIページ](https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html)
-
-変更点の全体的要約
-
-1. 関数名としては `__sync_xxx` -> `__atomic_xxx` と代わっている(ただし xxx の部分も代わっている場合があり, 名前から対応を想像する)
-1. 引数が増えており, とくに多くの関数が `memorder` (メモリオーダー) という引数を取ることになっている. 
-
-後者の意味を説明しだすと並列処理, コンピュータアーキテクチャに関する長〜い話になってしまうのです割愛しますが, 
-  * 手っ取り早く使うためには, よくわからなければ `memorder` 引数に `__ATOMIC_SEQ_CST` を与えておけば無難.
-  * 一体何なのかをざっくりと, 一言で言うとこれらの操作前後の他のメモリアクセスがどう振る舞ってほしいかを制御します. 興味がある人はまずは [新しいAPIページ](https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html) の説明を読み, よくわからなければ[Wikipedia](https://en.wikipedia.org/wiki/Consistency_model) を読んだり, 「共有メモリ 一貫性モデル」でググったり, ChatGPTさんに解説をお願いしたり, 田浦に聞いたりしてください. 
-
-  * `compare&swap` については引数も結構代わっており 
-
-`__sync_bool_compare_and_swap(p, r, s)`
-
-と同じ動作をさせたければ
-
-`__atomic_compare_and_exchange_n(p, &r, s, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)`
-
-または
-
-`__atomic_compare_and_exchange(p, &r, &s, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)`
-
-でよさげ(どういうわけか, rを値そのものではなく値へのアドレスで与えることになっているという謎仕様. _n ありなしと2つのバージョンがありその違いは s を値で渡すか値へのアドレスで渡すかの違いだけという, これまた謎仕様. 後ろの3つの引数は説明は省略するものの本質的な拡張の意味があるが, 2, 3個目の引数の渡し方がこう代わったことは謎.
-
-* <font color=blue>(投稿日: 2025/10/28)</font> 10/29 予定
-  1. [並行処理と同期 (条件変数)](slides/04_concurrent.pdf)
-  * `os06_cond_var.sos`
-  2. [並行処理と同期 (不可分更新〜)](slides/04_concurrent.pdf)
-  * `os07_atomic`
-  3. [メモリ管理](slides/05_memory.pdf)
-  * `os08_addr`
-  
-* <font color=blue>(投稿日: 2025/10/21)</font> 10/22 予定
-  1. [スケジューリング (Linux Completely Fair Scheduler)](slides/03_scheduling.pdf)
-  * `os04_sched.sos`
-  1. [並行処理と同期](slides/04_concurrent.pdf)
-  * `os05_mutex.sos`
-  * `os06_cond_var.sos`
-
-* <font color=blue>(投稿日: 2025/10/14)</font> 10/15 予定
-  1. [スレッド](slides/02_threads.pdf)
-  * [OSを例えるお題](https://app.community.learnwiz.one/events/operating-systems-2025-10-08) で「他者の投稿」を何ページか見て「いいね❤」をつける
-  * `os02_process`
-  * `os03_thread`
-  1. [スケジューリング](slides/03_scheduling.pdf)
-  * `os04_sched.sos`
-
-* <font color=blue>(投稿日: 2025/09/27)</font> 初回 10/08 予定
+<!--  
+* <font color=blue>(投稿日: 2026/09/27)</font> 初回 10/07 予定
   1. [イントロ](slides/00_intro.pdf)
   1. [Jupyter環境お試し](https://taura.github.io/programming-languages/html/jupyter.html)
     * Jupyter環境ユーザ名・パスワード入手 (UTOLの課題)
@@ -138,8 +19,11 @@
     * `os02_process`
   1. 振り返り課題 (毎週; 授業の翌日まで)
   1. [本日の宿題](https://app.community.learnwiz.one/events/operating-systems-2025-10-08) OSをなにかに例えて下さい (締め切り: 明日まで). UTokyo Accountでサインインして下さい.
+-->
 
-* <font color=blue>(投稿日: 2025/09/27)</font> 2025年度版ホームページオープン
+* <font color=blue>(投稿日: 2026/09/28)</font> 履修登録 (単位取得) するしないに関わらず, 初回の授業に参加予定の人は [UTOLコースページ](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE3d16L1_01) で「課題0: 演習環境のアカウント発行のための課題」を提出して  (g.eccアカウントを教えて) 下さい
+  * 注: 上記ページが見えない人はUTOLで「受講登録」して下さい ([マニュアル](https://utol.ecc.u-tokyo.ac.jp/common/support/manual) -> [UTOL学生向けマニュアル](https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1) p37)
+* <font color=blue>(投稿日: 2026/09/27)</font> 2026年度版ホームページオープン
 
 # スライド
 
