@@ -8,19 +8,16 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
-<!--  
-* <font color=blue>(投稿日: 2026/09/27)</font> 初回 10/07 予定
+* <font color=blue>(投稿日: 2026/10/07)</font> 初回 10/07 予定
   1. [イントロ](slides/00_intro.pdf)
-  1. [Jupyter環境お試し](https://taura.github.io/programming-languages/html/jupyter.html)
-    * Jupyter環境ユーザ名・パスワード入手 (UTOLの課題)
+  1. [Jupyter環境お試し](html/jupyter.html)
+    * [Jupyter環境にアクセス](https://taulec.zapto.org:8000/)
     * `os00_intro`
     * `os01_install_linux`
   1. [プロセス](slides/01_process.pdf)
     * `os02_process`
   1. 振り返り課題 (毎週; 授業の翌日まで)
-  1. [本日の宿題](https://app.community.learnwiz.one/events/operating-systems-2025-10-08) OSをなにかに例えて下さい (締め切り: 明日まで). UTokyo Accountでサインインして下さい.
--->
-
+  
 * <font color=blue>(投稿日: 2026/09/28)</font> 履修登録 (単位取得) するしないに関わらず, 初回の授業に参加予定の人は [UTOLコースページ](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE3d16L1_01) で **「課題0: 演習環境のアカウント発行のための課題」** を提出して  (g.eccアカウントを教えて) 下さい
   * 注: 課題が見えない人はUTOLで「受講登録」して下さい ([マニュアル](https://utol.ecc.u-tokyo.ac.jp/common/support/manual) -> [UTOL学生向けマニュアル](https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1) p37)
   * コースページが見られない場合はコース検索で、
