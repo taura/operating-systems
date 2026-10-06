@@ -145,7 +145,10 @@ gcc hello.c -o hello
   * you browse a man page
   * use kill command to terminate a program that does not stop with ■ button
 
+# Jupyter AI
 
+* 左の吹き出しのようなアイコンでAIを起動できる
+* プログラミング課題などで助けが必要な時に, 課題ごとに決められた範囲で使っても良い
 
 # SSH でログイン / Login with SSH
 

@@ -428,3 +428,46 @@ python3 time_fork_exit_wait.py 10
 python3 time_fork_exit_wait_ans.py 10
 <!--- end code --->
 
+#*P [オプション] ミニシェル
+
+* 普段使っているシェルはおおよそ以下のようなプログラム
+  * ユーザからの入力 (コマンドライン) を受け取る
+    * 入力が終了したらシェルも終了
+  * 指定されたコマンドを実行するために fork, exec (のどれか), wait を実行する
+以上を繰り返す
+
+この動作をするプログラム minsh を作成せよ. 
+* 簡単のため入力は1000文字以内 (それ以上はエラー) としてよい (C であればfgets を使うのが簡単) 
+* コマンド, 引数はすべて空白で区切られるとして良く, それらをそのまま exec に渡せば良い
+* C で Python でも可 (Pythonの場合以下のファイル名やコマンドを適宜変更)
+* 少しやってみてわからなければ Jupyter AI に聞いても可
+
+<!--- code w kernel=python points=1 --->
+%%writefile minish.c
+
+<!--- end code --->
+
+<!--- code w kernel=python points=1 --->
+%%bash
+gcc -o minsh minsh.c
+<!--- end code --->
+
+* 実行はnotebook 中ではできない.
+* ランチャー (+ ボタン) に戻って Terminal から実行せよ 
+* その際の実行ディレクトリは `~/notebooks/os/os02_process`
+
+#*P [オプション] ミニシェルと本物のシェルの違い
+
+* ここで作ったシェルに比べ, 普段使っているシェルにはどのような昨日の違いがあるか? 思いつく範囲で並べてみよ
+
+<!--- md w --->
+
+* ...
+* ...
+* ...
+
+<!--- end md --->
+
+
+
+
