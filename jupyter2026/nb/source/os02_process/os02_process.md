@@ -1,0 +1,430 @@
+
+#* オペレーティングシステム 演習 02
+
+#* プロセス
+
+
+<!--- md w --->
+
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+
+<!--- end md --->
+
+# プロセス関連コマンド
+
+## ps auxww
+
+* ps は現存するプロセスを表示するコマンド
+* 話せば長い(詳細はmanページを参照)が, auxwwですべてのプロセスがコマンドラインとともに表示される
+
+* 以下によりシステムのすべてのプロセスが表示される
+* 長過ぎる出力がうっとおしければファイルに出力するコマンドに書き換えて実行しなおせば良い
+* 例えば
+```
+ps auxww > ps.txt
+```
+
+<!--- code w kernel=python --->
+%%bash
+ps auxww
+<!--- end code --->
+
+
+# fork
+
+* forkはUnixでプロセスを生成する手段
+* プロセスを生成 = (例えば実行するファイルを指定して)プログラムを起動するということかと思いきやそうではなく, forkは何の引数もとらず, 呼び出したプロセスのコピーを作るというもの
+* 以下は全く役に立たないが, ともかくforkが何をするシステムコールかを教えてくれるプログラム
+
+* OSのシステムコールは特定のプログラミング言語には依存していない
+* そこで意味がある場合, なるべく同じことをPythonとCの両方で示すことにする
+
+## C
+<!--- code w kernel=python --->
+%%writefile fork.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall fork.c -o fork
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./fork
+<!--- end code --->
+
+## Python
+
+<!--- code w kernel=python --->
+%%writefile fork.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+# 何も表示されない場合, もう一度実行せよ (Jupyter環境の不具合)
+python3 fork.py
+<!--- end code --->
+
+# 親と子で違う動作をする例
+
+* forkを使うもう少し完結した例
+* 親と子で違う動作をする
+
+## C
+
+<!--- code w kernel=python --->
+%%writefile fork_pc.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_pc.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall fork_pc.c -o fork_pc
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./fork_pc
+<!--- end code --->
+
+## Python
+
+<!--- code w kernel=python --->
+%%writefile fork_pc.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_pc.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 fork_pc.py
+<!--- end code --->
+
+# wait
+
+* forkを使うさらにまともな例
+* 親が子のwait処理をする
+
+## C
+
+<!--- code w kernel=python --->
+%%writefile fork_wait.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_wait.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall fork_wait.c -o fork_wait
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./fork_wait
+<!--- end code --->
+
+## Python
+
+<!--- code w kernel=python --->
+%%writefile fork_wait.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_wait.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 fork_wait.py
+<!--- end code --->
+
+# exec
+
+* execは指定したプログラムを実行するシステムコール
+* 呼び出したプロセスをそのまま, 指定したプログラムを先頭から実行するものに「変える」というイメージ
+* execがプロセスを生成するのではないので注意
+* execはあくまで呼び出したプロセスを, これまでのことをすべて忘れて所定のことをするプロセスに「変身させる」
+* なお, execという名のシステムコールが実在するのではなく, execv, execveなど色々な変種の総称
+* 以下は ls -l を実行するプロセスを作るプログラム
+
+## C
+
+<!--- code w kernel=python --->
+%%writefile fork_execv.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_execv.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall fork_execv.c -o fork_execv
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./fork_execv
+<!--- end code --->
+
+## Python
+
+<!--- code w kernel=python --->
+%%writefile fork_execv.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_execv.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 fork_execv.py
+<!--- end code --->
+
+# execvp
+
+* execv関数では実行したいコマンド(ls)のファイル名(/bin/ls)を指定しなくてはならない
+* 普段シェルでコマンドを実行する際は ls と打つだけで実行できているのは, シェルがPATHという環境変数を見てコマンドを探してくれているから
+* 以下でPATHという環境変数の中身が表示できる
+
+<!--- code w kernel=python --->
+%%bash
+echo $PATH
+<!--- end code --->
+
+
+* シェルは, PATHに指定されているディレクトリを順に見ていって, lsという名前のファイルが見つかったらそれを実行する
+* 同じことはexecの変種 execvp という関数を呼べばやってくれる
+
+## C
+
+<!--- code w kernel=python --->
+%%writefile fork_execvp.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_execvp.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall fork_execvp.c -o fork_execvp
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./fork_execvp
+<!--- end code --->
+
+## Python
+
+<!--- code w kernel=python --->
+%%writefile fork_execvp.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_execvp.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 fork_execvp.py
+<!--- end code --->
+
+* なお, PATHの中身を見て, コマンド名に対応するファイル名を表示してくれるのが which というコマンド
+* コマンドを打ち込んで実行されているファイルがどこにあるのかを知りたいときに使う
+* Linux, Macを使っている人は普段使っているプログラム, firefox, zoomなどがどこにあるのかを探ってみよ
+
+<!--- code w kernel=python --->
+%%bash
+which firefox
+which zoom
+<!--- end code --->
+
+# forkにまつわる悲劇
+
+* 以下のようなプログラムを書いたらプロセスはいくつ生成されるのだろう?
+* そして以下を実行するとどんな表示が出てくるか?
+* 頭で予想してから実行してみよ
+* n=100としたら何が起こるか(<- 決してやってはいけない)?
+
+## C
+
+<!--- code w kernel=python --->
+%%writefile fork_n.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_n.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall fork_n.c -o fork_n
+<!--- end code --->
+
+* 以下を実行して (左側のファイル一覧から) out.txt を開いて見てみよ
+* プログラムと結果を見て, このプログラムを実行した結果何が起きたのかを考えよ (わかりにくければ n を小さくして)
+
+<!--- code w kernel=python --->
+%%bash
+./fork_n > out.txt
+<!--- end code --->
+
+## Python
+
+<!--- code w kernel=python --->
+%%writefile fork_n.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/fork_n.py --->
+<!--- end code --->
+
+* 以下を実行して (左側のファイル一覧から) out.txt を開いて見てみよ
+* プログラムと結果を見て, このプログラムを実行した結果何が起きたのかを考えよ (わかりにくければ n を小さくして)
+
+<!--- code w kernel=python --->
+%%bash
+python3 fork_n.py > out.txt
+<!--- end code --->
+
+* 注: > out.txt なしで直接表示することもできるが, 結果をすべて出力てくれないことがしばしばある. これは多分, Jupyterのbashカーネルのバグ
+* 多分以下のように, このセルの終了まで間を作ると全部出力してくれる(Jupyterのバグを回避しているだけで全く本質的なことではない. 端末で実行すればこんなことをする必要はない)
+
+<!--- code w kernel=python --->
+%%bash
+./fork_n
+sleep 1 
+<!--- end code --->
+
+#*P fork, exec, waitの練習
+
+以下を行うプログラムを書け
+
+1. 時刻をナノ秒単位で取得($t_0$とする)
+2. 以下を多数回($n$回)繰り返す
+ * 子プロセスをforkする
+  * 子プロセスはただちに ./do_nothing という, 何もしないプログラムをexecする
+  * 親プロセスはただちに子プロセスの終了をwaitする
+3. 時刻をナノ秒単位で取得($t_1$とする)
+4. 1回あたりの時間($(t_1 - t_0)/n$) をナノ秒単位で出力
+
+* do_nothingは以下のような, 何もしないプログラム
+
+<!--- code w kernel=python --->
+%%writefile do_nothing.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/do_nothing.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall do_nothing.c -o do_nothing
+<!--- end code --->
+
+* $n$はコマンドラインから取得できるようにする
+* 以下のコードを修正して上記を達成せよ(PythonとC両方)
+
+## C
+
+<!--- code w kernel=python points=1 --->
+%%writefile time_fork_exec_wait.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/time_fork.c --->
+<!--- end code --->
+
+<!--- code w kernel=python points=1 --->
+%%bash
+gcc -Wall time_fork_exec_wait.c -o time_fork_exec_wait
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%writefile time_fork_exec_wait_ans.c
+<!--- exec-include ./mk_version.py -DVER=2 nb/source/os02_process/include/time_fork.c --->
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%bash
+gcc -Wall time_fork_exec_wait_ans.c -o time_fork_exec_wait_ans
+<!--- end code --->
+
+* 同様に以下のコマンドラインを色々変更して, 1回あたりの時間を計測せよ
+
+<!--- code w kernel=python points=1 --->
+%%bash
+./time_fork_exec_wait 10
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%bash
+./time_fork_exec_wait_ans 10
+<!--- end code --->
+
+## Python
+
+<!--- code w kernel=python points=1 --->
+%%writefile time_fork_exec_wait.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os02_process/include/time_fork.py --->
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%writefile time_fork_exec_wait_ans.py
+<!--- exec-include ./mk_version.py -DVER=2 nb/source/os02_process/include/time_fork.py --->
+<!--- end code --->
+
+* 以下のコマンドラインを色々変更して, 1回あたりの時間を計測せよ
+* これは概ね, fork + exec + exit + wait の時間 (プログラムを起動して終了するまでにかかる最小の時間)を計測していることに相当する
+* 正しく動いているかを確認するために, do_nothingで何かをprintするとか, time_fork_exec_wait中でwaitpidの結果を表示するようにせよ
+* 時間を計測するときはそれらの表示を消すこと(消さないと, 測っているのは出力時間が大半を占めることになる)
+
+<!--- code w kernel=python points=1 --->
+%%bash
+python3 time_fork_exec_wait.py 10
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%bash
+python3 time_fork_exec_wait_ans.py 10
+<!--- end code --->
+
+#*P fork + waitの測定
+
+* 子プロセスが do_nothing を exec する代わりに, 直ちにexit した場合の時間(fork + wait の時間)も計測せよ
+
+## C
+
+<!--- code w kernel=python points=1 --->
+%%writefile time_fork_exit_wait.c
+<!--- exec-include ./mk_version.py -DVER=3 nb/source/os02_process/include/time_fork.c --->
+<!--- end code --->
+
+<!--- code w kernel=python points=1 --->
+%%bash
+gcc -Wall time_fork_exit_wait.c -o time_fork_exit_wait
+<!--- end code --->
+
+<!--- code w kernel=python points=1 --->
+%%bash
+./time_fork_exit_wait 10
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%writefile time_fork_exit_wait_ans.c
+<!--- exec-include ./mk_version.py -DVER=4 nb/source/os02_process/include/time_fork.c --->
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%bash
+gcc -Wall time_fork_exit_wait_ans.c -o time_fork_exit_wait_ans
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%bash
+./time_fork_exit_wait_ans 10
+<!--- end code --->
+
+## Python
+
+<!--- code w kernel=python points=1 --->
+%%writefile time_fork_exit_wait.py
+<!--- exec-include ./mk_version.py -DVER=3 nb/source/os02_process/include/time_fork.py --->
+<!--- end code --->
+
+<!--- code w kernel=python points=1 --->
+%%bash
+python3 time_fork_exit_wait.py 10
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%writefile time_fork_exit_wait_ans.py
+<!--- exec-include ./mk_version.py -DVER=4 nb/source/os02_process/include/time_fork.py --->
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%bash
+python3 time_fork_exit_wait_ans.py 10
+<!--- end code --->
+

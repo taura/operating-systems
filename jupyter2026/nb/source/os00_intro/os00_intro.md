@@ -1,0 +1,160 @@
+
+#* オペレーティングシステム 演習環境
+
+#* Operating Systems Hands-on Environment
+
+
+<!--- md w --->
+
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+
+<!--- end md --->
+
+
+# このnotebookの使い方 / How this notebook works
+
+## セル / Cell
+
+* 以下のような入力欄を「セル」という
+* SHIFT+ENTERで実行できる
+<br/>
+
+* A textbox like below is called a "cell"
+* Press SHIFT+ENTER to execute it
+
+
+## Python
+
+<!--- code w kernel=python --->
+def f(x):
+  return x + 1
+
+f(3)
+<!--- end code --->
+
+* 実行中のセルは, 左に`[*]`と表示され, 終了すると`[2]`のような番号に変わる
+* `[*]`が表示されている間は他のセルを実行できないことを覚えておこう
+* 以下のセルを実行して`[*]`を観察しておくこと
+<br/>
+
+* while a cell is executing, `[*]` is shown on the left, which turns into a number like `[2]`
+* remember that you cannot execute other cells while `[*]` is shown
+* execute the cell below and observe `[*]`
+
+
+<!--- code w kernel=python --->
+import time
+time.sleep(5.0)
+<!--- end code --->
+
+* 実行中のセルを途中で止めたければタブ上部の■ボタンで止められることにはなっているが効かないことも多い
+* その場合は, メニューの Kernel -&gt; Restart Kernel として **カーネルのリセット** をする
+* より強力なリセット方法はメニューの File -&gt; Hub Control Panel -&gt; Stop Server ->&gt; Start Server として**サーバの再起動** をする
+* 以下を実行し, 終了する前に■ボタンで止めてみよ
+* カーネルのリセット, サーバの再起動も試してみよ
+<br/>
+
+* you should be able to stop an executing cell by ■ button at top of the tab, but do not expect it to work reliably
+* if it doesn't work, **reset kernel** by going to menu and selecting Kernel -&gt; Restart Kernel
+* even more powerful method to reset everything is to **restart the server** by going to menu and selecting File -&gt; Hub Control Panel -&gt; Stop Server -&gt; Start Server
+* execute the cell below and stop it before it finishes by ■ button
+* also try to reset kernel and restart server
+
+<!--- code w kernel=python --->
+import time
+time.sleep(10.0)
+<!--- end code --->
+
+## `%%writefile` で始まるセル / Cells starting with `%%writefile`
+
+* `%%writefile filename` で始まるセルは SHIFT + Enter でその中身を指定されたファイルに保存する
+* Pythonではあるが典型的にはCプログラムを保存して後にBashセルでコンパイル, 実行するために用いられる
+
+* Pressing SHIFT + Enter on cells that begin with `%%writefile filename` save the contents of the cell into the specified file
+* They look like Python cells, but they typically contain C programs which are then compiled and executed by bash cells
+
+<!--- code w kernel=python --->
+%%writefile hello.c
+/* a Python cell that just saves the contents into a file (hello.c) */
+#include <stdio.h>
+int main() {
+    printf("hello\n");
+    return 0;
+}
+<!--- end code --->
+
+## bash
+
+* 下のセルはbash (Linuxのコマンドを実行できる)
+* ただしバグがあって, 出力が正しく出ないことがある(おかしいなと思ったら何度か実行してみてください)
+<br/>
+
+* The cell below is bash, in which you can execute Linux commands
+* There seems a bug that misses outputs.  Repeat executing several times when the output is suspicious.
+
+
+<!--- code w kernel=python --->
+%%bash
+# 表示されなかったらもう一回実行
+# if the result is not displayed, execute it again
+pwd
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+ls
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc hello.c -o hello
+./hello
+<!--- end code --->
+
+## text (markdown)
+
+* コードではなくテキスト(マークダウン形式)を書くためのセル
+* there are cells for ordinary texts (markdown format), not code
+
+
+<!--- md w --->
+* ここをダブルクリックして編集してみよ
+  * 編集し終えたらSHIFT-ENTERで保存
+* double-click this cell and edit
+  * after done, press SHIFT-ENTER to save
+<!--- end md --->
+
+
+# Jupyter 端末環境 / Jupyter Terminals
+
+* Jupyterの典型的な環境はこのようなページ(ノートブック)にプログラムを書いてそれを実行するというものだが, 自分でコマンドを打ち込んで実行できる環境(端末)も用意されている
+* メニュー直下の「+」アイコンをクリックしてlauncherを表示
+* Terminal を選ぶとコマンドラインが開く
+* 使いたくなるかも知れない場面
+  * man pageを閲覧する
+  * 暴走して, ■ボタンを押しても止まらないプログラムを kill コマンドで殺す
+<br/>
+
+* A typical Jupyter environment executes programs in a page like this (notebook).  There is, however, an environment you type arbitrary commands (terminal)
+* click the "+" icon right below the menu to show the launcher page
+* select "Terminal" to open the command line terminal
+* some circumstances in which you want to use it
+  * you browse a man page
+  * use kill command to terminate a program that does not stop with ■ button
+
+
+
+# SSH でログイン / Login with SSH
+
+* ただしそれをやりたいなら SSH ログインをマスターする方がきっと良い
+* 今すぐ必要ではないが後の週の課題で必要になる
+* SSHログインのやり方は, [Jupyter環境の使い方](https://taura.github.io/programming-languages/html/jupyter_ja.html)を参照
+<br/>
+
+* to do them, however, you probably want to master SSH login described below instead
+* you don't have to do this immediately, but need it in later assignments
+* see [How to access Jupyter environment](https://taura.github.io/programming-languages/html/jupyter_en.html) for how to set up SSH
+

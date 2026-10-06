@@ -1,0 +1,315 @@
+
+#* オペレーティングシステム 演習 03
+
+#* スレッド
+
+
+<!--- md w --->
+
+名前と学生証番号を書け. Enter your name and student ID.
+
+ * 名前 Name:
+ * 学生証番号 Student ID:
+
+<!--- end md --->
+
+# スレッド関連コマンド
+
+## ps auxmww
+
+* ps は現存するプロセスを表示するコマンド
+* mをつけると各プロセス内のスレッドも表示される
+
+* 以下によりシステムのすべてのプロセスのすべてのスレッドが表示される
+* 出力が一杯になりすぎたり, そのせいでエラーになったら一旦ファイルへ出力し, そのファイルを開けば良い
+* 例えば
+```
+ps auxmww > ps.txt
+```
+
+<!--- code w kernel=python --->
+%%bash
+ps auxmww
+<!--- end code --->
+
+
+# スレッド
+
+## C (POSIX Threads または Pthreads)
+
+* PthreadはUnix共通のスレッドAPI
+* 基本
+  * pthread_create でスレッドを作り, 実行
+  * pthread_join でスレッドの終了を待つ
+  * pthread_exit で呼び出したスレッドを終了させる
+  * pthread_self は呼び出したスレッドのthread IDを返す
+
+* 以下はともかくスレッドを作ってjoinするだけの例
+
+<!--- code w kernel=python --->
+%%writefile thread_create.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/thread_create.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall thread_create.c -o thread_create -lpthread
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./thread_create
+<!--- end code --->
+
+## Python (threadingモジュール)
+
+* 基本
+  * th = threading.Thread(...) でスレッドオブジェクトを作り, th.start() で実行
+  * th.join() でスレッドの終了を待つ
+    * ただし pthread のAPIと違って子スレッドの終了ステータスは得られない(あまり必然性のない制限)
+  * threading.current_thread() は呼び出したスレッドのスレッドオブジェクトを返す
+    * th.native_id で スレッド th の OSレベルのthread IDが得られるようである
+
+<!--- code w kernel=python --->
+%%writefile thread_create.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/thread_create.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 thread_create.py
+<!--- end code --->
+
+
+# スレッドに引数を渡す
+
+* 普通は, スレッドを複数作ったらそれぞれに違う仕事をやらせたい
+* そのためにスレッドが実行する関数(開始関数)に異なる引数を渡すのが普通だが, pthread のAPIでは開始関数がvoid* (ポインタ)型の引数1つしか取れないという制限がある (Pythonでは任意個の引数をタプルとして渡せる)
+```
+void * f(void *) { ... }
+```
+* そのため通常, 構造体を作りそれへのポインタを引数として渡す
+```
+typedef struct { int xxx; double yyy; ... } thread_arg_t;
+```
+* 開始関数の方では受け取った void* 型を構造体へのポインタ変数に代入し, そこから値を取り出すのが常套手段
+```
+void * f(void * arg_) {
+  thread_arg_t * arg = arg_;
+  arg->xxx, arg->yyy, ...
+}
+```
+* 開始関数はvoid* を受け取るが, それに構造体のポインタを渡しても問題はない
+
+## C
+
+<!--- code w kernel=python --->
+%%writefile thread_create_arg.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/thread_create_arg.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall -o thread_create_arg thread_create_arg.c -lpthread
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./thread_create_arg
+<!--- end code --->
+
+
+## Python
+
+<!--- code w kernel=python --->
+%%writefile thread_create_arg.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/thread_create_arg.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 thread_create_arg.py
+<!--- end code --->
+
+
+# スレッド vs プロセスの違いを理解する
+
+* 違いは色々あるものの, どちらもCPU (正確には仮想コア)を複数使うための道具であることも確か
+* 端的にその挙動の違いは
+  * 「1プロセス間の複数スレッドはメモリ(変数)を共有している」
+  * 「複数プロセス間ではメモリは共有されない」
+という違いがある
+
+* 特にfork()は「コピー」を作っているのであって親プロセスと子プロセスでデータ(変数)が共有されているわけではないことに注意
+
+* 以下が違いを示す例
+* 表示される結果を予想してから実行し, 何が起きているのかを理解せよ
+
+
+* プロセス(fork)を使う例
+
+* C
+
+<!--- code w kernel=python --->
+%%writefile thread_vs_fork_fork.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/thread_vs_fork_fork.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall -o thread_vs_fork_fork thread_vs_fork_fork.c
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./thread_vs_fork_fork
+<!--- end code --->
+
+* Python
+
+<!--- code w kernel=python --->
+%%writefile thread_vs_fork_fork.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/thread_vs_fork_fork.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 thread_vs_fork_fork.py
+<!--- end code --->
+
+* スレッド(pthread_create)を使う例
+
+* C
+
+<!--- code w kernel=python --->
+%%writefile thread_vs_fork_thread.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/thread_vs_fork_thread.c --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+gcc -Wall -o thread_vs_fork_thread thread_vs_fork_thread.c -lpthread
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./thread_vs_fork_thread
+<!--- end code --->
+
+* Python
+
+<!--- code w kernel=python --->
+%%writefile thread_vs_fork_thread.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/thread_vs_fork_thread.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 thread_vs_fork_thread.py
+<!--- end code --->
+
+
+#*P スレッドの練習
+
+以下のようなプログラムを書け.
+
+1. 時刻をナノ秒単位で取得(Linux: clock_gettime または gettimeofday, Mac: gettimeofday; manを参照. Python time.time())
+1. 以下を多数回($n$回)繰り返す
+ * 子スレッドを作る. 子スレッドは, 何もしない関数do_nothingを実行する
+  * 親スレッドはただちに子スレッドの終了を待つ
+3. 時刻をナノ秒単位で取得
+4. 1回あたりの時間をナノ秒単位で出力
+
+do_nothingは以下のような関数.
+
+```
+void * do_nothing(void *) {
+  return 0;
+}  
+```
+
+* $n$はコマンドラインから取得できるようにする
+* 以下のコードを修正して上記を達成せよ
+
+* C
+
+<!--- code w kernel=python points=1 --->
+%%writefile time_thread_create.c
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/time_thread_create.c --->
+<!--- end code --->
+
+<!--- code w kernel=python points=1 --->
+%%bash
+gcc -O3 -Wall -Wextra -o time_thread_create time_thread_create.c -lpthread
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+./time_thread_create
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile time_thread_create_ans.c
+<!--- exec-include ./mk_version.py -DVER=2 nb/source/os03_thread/include/time_thread_create.c --->
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%bash
+gcc -Wall -o time_thread_create_ans time_thread_create_ans.c -lpthread
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%bash
+./time_thread_create_ans
+<!--- end code --->
+
+* 以下のコマンドラインを色々変更して, 1回あたりの時間を計測せよ
+* 正しく動いているかを確認するために, 子スレッド(do_nothing関数)で何かを表示するとか, 子スレッドのstatus (do_nothingの返り値)を変えてそれが正しく受け取れていることを確認するなどせよ
+* 時間を計測するときはそれらの表示を消すこと(消さないと, 測っているのは出力時間が大半を占めることになる)
+
+<!--- code w kernel=python points=1 --->
+%%bash
+./time_thread_create 10
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%bash
+./time_thread_create_ans 1000
+<!--- end code --->
+
+
+
+
+* Python
+
+<!--- code w kernel=python points=1 --->
+%%writefile time_thread_create.py
+<!--- exec-include ./mk_version.py -DVER=1 nb/source/os03_thread/include/time_thread_create.py --->
+<!--- end code --->
+
+<!--- code w kernel=python --->
+%%bash
+python3 time_thread_create.py
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%writefile time_thread_create_ans.py
+<!--- exec-include ./mk_version.py -DVER=2 nb/source/os03_thread/include/time_thread_create.py --->
+<!--- end code --->
+
+<!--- code kernel=python label=ans --->
+%%bash
+python3 time_thread_create_ans.py
+<!--- end code --->
+
+* Cと同様に測定せよ
+
+<!--- code w kernel=python points=1 --->
+%%bash
+python3 time_thread_create.py 10
+<!--- end code --->
+
+<!--- code w kernel=python label=ans --->
+%%bash
+python3 time_thread_create_ans.py 1000
+<!--- end code --->

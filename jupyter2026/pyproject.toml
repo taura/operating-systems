@@ -1,0 +1,13 @@
+[project]
+name = "jupyter2026"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Kenjiro Taura", email = "tau@eidos.ic.i.u-tokyo.ac.jp" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "jupyterlab>=4.6.4",
+]
+
