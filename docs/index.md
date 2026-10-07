@@ -10,7 +10,7 @@
 
 * <font color=blue>(投稿日: 2026/10/07)</font> 初回 10/07 予定
   1. [イントロ](slides/00_intro.pdf)
-  1. [Jupyter環境お試し](html/jupyter.html)
+  1. [Jupyter環境お試し](html/jupyter_ja.html)
     * [Jupyter環境にアクセス](https://taulec.zapto.org:8000/)
     * `os00_intro`
     * `os01_install_linux`
