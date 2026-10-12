@@ -8,6 +8,14 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+* <font color=blue>(投稿日: 2026/10/12)</font> 初回 10/14 予定
+  1. [プロセス](slides/01_process.pdf)
+  1. [スレッド](slides/02_threads.pdf)
+    * `os03_thread`
+  1. [スケジューリング](slides/03_scheduling.pdf)
+    * `os04_sched`
+  1. 振り返り課題 (毎週; 授業の翌日まで. 以降ここにはいちいち書きません)
+  
 * <font color=blue>(投稿日: 2026/10/07)</font> 初回 10/07 予定
   1. [イントロ](slides/00_intro.pdf)
   1. [Jupyter環境お試し](html/jupyter_ja.html)

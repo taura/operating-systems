@@ -9,5 +9,6 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "jupyterlab>=4.6.4",
+    "nbgrader>=0.9.6",
 ]
 
