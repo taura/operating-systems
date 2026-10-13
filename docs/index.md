@@ -8,7 +8,7 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
-* <font color=blue>(投稿日: 2026/10/12)</font> 初回 10/14 予定
+* <font color=blue>(投稿日: 2026/10/12)</font> 10/14 予定
   1. [プロセス](slides/01_process.pdf)
   1. [スレッド](slides/02_threads.pdf)
     * `os03_thread`
