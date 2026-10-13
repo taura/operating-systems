@@ -10,11 +10,9 @@
 
 * <font color=blue>(投稿日: 2026/10/12)</font> 10/14 予定
   1. [プロセス](slides/01_process.pdf)
-  1. [スレッド](slides/02_threads.pdf)
-    * `os03_thread`
-  1. [スケジューリング](slides/03_scheduling.pdf)
-    * `os04_sched`
-  1. 振り返り課題 (毎週; 授業の翌日まで. 以降ここにはいちいち書きません)
+  2. [スレッド](slides/02_threads.pdf)  + Jupyter `os03_thread`
+  3. [スケジューリング](slides/03_scheduling.pdf) + Jupyter `os04_sched`
+  4. 振り返り課題 (毎週; 授業の翌日まで. 以降ここにはいちいち書きません)
   
 * <font color=blue>(投稿日: 2026/10/07)</font> 初回 10/07 予定
   1. [イントロ](slides/00_intro.pdf)
