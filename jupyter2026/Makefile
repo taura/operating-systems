@@ -55,10 +55,10 @@ assignments/release/$(asgn)/generated : assignments/source/$(asgn)/$(file).ipynb
 assignments/release/$(asgn)/generated : assignments/source/$(asgn)_ans/$(file).ipynb
 assignments/source/$(asgn)/$(file).ipynb : nb/source/$(asgn)/$(file).md assignments/source/$(asgn)/dir
 	mkdir -p $$(dir $$@)
-	uv run ./mk_nb.py --output $$@ --output-kernel miyabi $$<
+	uv run ./mk_nb.py --output $$@ --output-kernel py $$<
 assignments/source/$(asgn)_ans/$(file).ipynb : nb/source/$(asgn)/$(file).md assignments/source/$(asgn)_ans/dir
 	mkdir -p $$(dir $$@)
-	uv run ./mk_nb.py --output $$@ --output-kernel miyabi $$< --label ans
+	uv run ./mk_nb.py --output $$@ --output-kernel py $$< --label ans
 endef
 
 #
