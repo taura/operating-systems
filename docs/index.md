@@ -8,6 +8,8 @@
 * 新しいものが上
 * お知らせなど随時掲載しますので， ちょくちょく「再読み込み」してください 
 
+<a name="sorry"> </a>
+
 * <font color=blue>(投稿日: 2026/10/19)</font>
   - `os01_install_linux`, `os02_process` の Jupyter notebook で、一部のセルが空になっていました
   - すみませんがそれぞれの課題の再 fetch をお願いします
