@@ -221,13 +221,14 @@ fetchし直したい課題のフォルダをまるごと削除 (… は危険な
 の「すべてがダメなときのリセット方法」に従ってJupyterサーバを再起動してください.</li>
 <li>詳しい手順:
 <ul>
-<li>左ペインからフォルダアイコンを選び, 「notebooks」を表示
-(課題フォルダ一覧が表示されるはず)</li>
+<li>開いている ipynb ファイルがあれば全部閉じる</li>
+<li>左ペインからフォルダアイコンを選び,
+「notebooks」の下で課題フォルダ一覧を表示 (notebooks/os, notebooks/pd
+など)</li>
 <li>やり直したい課題のフォルダを右クリック -&gt; Rename
 して適当な名前に変更 (e.g., <code>pl00_intro</code> -&gt;
 <code>pl00_intro_xxx</code>)</li>
-<li>開いているファイルを含むディレクトリの名前を変更するとサーバが混乱することがあるので,
-<a href="#if_jupyter_goes_wrong">おかしなことになったら …</a>
+<li><a href="#if_jupyter_goes_wrong">おかしなことになったら …</a>
 の「すべてがダメなときのリセット方法」を行う.</li>
 <li>メニューから <font color="blue">Nbgrader</font> -&gt;
 <font color="blue">Assignment List</font> を表示すると,
@@ -241,7 +242,7 @@ fetchし直したい課題のフォルダをまるごと削除 (… は危険な
 <li>注: 当然上記の作業は端末 (SSH, Jupyter terminal)
 経由で行うことも可能. その場合の例:</li>
 </ul>
-<pre><code>cd ~/notebooks/
+<pre><code>cd ~/notebooks/pl
 mv pl00_intro pl00_intro_xxx
 # Stop My Server -&gt; Start My Server
 # 再fetch

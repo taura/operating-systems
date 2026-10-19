@@ -112,9 +112,10 @@
 
 - Notebookを破壊してしまったとか, 何か訳あって課題をfetchし直して初期状態からやり直したい場合は, fetchし直したい課題のフォルダをまるごと削除 (... は危険なので名前を変更) して, 上記の <a href="#if_jupyter_goes_wrong">おかしなことになったら ...</a> の「すべてがダメなときのリセット方法」に従ってJupyterサーバを再起動してください.
 - 詳しい手順:
-  - 左ペインからフォルダアイコンを選び, 「notebooks」を表示 (課題フォルダ一覧が表示されるはず)
+  - 開いている ipynb ファイルがあれば全部閉じる
+  - 左ペインからフォルダアイコンを選び, 「notebooks」の下で課題フォルダ一覧を表示 (notebooks/os, notebooks/pd など)
   - やり直したい課題のフォルダを右クリック -> Rename して適当な名前に変更 (e.g., `pl00_intro` -&gt; `pl00_intro_xxx`)
-  - 開いているファイルを含むディレクトリの名前を変更するとサーバが混乱することがあるので, <a href="#if_jupyter_goes_wrong">おかしなことになったら ...</a> の「すべてがダメなときのリセット方法」を行う.
+  - <a href="#if_jupyter_goes_wrong">おかしなことになったら ...</a> の「すべてがダメなときのリセット方法」を行う.
   - メニューから <font color="blue">Nbgrader</font> -&gt; <font color="blue">Assignment List</font> を表示すると, 課題が再びFetch可能になっているはずなのでFetchする
   - 適宜, 元フォルダの作業内容を新しくfetchしたファイルに移植する (逆に, 新しくfetchしたフォルダをrename, 古いフォルダの名前を元に戻す, 新しくfetchしたフォルダから直したいファイルだけをコピーする, という方法も考えられる)<br/><br/>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/QqE18GAT4S0?si=2VJNYg3JaQzJB3m7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -122,7 +123,7 @@
 - 注: 当然上記の作業は端末 (SSH, Jupyter terminal) 経由で行うことも可能. その場合の例:
 
 ```
-cd ~/notebooks/
+cd ~/notebooks/pl
 mv pl00_intro pl00_intro_xxx
 # Stop My Server -> Start My Server
 # 再fetch
