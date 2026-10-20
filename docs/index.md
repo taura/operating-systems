@@ -10,6 +10,12 @@
 
 <a name="sorry"> </a>
 
+* <font color=blue>(投稿日: 2026/10/19)</font> 10/20 予定
+  1. [スケジューリング](slides/03_scheduling.pdf) 
+  1. Jupyter `os04_sched`
+  1. [並行処理と同期](slides/04_concurrent.pdf)
+  1. Jupyter `os05_mutex`
+
 * <font color=blue>(投稿日: 2026/10/19)</font>
   - `os01_install_linux`, `os02_process` の Jupyter notebook で、一部のセルが空になっていました
   - すみませんがそれぞれの課題の再 fetch をお願いします
