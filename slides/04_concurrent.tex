@@ -90,8 +90,8 @@ int main() {
   \begin{center}
 \begin{tabular}{l|l|l}
     & 子スレッドA                   &  子スレッドB                   \\
-A1: & $t_0$ {\tt = g} (200){\tt ;}  &                                \\
-B1: &                               &  $t_1$ {\tt = g} (200){\tt ;}  \\
+A1: & $t_0$ {\tt = g;} (200)       &                                \\
+B1: &                               &  $t_1$ {\tt = g}{\tt ;} (200)  \\
 B2: &                               &  {\tt g = 300;}                \\
 A2: &  {\tt g = 300;}               &                                \\
 \end{tabular}
@@ -240,15 +240,16 @@ unlucky:
   \begin{itemize}
   \item \mura{不可分性(atomicity)}の崩れ:
     \begin{itemize}
-    \item \ao{「一度にできない一連の操作」}の途中に,
+    \item \ao{「一度でできない一連の操作」}の途中に,
       他の処理(更新)が挟まるために, 意図した操作が行えなくなる状態
-    \item \ao{「一度にできない一連の操作」}の例
+    \item \ao{「一度でできない一連の操作」}の例
       \begin{itemize}
       \item 1つの変数を\mura{読み出し〜変更}
       \item \mura{2つ以上の変数}を読み出し, または書き込み
       \end{itemize}
-    \item 用語「一度に出来る」$\approx$ 他の処理が挟まらないことが
-      保証されている $\equiv$ \ao{不可分(atomic)}に実行できる
+    \item 用語: 「一度で出来る」$\equiv$ 他の処理が挟まらないことが
+      保証されている $\equiv$ \ao{不可分(atomic)}に実行できる \\
+      $\approx$ 一命令でできる
     \end{itemize}
     
   \item \mura{順序, 依存関係 (dependency)}の崩れ:

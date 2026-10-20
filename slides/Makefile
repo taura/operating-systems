@@ -13,7 +13,7 @@ bibtex := biber
 run_bibtex_and_latex_twice:=n
 
 # tex files
-tex := $(wildcard 07_*.tex)
+tex := $(wildcard 04_*.tex)
 # svg files
 svg_svg :=
 #svg_svg += svg/mmap_action.svg
