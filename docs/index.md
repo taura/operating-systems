@@ -19,7 +19,7 @@
 * <font color=blue>(投稿日: 2026/10/19)</font>
   - `os01_install_linux`, `os02_process` の Jupyter notebook で、一部のセルが空になっていました
   - すみませんがそれぞれの課題の再 fetch をお願いします
-  - 再fetch の手順はこちらの https://taura.github.io/operating-systems/html/jupyter_ja.html の「課題をfetchし直して始めからやり直したい...」
+  - 再fetch の手順は[こちら](https://taura.github.io/operating-systems/html/jupyter_ja.html) の「課題をfetchし直して始めからやり直したい...」
     - すでに notebook の編集作業をしている人は作業を失わないように気をつけて下さい（そのための手順が↑）
   - ただしすでに提出済みの人は再 fetch -> 再提出しても良いし, しなくても構いません
 	- しない場合, 空セルであっても問題文から何を書けばよいかがわかり, 回答を書いたものとみなします
