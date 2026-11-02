@@ -10,6 +10,12 @@
 
 <a name="sorry"> </a>
 
+* <font color=blue>(投稿日: 2026/11/02)</font> 11/04 予定
+  1. [並行処理と同期](slides/04_concurrent.pdf)
+  1. Jupyter `os05_mutex`, `os06_cond_var`, `os07_atomic`
+  1. [メモリ管理 (仮想記憶)](slides/05_memory.pdf)
+  1. Jupyter `os08_addr`, `os09_vm`
+
 * <font color=blue>(投稿日: 2026/10/27)</font> 10/28 予定
   1. [並行処理と同期](slides/04_concurrent.pdf)
   1. Jupyter `os05_mutex`, `os06_cond_var`, `os07_atomic`
