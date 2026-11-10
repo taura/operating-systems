@@ -25,6 +25,8 @@ aux_files += $(wildcard nb/source/os01_install_linux/img/*.png)
 aux_files += $(wildcard nb/source/os09_vm/*.py)
 aux_files += nb/source/os10_cache/read_file_vis.py
 aux_files += os11_prefetch/read_file_vis.py
+aux_files += $(wildcard nb/source/*/*.chat)
+aux_files += $(wildcard nb/source/*/AGENTS.md)
 
 EVAL=$(eval $(1))
 #EVAL=$(info $(1))
